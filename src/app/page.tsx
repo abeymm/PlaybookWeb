@@ -24,6 +24,8 @@ import {
   MenuIcon,
 } from "lucide-react";
 
+const APP_STORE_URL = "https://apps.apple.com/us/app/golf-playbook/id1557162395";
+
 const features = [
   {
     Icon: MapIcon,
@@ -34,8 +36,8 @@ const features = [
     background: (
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent" />
     ),
-    href: "#",
-    cta: "Learn more",
+    href: APP_STORE_URL,
+    cta: "Get the App",
   },
   {
     Icon: BrainIcon,
@@ -46,8 +48,8 @@ const features = [
     background: (
       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent" />
     ),
-    href: "#",
-    cta: "Learn more",
+    href: APP_STORE_URL,
+    cta: "Get the App",
   },
   {
     Icon: PrinterIcon,
@@ -58,8 +60,8 @@ const features = [
     background: (
       <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-transparent" />
     ),
-    href: "#",
-    cta: "Learn more",
+    href: APP_STORE_URL,
+    cta: "Get the App",
   },
   {
     Icon: Share2Icon,
@@ -70,36 +72,27 @@ const features = [
     background: (
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent" />
     ),
-    href: "#",
-    cta: "Learn more",
+    href: APP_STORE_URL,
+    cta: "Get the App",
   },
 ];
 
 const testimonials = [
   {
-    name: "Mike T.",
-    handicap: "12 HCP",
-    quote: "Dropped 4 strokes in my first month using Golf Playbook strategies.",
+    name: "MLB freak",
+    quote: "Great tool to plan your round. Particularly for competitive golf. Looking forward to using this through the tour season.",
   },
   {
-    name: "Sarah L.",
-    handicap: "8 HCP",
-    quote: "Finally have a consistent pre-shot routine. Game changer!",
+    name: "Willow02",
+    quote: "Phenomenal alternative to other paid apps or spending lots of time doing it yourself in Google Earth. Truly helpful for pre-round decision making.",
   },
   {
-    name: "James R.",
-    handicap: "18 HCP",
-    quote: "The printed playbooks are beautiful. I reference mine every round.",
+    name: "ECboy",
+    quote: "Super cool and gives so much insight into each hole you're playing!",
   },
   {
-    name: "Chris M.",
-    handicap: "5 HCP",
-    quote: "Course management was my weakness. Not anymore.",
-  },
-  {
-    name: "David K.",
-    handicap: "15 HCP",
-    quote: "Love sharing strategies with my golf buddies.",
+    name: "Jeff$2",
+    quote: "Being able to turn off compensations during tournaments is nice. Very eager to use this in practice rounds to think through my shots.",
   },
 ];
 
@@ -215,18 +208,18 @@ export default function Home() {
           <BlurFade delay={0.5}>
             <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground md:gap-8">
               <div className="flex items-center gap-2">
-                <TrendingDownIcon className="h-4 w-4 text-primary" />
-                <span>Average 3-5 strokes saved</span>
+                <TargetIcon className="h-4 w-4 text-primary" />
+                <span>Playbooks for 50+ courses</span>
               </div>
               <Separator orientation="vertical" className="hidden h-4 md:block" />
               <div className="flex items-center gap-2">
                 <StarIcon className="h-4 w-4 fill-primary text-primary" />
-                <span>4.9 App Store Rating</span>
+                <span>5.0 App Store Rating</span>
               </div>
               <Separator orientation="vertical" className="hidden h-4 md:block" />
               <div className="flex items-center gap-2">
-                <TargetIcon className="h-4 w-4 text-primary" />
-                <span>10,000+ Playbooks Created</span>
+                <TrendingDownIcon className="h-4 w-4 text-primary" />
+                <span>Play smarter, score better</span>
               </div>
             </div>
           </BlurFade>
@@ -299,9 +292,8 @@ export default function Home() {
                       ))}
                     </div>
                     <p className="mt-4 text-sm leading-relaxed">&ldquo;{testimonial.quote}&rdquo;</p>
-                    <div className="mt-4 flex items-center justify-between">
-                      <span className="font-medium">{testimonial.name}</span>
-                      <Badge variant="outline" className="text-xs">{testimonial.handicap}</Badge>
+                    <div className="mt-4">
+                      <span className="font-medium">— {testimonial.name}</span>
                     </div>
                   </CardContent>
                 </Card>

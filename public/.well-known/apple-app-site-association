@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "8GV2L5AN5U.golf.playbook",
+        "paths": ["/p/*"]
+      }
+    ]
+  }
+}
