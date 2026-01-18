@@ -147,6 +147,9 @@ export default function Home() {
             <Button variant="ghost" size="sm" asChild>
               <Link href="#pricing">Pricing</Link>
             </Button>
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/print">Print</Link>
+            </Button>
           </div>
           <div className="flex items-center gap-2">
             <Button size="sm" asChild>
