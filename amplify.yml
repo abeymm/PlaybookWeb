@@ -1,10 +1,4 @@
 version: 1
-backend:
-  phases:
-    build:
-      commands:
-        - npm ci --cache .npm --prefer-offline
-        - npx @aws-amplify/backend-cli generate outputs --branch main --app-id 7c7718c699f8466eb876f64a618ecf83
 frontend:
   phases:
     preBuild:
