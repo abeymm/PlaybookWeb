@@ -143,6 +143,9 @@ export default function Home() {
             <Button variant="ghost" size="sm" asChild>
               <Link href="/for-tournaments">Tournaments</Link>
             </Button>
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/for-courses">Courses</Link>
+            </Button>
           </div>
           <div className="flex items-center gap-2">
             <Button size="sm" asChild>

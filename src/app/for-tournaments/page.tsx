@@ -124,7 +124,7 @@ const faqs = [
   {
     question: "What size are the playbooks?",
     answer:
-      'All playbooks are printed at 4"x6" - the standard yardage book size that fits perfectly in a pocket or golf bag.',
+      "Pocket-sized for easy use on the course, and fully compliant with USGA rules for green-reading materials.",
   },
   {
     question: "Can we customize the design with our tournament branding?",
@@ -345,8 +345,8 @@ export default function TournamentsPage() {
                     </span>
                     <h3 className="mt-1 text-xl font-semibold">We Print & Ship</h3>
                     <p className="mt-2 text-sm text-muted-foreground">
-                      Professional 4&quot;x6&quot; booklets delivered to your event, ready to
-                      hand out.
+                      Professional pocket-sized booklets delivered to your event, ready
+                      to hand out.
                     </p>
                   </div>
                 </CardContent>

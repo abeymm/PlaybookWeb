@@ -23,35 +23,35 @@ import {
 
 const pricingTiers = [
   {
-    quantity: "1",
-    label: "Single",
+    quantity: "1-9",
+    label: "Standard",
     price: "$24.99",
     perUnit: "$24.99 each",
     savings: null,
     popular: false,
   },
   {
-    quantity: "2-4",
-    label: "Starter",
-    price: "$21.99",
-    perUnit: "$21.99 each",
-    savings: "12% off",
+    quantity: "10-49",
+    label: "Group",
+    price: "$19.99",
+    perUnit: "$19.99 each",
+    savings: "20% off",
     popular: true,
   },
   {
-    quantity: "5-9",
-    label: "Group",
-    price: "$18.99",
-    perUnit: "$18.99 each",
-    savings: "24% off",
+    quantity: "50-99",
+    label: "Event",
+    price: "$16.99",
+    perUnit: "$16.99 each",
+    savings: "32% off",
     popular: false,
   },
   {
-    quantity: "10+",
-    label: "Team",
-    price: "$15.99",
-    perUnit: "$15.99 each",
-    savings: "36% off",
+    quantity: "100+",
+    label: "Tournament",
+    price: "$14.99",
+    perUnit: "$14.99 each",
+    savings: "40% off",
     popular: false,
   },
 ];
@@ -61,7 +61,7 @@ const covers = [
     Icon: SparklesIcon,
     name: "Leather Cover",
     description:
-      "Premium full-grain leather with a soft interior lining. Available in Black, Brown, and Tan. Fits standard 4\"x6\" yardage books.",
+      "Premium full-grain leather with a soft interior lining. Available in Black, Brown, and Tan. Fits all Golf Playbook prints.",
     price: "$34.99",
     className: "col-span-3 md:col-span-1",
     background: (
@@ -139,12 +139,12 @@ const faqs = [
   {
     question: "What size are the playbooks?",
     answer:
-      "All playbooks are printed at 4\"x6\" - the standard yardage book size that fits perfectly in your pocket or golf bag.",
+      "Pocket-sized for easy use on the course, and fully compliant with USGA rules for green-reading materials.",
   },
   {
     question: "Can I order for my golf group?",
     answer:
-      "Yes! We offer volume discounts starting at 2 playbooks. Orders of 10+ get our best pricing at $15.99 each.",
+      "Yes! We offer volume discounts starting at 10 playbooks. Orders of 100+ get our best pricing at $14.99 each.",
   },
   {
     question: "What if I update my playbook?",
@@ -356,8 +356,10 @@ export default function PrintPage() {
           <BlurFade delay={0.3}>
             <div className="mt-8 text-center">
               <p className="text-sm text-muted-foreground">
-                All playbooks include: 4&quot;x6&quot; size • Premium matte cardstock • Spiral
-                binding • Laminated cover
+                Professional quality • Pocket-sized • Tournament ready
+              </p>
+              <p className="mt-2 text-xs text-muted-foreground/70">
+                Premium edition coming soon
               </p>
             </div>
           </BlurFade>
