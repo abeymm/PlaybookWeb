@@ -138,10 +138,10 @@ export default function Home() {
               <Link href="#testimonials">Reviews</Link>
             </Button>
             <Button variant="ghost" size="sm" asChild>
-              <Link href="#pricing">Pricing</Link>
+              <Link href="/print">Print</Link>
             </Button>
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/print">Print</Link>
+              <Link href="/for-tournaments">Tournaments</Link>
             </Button>
           </div>
           <div className="flex items-center gap-2">
@@ -209,7 +209,7 @@ export default function Home() {
             <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground md:gap-8">
               <div className="flex items-center gap-2">
                 <TargetIcon className="h-4 w-4 text-primary" />
-                <span>Playbooks for 50+ courses</span>
+                <span>Playbooks for 100s of courses created</span>
               </div>
               <Separator orientation="vertical" className="hidden h-4 md:block" />
               <div className="flex items-center gap-2">
@@ -306,7 +306,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section id="pricing" className="px-6 py-20 md:py-24">
+      <section id="download" className="px-6 py-20 md:py-24">
         <div className="mx-auto max-w-4xl">
           <BlurFade delay={0.1}>
             <Card className="relative overflow-hidden border-primary/20 bg-gradient-to-br from-primary/5 via-background to-background">
@@ -318,7 +318,7 @@ export default function Home() {
                     </h2>
                     <p className="mt-4 text-muted-foreground">
                       Download Golf Playbook today and start playing with a plan.
-                      Free to try, with premium features for serious golfers.
+                      It&apos;s free on the App Store.
                     </p>
                     <div className="mt-8">
                       <ShimmerButton className="h-12 px-8" background="#FFBF00">

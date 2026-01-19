@@ -79,7 +79,15 @@
   from {
     transform: translateY(0);}
   to {
-    transform: translateY(calc(-100% - var(--gap)));}}}
+    transform: translateY(calc(-100% - var(--gap)));}}
+  --animate-slow-pan: slow-pan 12s ease-in-out infinite;
+  @keyframes slow-pan {
+  0%, 15% {
+    transform: translateY(0);}
+  42.5%, 57.5% {
+    transform: translateY(-40%);}
+  85%, 100% {
+    transform: translateY(0);}}}
 
 :root {
   --radius: 0.625rem;
