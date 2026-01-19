@@ -14,6 +14,10 @@ export const metadata: Metadata = {
     "Create, share, and print professional golf course strategies. Turn your practice into lower scores with pre-round planning that adapts as you play.",
   keywords:
     "golf, golf strategy, golf playbook, course management, golf printing, golf app",
+  icons: {
+    icon: "/icon.png",
+    apple: "/apple-icon.png",
+  },
   openGraph: {
     title: "Golf Playbook - Strategy That Wins",
     description:
