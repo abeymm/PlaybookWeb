@@ -12,7 +12,7 @@ export default function SupportPage() {
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src="/logo3d.png"
+              src="/images/logo3d.png"
               alt="Golf Playbook"
               width={36}
               height={36}

@@ -122,7 +122,7 @@ export default function Home() {
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src="/logo3d.png"
+              src="/images/logo3d.png"
               alt="Golf Playbook"
               width={36}
               height={36}
@@ -354,7 +354,7 @@ export default function Home() {
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
             <div className="flex items-center gap-2">
               <Image
-                src="/logo3d.png"
+                src="/images/logo3d.png"
                 alt="Golf Playbook"
                 width={32}
                 height={32}

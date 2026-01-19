@@ -1,4 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Amplify } from "aws-amplify";
+import { generateClient } from "aws-amplify/api";
+import outputs from "../../../../amplify_outputs.json";
+
+// Configure Amplify for server-side
+Amplify.configure(outputs, { ssr: true });
 
 interface TournamentLeadRequest {
   name: string;
@@ -33,26 +39,49 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const leadData = {
-      ...body,
-      submittedAt: new Date().toISOString(),
-      source: "website",
+    // Create the form data object
+    const formData = {
+      name: body.name,
+      email: body.email,
+      phone: body.phone || "",
+      tournamentName: body.tournamentName,
+      courseName: body.courseName,
+      eventDate: body.eventDate || "",
+      playerCount: body.playerCount || "",
+      interests: body.interests || [],
+      notes: body.notes || "",
     };
 
-    // Log the lead (for development/debugging)
-    console.log("Tournament Lead Received:", JSON.stringify(leadData, null, 2));
+    // Call the GraphQL mutation via AppSync
+    const client = generateClient({ authMode: "iam" });
 
-    // TODO: Store in DynamoDB via Amplify Data client
-    // TODO: Send email notification via AWS SES
+    const mutation = /* GraphQL */ `
+      mutation SubmitForm(
+        $formType: String!
+        $subject: String
+        $formData: AWSJSON!
+        $replyToEmail: AWSEmail
+      ) {
+        submitForm(
+          formType: $formType
+          subject: $subject
+          formData: $formData
+          replyToEmail: $replyToEmail
+        )
+      }
+    `;
 
-    // For now, we'll use a simple approach - you can integrate with:
-    // 1. AWS SES for email notifications
-    // 2. DynamoDB for lead storage
-    // 3. External services like Mailchimp, HubSpot, etc.
+    const result = await client.graphql({
+      query: mutation,
+      variables: {
+        formType: "tournament-lead",
+        subject: `New Tournament Lead: ${body.tournamentName} at ${body.courseName}`,
+        formData: JSON.stringify(formData),
+        replyToEmail: body.email,
+      },
+    });
 
-    // Example: If SES is configured, uncomment and use:
-    // await sendLeadNotificationEmail(leadData);
-    // await storeTournamentLead(leadData);
+    console.log("Tournament lead submitted via GraphQL:", result);
 
     return NextResponse.json(
       { success: true, message: "Lead received successfully" },
@@ -60,33 +89,13 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error("Error processing tournament lead:", error);
+
+    // Check if it's a GraphQL error
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }
 }
-
-// Placeholder functions for future implementation
-// These can be implemented when AWS services are configured
-
-/*
-async function sendLeadNotificationEmail(lead: TournamentLeadRequest & { submittedAt: string }) {
-  // Use AWS SES or similar service
-  // const ses = new SESClient({ region: process.env.AWS_REGION });
-  // await ses.send(new SendEmailCommand({
-  //   Source: "noreply@playbook.golf",
-  //   Destination: { ToAddresses: ["support@playbook.golf"] },
-  //   Message: {
-  //     Subject: { Data: `New Tournament Lead: ${lead.tournamentName}` },
-  //     Body: { Text: { Data: formatLeadEmail(lead) } }
-  //   }
-  // }));
-}
-
-async function storeTournamentLead(lead: TournamentLeadRequest & { submittedAt: string }) {
-  // Use Amplify Data client or direct DynamoDB access
-  // const client = generateClient<Schema>();
-  // await client.models.TournamentLead.create(lead);
-}
-*/

@@ -132,7 +132,7 @@ const faqs = [
       "Absolutely! We include your tournament logo, colors, and branding throughout the playbook at no extra charge.",
   },
   {
-    question: "What&apos;s the minimum order?",
+    question: "What's the minimum order?",
     answer:
       "Minimum order is 50 playbooks. This ensures we can offer competitive pricing while maintaining premium quality.",
   },
@@ -199,7 +199,7 @@ export default function TournamentsPage() {
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src="/logo3d.png"
+              src="/images/logo3d.png"
               alt="Golf Playbook"
               width={36}
               height={36}
@@ -215,7 +215,7 @@ export default function TournamentsPage() {
               </Link>
             </Button>
             <Button size="sm" asChild>
-              <Link href="#quote">Request a Quote</Link>
+              <a href="#quote">Request a Quote</a>
             </Button>
           </div>
         </div>
@@ -239,17 +239,17 @@ export default function TournamentsPage() {
                 </p>
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                   <ShimmerButton className="h-12 px-8" background="#FFBF00">
-                    <Link
+                    <a
                       href="#quote"
                       className="flex items-center gap-2 text-base font-semibold text-[#08401B]"
                     >
                       Request a Quote
                       <ArrowRightIcon className="h-4 w-4" />
-                    </Link>
+                    </a>
                   </ShimmerButton>
                   <Button variant="outline" size="lg" className="h-12 px-8" asChild>
                     <Link
-                      href="/sample-playbook.pdf"
+                      href="/images/print/samples/SampleYardagePebble.pdf"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -259,14 +259,18 @@ export default function TournamentsPage() {
                 </div>
               </div>
               <div className="flex justify-center">
-                <div className="relative aspect-[4/5] w-full max-w-sm overflow-hidden rounded-2xl border border-border/50 bg-muted/30">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center">
-                      <BookOpenIcon className="mx-auto h-16 w-16 text-muted-foreground/50" />
-                      <p className="mt-4 text-sm text-muted-foreground">
-                        Tournament Playbook Preview
-                      </p>
-                    </div>
+                <div className="relative aspect-[4/5] w-full max-w-sm overflow-hidden rounded-2xl border border-border/50 bg-muted/30 shadow-2xl">
+                  <Image
+                    src="/images/print/samples/hole-strategy.jpg"
+                    alt="Sample tournament playbook page showing hole strategy"
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
+                    <p className="text-sm font-medium text-white">
+                      Sample Playbook Page
+                    </p>
                   </div>
                 </div>
               </div>
@@ -352,14 +356,14 @@ export default function TournamentsPage() {
         </div>
       </section>
 
-      {/* What&apos;s Included Section */}
+      {/* What's Included Section */}
       <section className="px-6 py-20">
         <div className="mx-auto max-w-6xl">
           <BlurFade delay={0.1}>
             <div className="grid gap-12 md:grid-cols-2 md:items-center">
               <div>
                 <Badge variant="secondary" className="mb-4">
-                  What&apos;s Included
+                  What's Included
                 </Badge>
                 <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
                   What Every Player Gets
@@ -512,13 +516,13 @@ export default function TournamentsPage() {
           <BlurFade delay={0.3}>
             <div className="mt-12 text-center">
               <ShimmerButton className="h-12 px-8" background="#FFBF00">
-                <Link
+                <a
                   href="#quote"
                   className="flex items-center gap-2 text-base font-semibold text-[#08401B]"
                 >
                   Request a Quote
                   <ArrowRightIcon className="h-4 w-4" />
-                </Link>
+                </a>
               </ShimmerButton>
             </div>
           </BlurFade>
@@ -855,7 +859,7 @@ export default function TournamentsPage() {
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
             <div className="flex items-center gap-2">
               <Image
-                src="/logo3d.png"
+                src="/images/logo3d.png"
                 alt="Golf Playbook"
                 width={32}
                 height={32}
