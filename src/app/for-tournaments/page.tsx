@@ -238,14 +238,15 @@ export default function TournamentsPage() {
                   or included in registration.
                 </p>
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                  <ShimmerButton className="h-12 px-8" background="#FFBF00">
-                    <a
-                      href="#quote"
-                      className="flex items-center gap-2 text-base font-semibold text-[#08401B]"
-                    >
+                  <ShimmerButton
+                    className="h-12 px-8"
+                    background="#FFBF00"
+                    onClick={() => document.getElementById("quote")?.scrollIntoView({ behavior: "smooth" })}
+                  >
+                    <span className="flex items-center gap-2 text-base font-semibold text-[#08401B]">
                       Request a Quote
                       <ArrowRightIcon className="h-4 w-4" />
-                    </a>
+                    </span>
                   </ShimmerButton>
                   <Button variant="outline" size="lg" className="h-12 px-8" asChild>
                     <Link
@@ -515,14 +516,15 @@ export default function TournamentsPage() {
 
           <BlurFade delay={0.3}>
             <div className="mt-12 text-center">
-              <ShimmerButton className="h-12 px-8" background="#FFBF00">
-                <a
-                  href="#quote"
-                  className="flex items-center gap-2 text-base font-semibold text-[#08401B]"
-                >
+              <ShimmerButton
+                className="h-12 px-8"
+                background="#FFBF00"
+                onClick={() => document.getElementById("quote")?.scrollIntoView({ behavior: "smooth" })}
+              >
+                <span className="flex items-center gap-2 text-base font-semibold text-[#08401B]">
                   Request a Quote
                   <ArrowRightIcon className="h-4 w-4" />
-                </a>
+                </span>
               </ShimmerButton>
             </div>
           </BlurFade>

@@ -266,14 +266,15 @@ export default function ForCoursesPage() {
                 the first tee to the 19th hole—and brings them back for more.
               </p>
               <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-                <ShimmerButton className="h-12 px-8" background="#FFBF00">
-                  <a
-                    href="#lead-form"
-                    className="flex items-center gap-2 text-base font-semibold text-[#08401B]"
-                  >
+                <ShimmerButton
+                  className="h-12 px-8"
+                  background="#FFBF00"
+                  onClick={() => document.getElementById("lead-form")?.scrollIntoView({ behavior: "smooth" })}
+                >
+                  <span className="flex items-center gap-2 text-base font-semibold text-[#08401B]">
                     Request a Demo
                     <ArrowRightIcon className="h-4 w-4" />
-                  </a>
+                  </span>
                 </ShimmerButton>
                 <Button variant="outline" size="lg" className="h-12 px-8" asChild>
                   <a href="#how-it-works">See How It Works</a>
@@ -637,14 +638,15 @@ export default function ForCoursesPage() {
                 </ul>
               </CardContent>
               <CardFooter>
-                <ShimmerButton className="h-12 w-full" background="#FFBF00">
-                  <a
-                    href="#lead-form"
-                    className="flex items-center justify-center gap-2 text-base font-semibold text-[#08401B]"
-                  >
+                <ShimmerButton
+                  className="h-12 w-full"
+                  background="#FFBF00"
+                  onClick={() => document.getElementById("lead-form")?.scrollIntoView({ behavior: "smooth" })}
+                >
+                  <span className="flex items-center justify-center gap-2 text-base font-semibold text-[#08401B]">
                     Request a Demo
                     <ArrowRightIcon className="h-4 w-4" />
-                  </a>
+                  </span>
                 </ShimmerButton>
               </CardFooter>
             </Card>

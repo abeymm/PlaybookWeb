@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -22,6 +25,7 @@ import {
   CheckIcon,
   StarIcon,
   MenuIcon,
+  XIcon,
 } from "lucide-react";
 
 const APP_STORE_URL = "https://apps.apple.com/us/app/golf-playbook/id1557162395";
@@ -106,6 +110,12 @@ const benefits = [
 ];
 
 export default function Home() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleAppStoreClick = () => {
+    window.open(APP_STORE_URL, "_blank");
+  };
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-background">
       {/* Particles Background */}
@@ -148,14 +158,50 @@ export default function Home() {
             </Button>
           </div>
           <div className="flex items-center gap-2">
-            <Button size="sm" asChild>
+            <Button size="sm" asChild className="hidden sm:inline-flex">
               <Link href="/login">Sign In</Link>
             </Button>
-            <Button variant="ghost" size="icon" className="md:hidden">
-              <MenuIcon className="h-5 w-5" />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? (
+                <XIcon className="h-5 w-5" />
+              ) : (
+                <MenuIcon className="h-5 w-5" />
+              )}
             </Button>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="border-t border-border/40 bg-background/95 backdrop-blur-xl md:hidden">
+            <div className="flex flex-col gap-2 px-6 py-4">
+              <Button variant="ghost" size="sm" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
+                <Link href="#features">Features</Link>
+              </Button>
+              <Button variant="ghost" size="sm" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
+                <Link href="#testimonials">Reviews</Link>
+              </Button>
+              <Button variant="ghost" size="sm" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/print">Print</Link>
+              </Button>
+              <Button variant="ghost" size="sm" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/for-tournaments">Tournaments</Link>
+              </Button>
+              <Button variant="ghost" size="sm" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/for-courses">Courses</Link>
+              </Button>
+              <Separator className="my-2" />
+              <Button size="sm" asChild onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/login">Sign In</Link>
+              </Button>
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Hero Section */}
@@ -196,7 +242,7 @@ export default function Home() {
 
           <BlurFade delay={0.4}>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <ShimmerButton className="h-12 px-8" background="#FFBF00">
+              <ShimmerButton className="h-12 px-8" background="#FFBF00" onClick={handleAppStoreClick}>
                 <span className="flex items-center gap-2 text-base font-semibold text-[#08401B]">
                   Download for iOS
                   <ArrowRightIcon className="h-4 w-4" />
@@ -324,7 +370,7 @@ export default function Home() {
                       It&apos;s free on the App Store.
                     </p>
                     <div className="mt-8">
-                      <ShimmerButton className="h-12 px-8" background="#FFBF00">
+                      <ShimmerButton className="h-12 px-8" background="#FFBF00" onClick={handleAppStoreClick}>
                         <span className="flex items-center gap-2 text-base font-semibold text-[#08401B]">
                           Get Started Free
                           <ArrowRightIcon className="h-4 w-4" />

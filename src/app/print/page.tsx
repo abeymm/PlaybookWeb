@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -20,6 +22,8 @@ import {
   LeafIcon,
   BookOpenIcon,
 } from "lucide-react";
+
+const APP_STORE_URL = "https://apps.apple.com/us/app/golf-playbook/id1557162395";
 
 const pricingTiers = [
   {
@@ -159,6 +163,10 @@ const faqs = [
 ];
 
 export default function PrintPage() {
+  const handleAppStoreClick = () => {
+    window.open(APP_STORE_URL, "_blank");
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -205,7 +213,7 @@ export default function PrintPage() {
                   strategy to your hands in days.
                 </p>
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                  <ShimmerButton className="h-12 px-8" background="#FFBF00">
+                  <ShimmerButton className="h-12 px-8" background="#FFBF00" onClick={handleAppStoreClick}>
                     <span className="flex items-center gap-2 text-base font-semibold text-[#08401B]">
                       Order in App
                       <ArrowRightIcon className="h-4 w-4" />
@@ -538,7 +546,7 @@ export default function PrintPage() {
               printed playbook today.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <ShimmerButton className="h-12 px-8" background="#FFBF00">
+              <ShimmerButton className="h-12 px-8" background="#FFBF00" onClick={handleAppStoreClick}>
                 <span className="flex items-center gap-2 text-base font-semibold text-[#08401B]">
                   Download for iOS
                   <ArrowRightIcon className="h-4 w-4" />
