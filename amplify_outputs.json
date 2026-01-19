@@ -1,9 +1,9 @@
 {
   "auth": {
-    "user_pool_id": "us-west-2_k81yY9yAd",
+    "user_pool_id": "us-west-2_nGhGtYWOs",
     "aws_region": "us-west-2",
-    "user_pool_client_id": "3ud5r9kkhu2s2va2bga9ekh2r6",
-    "identity_pool_id": "us-west-2:f9288d0c-1d5a-457f-a12f-61ee1c8c9d5e",
+    "user_pool_client_id": "2po6sj61iitg0fvnd8n866a1uh",
+    "identity_pool_id": "us-west-2:8689356f-5876-4e18-a81f-3cdadd20e4b0",
     "mfa_methods": [],
     "standard_required_attributes": [
       "email",
@@ -48,12 +48,12 @@
         "profile",
         "aws.cognito.signin.user.admin"
       ],
-      "domain": "25fd615d0e2dc5637d8c.auth.us-west-2.amazoncognito.com"
+      "domain": "9f95346598a09a72c8f5.auth.us-west-2.amazoncognito.com"
     },
     "unauthenticated_identities_enabled": true
   },
   "data": {
-    "url": "https://fz5xhb6p3ne5pfdwll6r2h4fsy.appsync-api.us-west-2.amazonaws.com/graphql",
+    "url": "https://yqv3cgydarevxaf3bunyraczca.appsync-api.us-west-2.amazonaws.com/graphql",
     "aws_region": "us-west-2",
     "default_authorization_type": "AMAZON_COGNITO_USER_POOLS",
     "authorization_types": [
@@ -1794,16 +1794,50 @@
             }
           }
         }
+      },
+      "mutations": {
+        "submitForm": {
+          "name": "submitForm",
+          "isArray": false,
+          "type": "AWSJSON",
+          "isRequired": false,
+          "arguments": {
+            "formType": {
+              "name": "formType",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true
+            },
+            "subject": {
+              "name": "subject",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false
+            },
+            "formData": {
+              "name": "formData",
+              "isArray": false,
+              "type": "AWSJSON",
+              "isRequired": true
+            },
+            "replyToEmail": {
+              "name": "replyToEmail",
+              "isArray": false,
+              "type": "AWSEmail",
+              "isRequired": false
+            }
+          }
+        }
       }
     }
   },
   "storage": {
     "aws_region": "us-west-2",
-    "bucket_name": "amplify-playbookbackend-ab-gpstoragebucket69dc93e8-glijglac85wp",
+    "bucket_name": "amplify-d19r6ihtvw4nlv-mai-gpstoragebucket69dc93e8-7ga5ldbvvjgf",
     "buckets": [
       {
         "name": "GPStorage",
-        "bucket_name": "amplify-playbookbackend-ab-gpstoragebucket69dc93e8-glijglac85wp",
+        "bucket_name": "amplify-d19r6ihtvw4nlv-mai-gpstoragebucket69dc93e8-7ga5ldbvvjgf",
         "aws_region": "us-west-2",
         "paths": {
           "public/*": {
@@ -1865,7 +1899,7 @@
   "version": "1.4",
   "analytics": {
     "amazon_pinpoint": {
-      "app_id": "7c7718c699f8466eb876f64a618ecf83",
+      "app_id": "1af15dd554d049feb6133f00bd42a61a",
       "aws_region": "us-west-2"
     }
   }
