@@ -203,10 +203,15 @@ export default function ForCoursesPage() {
     setError(null);
 
     try {
-      const response = await fetch("/api/course-lead", {
+      const response = await fetch("/api/submit-form", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formState),
+        body: JSON.stringify({
+          formType: "course-lead",
+          subject: `New Course Lead: ${formState.courseName}`,
+          email: formState.email,
+          formData: formState,
+        }),
       });
 
       if (!response.ok) {
@@ -663,6 +668,59 @@ export default function ForCoursesPage() {
         </div>
       </section>
 
+      {/* Tour-Level Pin Accuracy Section */}
+      <section className="px-6 py-20">
+        <div className="mx-auto max-w-4xl">
+          <BlurFade delay={0.1}>
+            <Card className="overflow-hidden border-primary/20 bg-gradient-to-br from-primary/10 via-primary/5 to-background">
+              <CardContent className="p-8 md:p-12">
+                <div className="grid gap-8 md:grid-cols-2 md:items-center">
+                  <div>
+                    <Badge className="mb-4 bg-primary text-primary-foreground">
+                      <SparklesIcon className="mr-1 h-3 w-3" />
+                      Optional Enhancement
+                    </Badge>
+                    <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
+                      Tour-Level Pin Accuracy
+                    </h2>
+                    <p className="mt-4 text-muted-foreground">
+                      Take your playbook to the next level with daily pin positions and
+                      professional green slope data—the same technology used on tour.
+                    </p>
+                  </div>
+                  <div>
+                    <ul className="space-y-3">
+                      <li className="flex items-center gap-3">
+                        <CheckIcon className="h-5 w-5 text-primary" />
+                        <span>Daily pin position updates</span>
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <CheckIcon className="h-5 w-5 text-primary" />
+                        <span>Green slope and break data</span>
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <CheckIcon className="h-5 w-5 text-primary" />
+                        <span>Integration with mapping partners</span>
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <CheckIcon className="h-5 w-5 text-primary" />
+                        <span>Real-time updates in player app</span>
+                      </li>
+                    </ul>
+                    <Button className="mt-6" variant="outline" asChild>
+                      <Link href="/partners">
+                        Learn About Partner Integrations
+                        <ArrowRightIcon className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </BlurFade>
+        </div>
+      </section>
+
       {/* FAQ Section */}
       <section className="border-y border-border/40 bg-muted/30 px-6 py-20">
         <div className="mx-auto max-w-3xl">
@@ -950,6 +1008,12 @@ export default function ForCoursesPage() {
               <span className="text-lg font-bold tracking-tight">Golf Playbook</span>
             </div>
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
+              <Link href="/for-tournaments" className="transition-colors hover:text-foreground">
+                Tournaments
+              </Link>
+              <Link href="/partners" className="transition-colors hover:text-foreground">
+                Partners
+              </Link>
               <Link href="/privacy" className="transition-colors hover:text-foreground">
                 Privacy
               </Link>

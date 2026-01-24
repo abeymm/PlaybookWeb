@@ -575,6 +575,15 @@ export default function PrintPage() {
               <span className="text-lg font-bold tracking-tight">Golf Playbook</span>
             </div>
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
+              <Link href="/for-courses" className="transition-colors hover:text-foreground">
+                Courses
+              </Link>
+              <Link href="/for-tournaments" className="transition-colors hover:text-foreground">
+                Tournaments
+              </Link>
+              <Link href="/partners" className="transition-colors hover:text-foreground">
+                Partners
+              </Link>
               <Link href="/privacy" className="transition-colors hover:text-foreground">
                 Privacy
               </Link>

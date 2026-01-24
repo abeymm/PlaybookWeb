@@ -156,6 +156,9 @@ export default function Home() {
             <Button variant="ghost" size="sm" asChild>
               <Link href="/for-courses">Courses</Link>
             </Button>
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/partners">Partners</Link>
+            </Button>
           </div>
           <div className="flex items-center gap-2">
             <Button size="sm" asChild className="hidden sm:inline-flex">
@@ -194,6 +197,9 @@ export default function Home() {
               </Button>
               <Button variant="ghost" size="sm" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
                 <Link href="/for-courses">Courses</Link>
+              </Button>
+              <Button variant="ghost" size="sm" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/partners">Partners</Link>
               </Button>
               <Separator className="my-2" />
               <Button size="sm" asChild onClick={() => setMobileMenuOpen(false)}>
@@ -397,6 +403,33 @@ export default function Home() {
         </div>
       </section>
 
+      {/* For Business Section */}
+      <section className="border-t border-border/40 bg-muted/30 px-6 py-12">
+        <div className="mx-auto max-w-4xl">
+          <BlurFade delay={0.1}>
+            <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
+              <div>
+                <p className="text-sm font-medium">For Business</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Partner with Golf Playbook for your course, tournament, or golf technology.
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                <Button variant="outline" size="sm" asChild>
+                  <Link href="/for-courses">For Courses</Link>
+                </Button>
+                <Button variant="outline" size="sm" asChild>
+                  <Link href="/for-tournaments">For Tournaments</Link>
+                </Button>
+                <Button variant="outline" size="sm" asChild>
+                  <Link href="/partners">For Partners</Link>
+                </Button>
+              </div>
+            </div>
+          </BlurFade>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="border-t border-border/40 px-6 py-12">
         <div className="mx-auto max-w-6xl">
@@ -412,6 +445,15 @@ export default function Home() {
               <span className="text-lg font-bold tracking-tight">Golf Playbook</span>
             </div>
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
+              <Link href="/for-courses" className="transition-colors hover:text-foreground">
+                Courses
+              </Link>
+              <Link href="/for-tournaments" className="transition-colors hover:text-foreground">
+                Tournaments
+              </Link>
+              <Link href="/partners" className="transition-colors hover:text-foreground">
+                Partners
+              </Link>
               <Link href="/privacy" className="transition-colors hover:text-foreground">
                 Privacy
               </Link>

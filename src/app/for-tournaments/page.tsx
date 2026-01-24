@@ -174,10 +174,15 @@ export default function TournamentsPage() {
     setError(null);
 
     try {
-      const response = await fetch("/api/tournament-lead", {
+      const response = await fetch("/api/submit-form", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formState),
+        body: JSON.stringify({
+          formType: "tournament-lead",
+          subject: `New Tournament Lead: ${formState.tournamentName} at ${formState.courseName}`,
+          email: formState.email,
+          formData: formState,
+        }),
       });
 
       if (!response.ok) {
@@ -586,6 +591,133 @@ export default function TournamentsPage() {
         </div>
       </section>
 
+      {/* Tournament Packages Section */}
+      <section className="px-6 py-20">
+        <div className="mx-auto max-w-6xl">
+          <BlurFade delay={0.1}>
+            <div className="text-center">
+              <Badge variant="secondary" className="mb-4">
+                Tournament Packages
+              </Badge>
+              <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+                Choose Your Experience Level
+              </h2>
+              <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+                From basic playbooks to tour-level precision—we have a package for every event.
+              </p>
+            </div>
+          </BlurFade>
+
+          <BlurFade delay={0.2}>
+            <div className="mt-12 grid gap-6 md:grid-cols-3">
+              {/* Starter Package */}
+              <Card className="relative overflow-hidden border-border/50">
+                <CardHeader>
+                  <CardTitle className="text-xl">Starter</CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    Essential playbooks for your event
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-3 text-sm">
+                    <li className="flex items-center gap-2">
+                      <CheckIcon className="h-4 w-4 text-primary" />
+                      Hole-by-hole strategy
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckIcon className="h-4 w-4 text-primary" />
+                      Tournament branding
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckIcon className="h-4 w-4 text-primary" />
+                      Wind compensation chart
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckIcon className="h-4 w-4 text-primary" />
+                      Scorecard included
+                    </li>
+                  </ul>
+                </CardContent>
+              </Card>
+
+              {/* Pro Package */}
+              <Card className="relative overflow-hidden border-primary/50 ring-1 ring-primary/20">
+                <div className="absolute right-4 top-4">
+                  <Badge className="bg-primary text-primary-foreground">Popular</Badge>
+                </div>
+                <CardHeader>
+                  <CardTitle className="text-xl">Pro</CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    Enhanced with daily pin positions
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-3 text-sm">
+                    <li className="flex items-center gap-2">
+                      <CheckIcon className="h-4 w-4 text-primary" />
+                      Everything in Starter
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckIcon className="h-4 w-4 text-primary" />
+                      Daily pin positions
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckIcon className="h-4 w-4 text-primary" />
+                      Green slope indicators
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckIcon className="h-4 w-4 text-primary" />
+                      Premium art style options
+                    </li>
+                  </ul>
+                </CardContent>
+              </Card>
+
+              {/* Tour Package */}
+              <Card className="relative overflow-hidden border-border/50">
+                <CardHeader>
+                  <CardTitle className="text-xl">Tour</CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    Professional-grade mapping
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-3 text-sm">
+                    <li className="flex items-center gap-2">
+                      <CheckIcon className="h-4 w-4 text-primary" />
+                      Everything in Pro
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckIcon className="h-4 w-4 text-primary" />
+                      Full green contour mapping
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckIcon className="h-4 w-4 text-primary" />
+                      Stimpmeter-adjusted breaks
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckIcon className="h-4 w-4 text-primary" />
+                      Digital companion app
+                    </li>
+                  </ul>
+                </CardContent>
+              </Card>
+            </div>
+          </BlurFade>
+
+          <BlurFade delay={0.3}>
+            <div className="mt-8 text-center">
+              <p className="text-sm text-muted-foreground">
+                Pro and Tour packages require partner integration.{" "}
+                <Link href="/partners" className="text-primary hover:underline">
+                  Learn about our partners
+                </Link>
+              </p>
+            </div>
+          </BlurFade>
+        </div>
+      </section>
+
       {/* FAQ Section */}
       <section className="border-y border-border/40 bg-muted/30 px-6 py-20">
         <div className="mx-auto max-w-3xl">
@@ -870,6 +1002,12 @@ export default function TournamentsPage() {
               <span className="text-lg font-bold tracking-tight">Golf Playbook</span>
             </div>
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
+              <Link href="/for-courses" className="transition-colors hover:text-foreground">
+                Courses
+              </Link>
+              <Link href="/partners" className="transition-colors hover:text-foreground">
+                Partners
+              </Link>
               <Link href="/privacy" className="transition-colors hover:text-foreground">
                 Privacy
               </Link>
