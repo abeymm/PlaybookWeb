@@ -57,15 +57,15 @@ const features = [
   },
   {
     Icon: PrinterIcon,
-    name: "Print Ready",
+    name: "Print Your Playbook",
     description:
-      "Export beautiful, professional playbooks to take on the course.",
+      "Order professional printed playbooks delivered to your door. From $14.99 each.",
     className: "col-span-1",
     background: (
       <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-transparent" />
     ),
-    href: APP_STORE_URL,
-    cta: "Get the App",
+    href: "/print",
+    cta: "See Pricing",
   },
   {
     Icon: Share2Icon,
@@ -148,9 +148,6 @@ export default function Home() {
               <Link href="#testimonials">Reviews</Link>
             </Button>
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/print">Print</Link>
-            </Button>
-            <Button variant="ghost" size="sm" asChild>
               <Link href="/for-tournaments">Tournaments</Link>
             </Button>
             <Button variant="ghost" size="sm" asChild>
@@ -188,9 +185,6 @@ export default function Home() {
               </Button>
               <Button variant="ghost" size="sm" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
                 <Link href="#testimonials">Reviews</Link>
-              </Button>
-              <Button variant="ghost" size="sm" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
-                <Link href="/print">Print</Link>
               </Button>
               <Button variant="ghost" size="sm" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
                 <Link href="/for-tournaments">Tournaments</Link>
@@ -445,6 +439,9 @@ export default function Home() {
               <span className="text-lg font-bold tracking-tight">Golf Playbook</span>
             </div>
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
+              <Link href="/print" className="transition-colors hover:text-foreground">
+                Print
+              </Link>
               <Link href="/for-courses" className="transition-colors hover:text-foreground">
                 Courses
               </Link>
