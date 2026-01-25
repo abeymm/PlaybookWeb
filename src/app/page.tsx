@@ -30,26 +30,19 @@ import { VideoCarousel } from "@/components/ui/video-carousel";
 const APP_STORE_URL = "https://apps.apple.com/us/app/golf-playbook/id1557162395";
 
 const videoSlides = [
-  {
-    src: "/appstore/preview1-web.mp4",
-    poster: "/appstore/3DView.png",
-    title: "True elliptical dispersion",
-    features: [
-      "Personalized to your skill level",
-      "Club recommendations for each shot",
-      "Wind, slope & altitude adjustments",
-    ],
-  },
-  {
-    src: "/appstore/preview2-web.mp4",
-    poster: "/appstore/Playbooks.png",
-    title: "Create & share playbooks",
-    features: [
-      "Flyover views from every tee",
-      "Hole-by-hole game plans",
-      "Share with unlimited friends",
-    ],
-  },
+  { src: "/appstore/preview1-web.mp4", poster: "/appstore/3DView.png" },
+  { src: "/appstore/preview2-web.mp4", poster: "/appstore/Playbooks.png" },
+];
+
+const appFeatures = [
+  "Risk zones shown in red, amber, green",
+  "True elliptical dispersion patterns",
+  "Auto-generated game plans you customize",
+  "Flyover animations from every tee",
+  "Share playbooks with friends",
+  "Quick bag setup from your 7-iron",
+  "Aim lines for your draw or fade",
+  "Wind, slope & altitude adjustments",
 ];
 
 const testimonials = [
@@ -283,7 +276,12 @@ export default function Home() {
 
           {/* 2. VIDEO CAROUSEL */}
           <BlurFade delay={0.3}>
-            <VideoCarousel slides={videoSlides} className="mt-4" />
+            <VideoCarousel
+              slides={videoSlides}
+              title="Everything you need to play smarter"
+              features={appFeatures}
+              className="mt-4"
+            />
           </BlurFade>
 
           {/* 3. PRINTED FORMAT - Coming Soon */}

@@ -3,24 +3,23 @@
 import { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { CheckIcon } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface VideoSlide {
   src: string;
   poster: string;
-  title: string;
-  features: string[];
 }
 
 interface VideoCarouselProps {
   slides: VideoSlide[];
+  title: string;
+  features: string[];
   className?: string;
 }
 
-export function VideoCarousel({ slides, className }: VideoCarouselProps) {
+export function VideoCarousel({ slides, title, features, className }: VideoCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
-
-  const currentSlide = slides[activeIndex];
 
   // Auto-advance when video ends
   const handleVideoEnded = () => {
@@ -54,18 +53,21 @@ export function VideoCarousel({ slides, className }: VideoCarouselProps) {
             playsInline
             onEnded={handleVideoEnded}
             className="h-[350px] w-auto rounded-xl md:h-[450px] lg:h-[500px]"
-            poster={currentSlide.poster}
+            poster={slides[activeIndex].poster}
           >
-            <source src={currentSlide.src} type="video/mp4" />
+            <source src={slides[activeIndex].src} type="video/mp4" />
           </video>
         </div>
 
         {/* Text Content - Side on desktop */}
         <div className="flex flex-col justify-center p-6 lg:w-[340px] lg:p-8">
           {/* Feature Text */}
-          <h3 className="text-xl font-bold md:text-2xl">{currentSlide.title}</h3>
+          <Badge variant="secondary" className="mb-3 w-fit text-xs">
+            Included Free
+          </Badge>
+          <h3 className="text-xl font-bold md:text-2xl">{title}</h3>
           <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
-            {currentSlide.features.map((feature, index) => (
+            {features.map((feature, index) => (
               <li key={index} className="flex items-center gap-2">
                 <CheckIcon className="h-4 w-4 shrink-0 text-primary" />
                 {feature}
