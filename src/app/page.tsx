@@ -113,12 +113,6 @@ export default function Home() {
           </Link>
           <div className="hidden items-center gap-6 md:flex">
             <Button variant="ghost" size="sm" asChild>
-              <Link href="#features">Features</Link>
-            </Button>
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="#testimonials">Reviews</Link>
-            </Button>
-            <Button variant="ghost" size="sm" asChild>
               <Link href="/for-tournaments">Tournaments</Link>
             </Button>
             <Button variant="ghost" size="sm" asChild>
@@ -151,12 +145,6 @@ export default function Home() {
         {mobileMenuOpen && (
           <div className="border-t border-border/40 bg-background/95 backdrop-blur-xl md:hidden">
             <div className="flex flex-col gap-2 px-6 py-4">
-              <Button variant="ghost" size="sm" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
-                <Link href="#features">Features</Link>
-              </Button>
-              <Button variant="ghost" size="sm" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
-                <Link href="#testimonials">Reviews</Link>
-              </Button>
               <Button variant="ghost" size="sm" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
                 <Link href="/for-tournaments">Tournaments</Link>
               </Button>
