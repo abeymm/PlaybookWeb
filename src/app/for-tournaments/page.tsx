@@ -245,10 +245,10 @@ export default function TournamentsPage() {
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                   <ShimmerButton
                     className="h-12 px-8"
-                    background="#FFBF00"
+                    background="#F5C518"
                     onClick={() => document.getElementById("quote")?.scrollIntoView({ behavior: "smooth" })}
                   >
-                    <span className="flex items-center gap-2 text-base font-semibold text-[#08401B]">
+                    <span className="flex items-center gap-2 text-base font-semibold text-[#000000]">
                       Request a Quote
                       <ArrowRightIcon className="h-4 w-4" />
                     </span>
@@ -523,10 +523,10 @@ export default function TournamentsPage() {
             <div className="mt-12 text-center">
               <ShimmerButton
                 className="h-12 px-8"
-                background="#FFBF00"
+                background="#F5C518"
                 onClick={() => document.getElementById("quote")?.scrollIntoView({ behavior: "smooth" })}
               >
-                <span className="flex items-center gap-2 text-base font-semibold text-[#08401B]">
+                <span className="flex items-center gap-2 text-base font-semibold text-[#000000]">
                   Request a Quote
                   <ArrowRightIcon className="h-4 w-4" />
                 </span>

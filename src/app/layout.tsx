@@ -32,7 +32,28 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                var stored = localStorage.getItem('theme');
+                var mq = window.matchMedia('(prefers-color-scheme: dark)');
+                var isDark = stored ? stored === 'dark' : mq.matches;
+                document.documentElement.classList.toggle('dark', isDark);
+                if (!stored) {
+                  mq.addEventListener('change', function(e) {
+                    if (!localStorage.getItem('theme')) {
+                      document.documentElement.classList.toggle('dark', e.matches);
+                    }
+                  });
+                }
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className={`${inter.variable} font-sans antialiased`}>
         <AmplifyProvider>{children}</AmplifyProvider>
       </body>

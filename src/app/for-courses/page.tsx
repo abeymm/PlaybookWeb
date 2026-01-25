@@ -273,10 +273,10 @@ export default function ForCoursesPage() {
               <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <ShimmerButton
                   className="h-12 px-8"
-                  background="#FFBF00"
+                  background="#F5C518"
                   onClick={() => document.getElementById("lead-form")?.scrollIntoView({ behavior: "smooth" })}
                 >
-                  <span className="flex items-center gap-2 text-base font-semibold text-[#08401B]">
+                  <span className="flex items-center gap-2 text-base font-semibold text-[#000000]">
                     Request a Demo
                     <ArrowRightIcon className="h-4 w-4" />
                   </span>
@@ -645,10 +645,10 @@ export default function ForCoursesPage() {
               <CardFooter>
                 <ShimmerButton
                   className="h-12 w-full"
-                  background="#FFBF00"
+                  background="#F5C518"
                   onClick={() => document.getElementById("lead-form")?.scrollIntoView({ behavior: "smooth" })}
                 >
-                  <span className="flex items-center justify-center gap-2 text-base font-semibold text-[#08401B]">
+                  <span className="flex items-center justify-center gap-2 text-base font-semibold text-[#000000]">
                     Request a Demo
                     <ArrowRightIcon className="h-4 w-4" />
                   </span>

@@ -90,72 +90,127 @@
     transform: translateY(0);}}}
 
 :root {
+  /* ===== Brand Colors (from GolfPlaybook_Theme_System.md) ===== */
+  --color-primary-gold: #F5C518;
+  --color-fairway-green: #4CAF50;
+  --color-wind-pink: #FF6B9D;
+
+  /* ===== Semantic Colors ===== */
+  --color-success: #4CAF50;
+  --color-warning: #FF9500;
+  --color-error: #FF3B30;
+  --color-info: #007AFF;
+  --color-risk-high: #FF3B30;
+  --color-risk-low: #4CAF50;
+
+  /* ===== Tailwind Theme Variables ===== */
   --radius: 0.625rem;
-  --background: oklch(0.99 0.005 145);
-  --foreground: oklch(0.18 0.05 145);
+
+  /* Warm cream background (#F5F5F0) */
+  --background: oklch(0.970 0.006 100);
+  --foreground: oklch(0.15 0.01 0);
+
+  /* Pure white cards */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.05 145);
+  --card-foreground: oklch(0.15 0.01 0);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.05 145);
-  --primary: oklch(0.82 0.17 86);
-  --primary-foreground: oklch(0.18 0.05 145);
-  --secondary: oklch(0.95 0.02 145);
-  --secondary-foreground: oklch(0.25 0.06 145);
-  --muted: oklch(0.96 0.01 145);
-  --muted-foreground: oklch(0.5 0.03 145);
-  --accent: oklch(0.93 0.03 145);
-  --accent-foreground: oklch(0.25 0.06 145);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.15 0.01 0);
+
+  /* Primary Gold (#F5C518) */
+  --primary: oklch(0.846 0.176 86);
+  --primary-foreground: oklch(0 0 0);
+
+  /* Secondary - warm gray */
+  --secondary: oklch(0.94 0.006 100);
+  --secondary-foreground: oklch(0.25 0.01 0);
+
+  /* Muted - subtle warm tint */
+  --muted: oklch(0.95 0.005 100);
+  --muted-foreground: oklch(0.45 0.01 0);
+
+  /* Accent */
+  --accent: oklch(0.92 0.006 100);
+  --accent-foreground: oklch(0.25 0.01 0);
+
+  /* Destructive - iOS system red (#FF3B30) */
+  --destructive: oklch(0.628 0.258 27);
+
+  /* Borders - warm gray (#E5E5E0) */
+  --border: oklch(0.91 0.005 100);
+  --input: oklch(0.91 0.005 100);
+  --ring: oklch(0.846 0.176 86);
+
+  /* Chart colors */
+  --chart-1: oklch(0.846 0.176 86);
+  --chart-2: oklch(0.648 0.164 145);
+  --chart-3: oklch(0.628 0.258 27);
+  --chart-4: oklch(0.65 0.2 250);
+  --chart-5: oklch(0.7 0.15 320);
+
+  /* Sidebar */
+  --sidebar: oklch(0.985 0.003 100);
+  --sidebar-foreground: oklch(0.15 0.01 0);
+  --sidebar-primary: oklch(0.15 0.01 0);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-accent: oklch(0.95 0.005 100);
+  --sidebar-accent-foreground: oklch(0.25 0.01 0);
+  --sidebar-border: oklch(0.91 0.005 100);
+  --sidebar-ring: oklch(0.846 0.176 86);
 }
 
 .dark {
-  --background: oklch(0.22 0.06 145);
-  --foreground: oklch(0.96 0.02 86);
-  --card: oklch(0.26 0.05 145);
-  --card-foreground: oklch(0.96 0.02 86);
-  --popover: oklch(0.26 0.05 145);
-  --popover-foreground: oklch(0.96 0.02 86);
-  --primary: oklch(0.82 0.17 86);
-  --primary-foreground: oklch(0.18 0.05 145);
-  --secondary: oklch(0.30 0.04 145);
-  --secondary-foreground: oklch(0.96 0.02 86);
-  --muted: oklch(0.30 0.04 145);
-  --muted-foreground: oklch(0.70 0.03 86);
-  --accent: oklch(0.30 0.04 145);
-  --accent-foreground: oklch(0.96 0.02 86);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(0.82 0.17 86 / 15%);
-  --input: oklch(0.82 0.17 86 / 20%);
-  --ring: oklch(0.82 0.17 86);
-  --chart-1: oklch(0.82 0.17 86);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.22 0.06 145);
-  --sidebar-foreground: oklch(0.96 0.02 86);
-  --sidebar-primary: oklch(0.82 0.17 86);
-  --sidebar-primary-foreground: oklch(0.18 0.05 145);
-  --sidebar-accent: oklch(0.30 0.04 145);
-  --sidebar-accent-foreground: oklch(0.96 0.02 86);
-  --sidebar-border: oklch(0.82 0.17 86 / 15%);
-  --sidebar-ring: oklch(0.82 0.17 86);
+  /* Dark theme aligned with iOS (from GolfPlaybook_Theme_System.md) */
+
+  /* Background Primary (#000000) */
+  --background: oklch(0 0 0);
+  --foreground: oklch(1 0 0);
+
+  /* Background Secondary (#1C1C1E) */
+  --card: oklch(0.20 0.005 270);
+  --card-foreground: oklch(1 0 0);
+  --popover: oklch(0.20 0.005 270);
+  --popover-foreground: oklch(1 0 0);
+
+  /* Primary Gold (#F5C518) - same in dark */
+  --primary: oklch(0.846 0.176 86);
+  --primary-foreground: oklch(0 0 0);
+
+  /* Background Tertiary (#2C2C2E) */
+  --secondary: oklch(0.28 0.005 270);
+  --secondary-foreground: oklch(0.93 0.01 0);
+
+  /* Muted surfaces */
+  --muted: oklch(0.28 0.005 270);
+  --muted-foreground: oklch(0.65 0.01 0);
+
+  /* Accent */
+  --accent: oklch(0.28 0.005 270);
+  --accent-foreground: oklch(0.93 0.01 0);
+
+  /* Destructive - iOS dark system red (#FF453A) */
+  --destructive: oklch(0.65 0.24 25);
+
+  /* Borders - subtle separator (#38383A) */
+  --border: oklch(0.32 0.005 270);
+  --input: oklch(0.32 0.005 270);
+  --ring: oklch(0.846 0.176 86);
+
+  /* Chart colors */
+  --chart-1: oklch(0.846 0.176 86);
+  --chart-2: oklch(0.696 0.17 162);
+  --chart-3: oklch(0.769 0.188 70);
+  --chart-4: oklch(0.627 0.265 304);
+  --chart-5: oklch(0.645 0.246 16);
+
+  /* Sidebar */
+  --sidebar: oklch(0 0 0);
+  --sidebar-foreground: oklch(1 0 0);
+  --sidebar-primary: oklch(0.846 0.176 86);
+  --sidebar-primary-foreground: oklch(0 0 0);
+  --sidebar-accent: oklch(0.28 0.005 270);
+  --sidebar-accent-foreground: oklch(0.93 0.01 0);
+  --sidebar-border: oklch(0.32 0.005 270);
+  --sidebar-ring: oklch(0.846 0.176 86);
 }
 
 @layer base {

@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { BeforeAfterSlider } from "@/components/ui/before-after-slider";
 import { VideoCarousel } from "@/components/ui/video-carousel";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const APP_STORE_URL = "https://apps.apple.com/us/app/golf-playbook/id1557162395";
 
@@ -86,7 +87,7 @@ export default function Home() {
       <Particles
         className="absolute inset-0 -z-10"
         quantity={40}
-        color="#FFBF00"
+        color="#F5C518"
         ease={80}
         refresh
       />
@@ -116,6 +117,7 @@ export default function Home() {
             </Button>
           </div>
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <Button size="sm" asChild className="hidden sm:inline-flex">
               <Link href="/login">Sign In</Link>
             </Button>
@@ -194,8 +196,8 @@ export default function Home() {
 
           <BlurFade delay={0.4}>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <ShimmerButton className="h-12 px-8" background="#FFBF00" onClick={handleAppStoreClick}>
-                <span className="flex items-center gap-2 text-base font-semibold text-[#08401B]">
+              <ShimmerButton className="h-12 px-8" background="#F5C518" onClick={handleAppStoreClick}>
+                <span className="flex items-center gap-2 text-base font-semibold text-[#000000]">
                   Download for iOS
                   <ArrowRightIcon className="h-4 w-4" />
                 </span>
@@ -374,8 +376,8 @@ export default function Home() {
                       It&apos;s free on the App Store.
                     </p>
                     <div className="mt-8">
-                      <ShimmerButton className="h-12 px-8" background="#FFBF00" onClick={handleAppStoreClick}>
-                        <span className="flex items-center gap-2 text-base font-semibold text-[#08401B]">
+                      <ShimmerButton className="h-12 px-8" background="#F5C518" onClick={handleAppStoreClick}>
+                        <span className="flex items-center gap-2 text-base font-semibold text-[#000000]">
                           Get Started Free
                           <ArrowRightIcon className="h-4 w-4" />
                         </span>
