@@ -10,15 +10,10 @@ import { Separator } from "@/components/ui/separator";
 import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { BlurFade } from "@/components/ui/blur-fade";
-import { BentoCard, BentoGrid } from "@/components/ui/bento-grid";
 import { Marquee } from "@/components/ui/marquee";
 import { WordRotate } from "@/components/ui/word-rotate";
 import { Particles } from "@/components/ui/particles";
 import {
-  MapIcon,
-  PrinterIcon,
-  Share2Icon,
-  BrainIcon,
   TargetIcon,
   TrendingDownIcon,
   ArrowRightIcon,
@@ -26,58 +21,34 @@ import {
   StarIcon,
   MenuIcon,
   XIcon,
+  ShieldIcon,
+  BookOpenIcon,
 } from "lucide-react";
+import { BeforeAfterSlider } from "@/components/ui/before-after-slider";
+import { VideoCarousel } from "@/components/ui/video-carousel";
 
 const APP_STORE_URL = "https://apps.apple.com/us/app/golf-playbook/id1557162395";
 
-const features = [
+const videoSlides = [
   {
-    Icon: MapIcon,
-    name: "Course Strategy",
-    description:
-      "Map out every hole with detailed strategies for tee shots, approaches, and putting lines.",
-    className: "col-span-1 md:col-span-2",
-    background: (
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent" />
-    ),
-    href: APP_STORE_URL,
-    cta: "Get the App",
+    src: "/appstore/preview1-web.mp4",
+    poster: "/appstore/3DView.png",
+    title: "True elliptical dispersion",
+    features: [
+      "Personalized to your skill level",
+      "Club recommendations for each shot",
+      "Wind, slope & altitude adjustments",
+    ],
   },
   {
-    Icon: BrainIcon,
-    name: "AI Caddie",
-    description:
-      "Get intelligent club recommendations based on your skill level and conditions.",
-    className: "col-span-1",
-    background: (
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent" />
-    ),
-    href: APP_STORE_URL,
-    cta: "Get the App",
-  },
-  {
-    Icon: PrinterIcon,
-    name: "Print Your Playbook",
-    description:
-      "Order professional printed playbooks delivered to your door. From $14.99 each.",
-    className: "col-span-1",
-    background: (
-      <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-transparent" />
-    ),
-    href: "/print",
-    cta: "See Pricing",
-  },
-  {
-    Icon: Share2Icon,
-    name: "Share & Discover",
-    description:
-      "Share strategies with friends or discover playbooks from other golfers.",
-    className: "col-span-1 md:col-span-2",
-    background: (
-      <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent" />
-    ),
-    href: APP_STORE_URL,
-    cta: "Get the App",
+    src: "/appstore/preview2-web.mp4",
+    poster: "/appstore/Playbooks.png",
+    title: "Create & share playbooks",
+    features: [
+      "Flyover views from every tee",
+      "Hole-by-hole game plans",
+      "Share with unlimited friends",
+    ],
   },
 ];
 
@@ -275,31 +246,78 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="px-6 py-20 md:py-24">
+      {/* Features Bento Grid Section */}
+      <section id="features" className="border-y border-border/40 bg-muted/30 px-6 py-20 md:py-24">
         <div className="mx-auto max-w-6xl">
           <BlurFade delay={0.1}>
             <div className="text-center">
               <Badge variant="secondary" className="mb-4">
-                Features
+                What Makes Us Different
               </Badge>
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                Everything you need to play smarter
+                Not just another GPS app
               </h2>
               <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-                Golf Playbook combines course strategy, AI insights, and
-                beautiful design to help you make better decisions on every hole.
+                Five features you won&apos;t find anywhere else
               </p>
             </div>
           </BlurFade>
 
+          {/* 1. RISK COLOR-CODING - Full width with slider */}
           <BlurFade delay={0.2}>
-            <BentoGrid className="mt-12">
-              {features.map((feature) => (
-                <BentoCard key={feature.name} {...feature} />
-              ))}
-            </BentoGrid>
+            <div className="mt-12 overflow-hidden rounded-2xl border border-border/50 bg-background">
+              <div className="flex flex-col md:h-[420px] md:flex-row md:items-center">
+                <div className="p-6 md:w-1/3 md:p-8">
+                  <div className="mb-2 flex items-center gap-2">
+                    <ShieldIcon className="h-5 w-5 text-red-400" />
+                    <span className="text-xs font-medium uppercase tracking-wider text-red-400">Risk Color-Coding</span>
+                  </div>
+                  <h3 className="text-2xl font-bold">See danger instantly</h3>
+                  <p className="mt-2 text-muted-foreground">
+                    Red, amber, green zones show where trouble lurks. The only GPS app with color-coded risk visualization.
+                  </p>
+                  <p className="mt-2 text-sm font-medium text-primary">Patent Pending</p>
+                </div>
+                <div className="h-[280px] p-4 md:h-full md:w-2/3 md:p-6">
+                  <BeforeAfterSlider
+                    beforeImage="/images/risk-risky.png"
+                    afterImage="/images/risk-smart.png"
+                    beforeLabel="Risky"
+                    afterLabel="Smart"
+                    beforeAlt="Risky approach"
+                    afterAlt="Smart approach"
+                    className="rounded-xl shadow-lg"
+                  />
+                </div>
+              </div>
+            </div>
           </BlurFade>
+
+          {/* 2. VIDEO CAROUSEL */}
+          <BlurFade delay={0.3}>
+            <VideoCarousel slides={videoSlides} className="mt-4" />
+          </BlurFade>
+
+          {/* 3. PRINTED FORMAT - Coming Soon */}
+          <BlurFade delay={0.4}>
+            <div className="mt-4 overflow-hidden rounded-2xl border border-border/50 bg-background p-6">
+              <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                    <BookOpenIcon className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Printed yardage books</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Tournament-ready playbooks delivered to your door
+                    </p>
+                  </div>
+                </div>
+                <Badge variant="secondary" className="text-xs">Coming Soon</Badge>
+              </div>
+            </div>
+          </BlurFade>
+
         </div>
       </section>
 
