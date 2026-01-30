@@ -4,7 +4,7 @@
     "details": [
       {
         "appID": "8GV2L5AN5U.golf.playbook",
-        "paths": ["/p/*"]
+        "paths": ["/public/*", "/protected/*", "/private/*"]
       }
     ]
   }
