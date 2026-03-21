@@ -169,7 +169,7 @@ export default function Home() {
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
                 </span>
                 <AnimatedShinyText className="text-sm font-medium">
-                  Now available on iOS App Store
+                  Free on the App Store
                 </AnimatedShinyText>
               </div>
             </div>
@@ -189,8 +189,8 @@ export default function Home() {
 
           <BlurFade delay={0.3}>
             <p className="mx-auto mt-6 max-w-2xl text-center text-lg text-muted-foreground md:text-xl">
-              Create personalized course strategies, get AI-powered club recommendations,
-              and print professional playbooks. Turn your practice into lower scores.
+              Most golf apps charge $150/year for GPS and yardages. We give you that plus
+              risk zones, AI Caddie, and course strategy — free. Pro extras like printed playbooks when you want them.
             </p>
           </BlurFade>
 
@@ -360,6 +360,63 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Why It's Free Section */}
+      <section className="px-6 py-20 md:py-24">
+        <div className="mx-auto max-w-4xl">
+          <BlurFade delay={0.1}>
+            <div className="text-center">
+              <Badge variant="secondary" className="mb-4">
+                Our Mission
+              </Badge>
+              <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+                Why is Golf Playbook free?
+              </h2>
+              <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
+                Golf is a beautiful game. The core strategy tools shouldn&apos;t be locked behind a paywall.
+              </p>
+            </div>
+          </BlurFade>
+
+          <BlurFade delay={0.2}>
+            <div className="mt-12 grid gap-6 md:grid-cols-3">
+              <Card className="border-border/50">
+                <CardContent className="p-6 text-center">
+                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
+                    <span className="text-2xl">🗺️</span>
+                  </div>
+                  <h3 className="mt-4 font-semibold">We Built Our Own Data</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Most golf apps license a third-party database and wrap GPS around it. We built our course intelligence from open terrain data — every risk zone, every contour, from the ground up.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border-border/50">
+                <CardContent className="p-6 text-center">
+                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
+                    <span className="text-2xl">🤖</span>
+                  </div>
+                  <h3 className="mt-4 font-semibold">AI Runs On Your Device</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Our AI Caddie processes your game data locally — no expensive cloud servers. That means the features that cost others $200+/year cost us almost nothing to deliver.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border-border/50">
+                <CardContent className="p-6 text-center">
+                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
+                    <span className="text-2xl">🎯</span>
+                  </div>
+                  <h3 className="mt-4 font-semibold">Strategy for Everyone</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    The college kid who can&apos;t afford Arccos. The weekend player who won&apos;t pay for 18Birdies Premium. They deserve real course strategy tools — not a stripped-down free tier. AI and open source made it possible.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </BlurFade>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section id="download" className="px-6 py-20 md:py-24">
         <div className="mx-auto max-w-4xl">
@@ -369,11 +426,11 @@ export default function Home() {
                 <div className="grid gap-8 md:grid-cols-2 md:gap-12">
                   <div>
                     <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                      Ready to lower your scores?
+                      Ready to play smarter?
                     </h2>
                     <p className="mt-4 text-muted-foreground">
-                      Download Golf Playbook today and start playing with a plan.
-                      It&apos;s free on the App Store.
+                      Full strategy. No subscription. No catch. Risk zones, AI Caddie,
+                      GPS, shot tracking — free. Premium extras like printed playbooks when you&apos;re ready.
                     </p>
                     <div className="mt-8">
                       <ShimmerButton className="h-12 px-8" background="#F5C518" onClick={handleAppStoreClick}>
