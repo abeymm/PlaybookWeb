@@ -12,8 +12,8 @@ interface VideoSlide {
 
 interface VideoCarouselProps {
   slides: VideoSlide[];
-  title: string;
-  features: string[];
+  title?: string;
+  features?: string[];
   className?: string;
 }
 
@@ -59,24 +59,41 @@ export function VideoCarousel({ slides, title, features, className }: VideoCarou
           </video>
         </div>
 
-        {/* Text Content - Side on desktop */}
-        <div className="flex flex-col justify-center p-6 lg:w-[340px] lg:p-8">
-          {/* Feature Text */}
-          <Badge variant="secondary" className="mb-3 w-fit text-xs">
-            Included Free
-          </Badge>
-          <h3 className="text-xl font-bold md:text-2xl">{title}</h3>
-          <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
-            {features.map((feature, index) => (
-              <li key={index} className="flex items-center gap-2">
-                <CheckIcon className="h-4 w-4 shrink-0 text-primary" />
-                {feature}
-              </li>
-            ))}
-          </ul>
-
-          {/* Dot Indicators */}
-          <div className="mt-6 flex gap-2">
+        {/* Text Content - Side on desktop (only if title/features provided) */}
+        {(title || features) ? (
+          <div className="flex flex-col justify-center p-6 lg:w-[340px] lg:p-8">
+            <Badge variant="secondary" className="mb-3 w-fit text-xs">
+              Included Free
+            </Badge>
+            {title && <h3 className="text-xl font-bold md:text-2xl">{title}</h3>}
+            {features && (
+              <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
+                {features.map((feature, index) => (
+                  <li key={index} className="flex items-center gap-2">
+                    <CheckIcon className="h-4 w-4 shrink-0 text-primary" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            )}
+            <div className="mt-6 flex gap-2">
+              {slides.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className={cn(
+                    "h-2.5 w-2.5 rounded-full transition-all duration-300",
+                    index === activeIndex
+                      ? "w-8 bg-primary"
+                      : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                  )}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center gap-2 p-4">
             {slides.map((_, index) => (
               <button
                 key={index}
@@ -91,7 +108,7 @@ export function VideoCarousel({ slides, title, features, className }: VideoCarou
               />
             ))}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

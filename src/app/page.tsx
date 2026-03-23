@@ -22,7 +22,6 @@ import {
   MenuIcon,
   XIcon,
   ShieldIcon,
-  BookOpenIcon,
 } from "lucide-react";
 import { BeforeAfterSlider } from "@/components/ui/before-after-slider";
 import { VideoCarousel } from "@/components/ui/video-carousel";
@@ -33,17 +32,6 @@ const APP_STORE_URL = "https://apps.apple.com/us/app/golf-playbook/id1557162395"
 const videoSlides = [
   { src: "/appstore/preview1-web.mp4", poster: "/appstore/3DView.png" },
   { src: "/appstore/preview2-web.mp4", poster: "/appstore/Playbooks.png" },
-];
-
-const appFeatures = [
-  "Risk zones shown in red, amber, green",
-  "True elliptical dispersion patterns",
-  "Auto-generated game plans you customize",
-  "Flyover animations from every tee",
-  "Share playbooks with friends",
-  "Quick bag setup from your 7-iron",
-  "Aim lines for your draw or fade",
-  "Wind, slope & altitude adjustments",
 ];
 
 const testimonials = [
@@ -189,7 +177,7 @@ export default function Home() {
 
           <BlurFade delay={0.3}>
             <p className="mx-auto mt-6 max-w-2xl text-center text-lg text-muted-foreground md:text-xl">
-              Most golf apps charge $150/year for GPS and yardages. We give you that plus
+              Most golf apps charge $$$ for GPS and yardages. We give you that plus
               risk zones, AI Caddie, and course strategy — free. Pro extras like printed playbooks when you want them.
             </p>
           </BlurFade>
@@ -241,7 +229,7 @@ export default function Home() {
                 Not just another GPS app
               </h2>
               <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-                Five features you won&apos;t find anywhere else
+                Features you won&apos;t find anywhere else — free or paid
               </p>
             </div>
           </BlurFade>
@@ -276,36 +264,108 @@ export default function Home() {
             </div>
           </BlurFade>
 
-          {/* 2. VIDEO CAROUSEL */}
+          {/* 2. COMPARISON TABLE */}
           <BlurFade delay={0.3}>
-            <VideoCarousel
-              slides={videoSlides}
-              title="Everything you need to play smarter"
-              features={appFeatures}
-              className="mt-4"
-            />
-          </BlurFade>
-
-          {/* 3. PRINTED FORMAT - Coming Soon */}
-          <BlurFade delay={0.4}>
-            <div className="mt-4 overflow-hidden rounded-2xl border border-border/50 bg-background p-6">
-              <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-                <div className="flex items-center gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                    <BookOpenIcon className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">Printed yardage books</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Tournament-ready playbooks delivered to your door
-                    </p>
-                  </div>
-                </div>
-                <Badge variant="secondary" className="text-xs">Coming Soon</Badge>
+            <div className="mt-8 overflow-hidden rounded-2xl border border-border/50 bg-background">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border/50">
+                      <th className="sticky left-0 z-10 min-w-[180px] bg-background px-4 py-3 text-left font-semibold md:px-6">Feature</th>
+                      <th className="px-3 py-3 text-center font-semibold text-[#08401B] dark:text-primary md:px-6">
+                        Golf Playbook
+                        <span className="block text-xs font-normal text-[#08401B]/80 dark:text-primary/80">Free</span>
+                      </th>
+                      <th className="px-3 py-3 text-center font-semibold text-muted-foreground md:px-6">
+                        Arccos
+                        <span className="block text-xs font-normal">$$$ + sensors</span>
+                      </th>
+                      <th className="px-3 py-3 text-center font-semibold text-muted-foreground md:px-6">
+                        18Birdies
+                        <span className="block text-xs font-normal">$$</span>
+                      </th>
+                      <th className="px-3 py-3 text-center font-semibold text-muted-foreground md:px-6">
+                        Grint
+                        <span className="block text-xs font-normal">$$</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {([
+                      { feature: "US Course Coverage", gp: "Top ~50%", arccos: "100%", birdies: "100%", grint: "100%", tag: "Request a course" },
+                      { feature: "GPS & Yardages", gp: "yes", arccos: "yes", birdies: "yes", grint: "yes", tag: "" },
+                      { feature: "Color-Coded Risk Zones (R/A/G)", gp: "yes", arccos: "no", birdies: "no", grint: "no", tag: "Nowhere else" },
+                      { feature: "Weather-Compensated Dispersion", gp: "yes", arccos: "no", birdies: "no", grint: "no", tag: "Nowhere else" },
+                      { feature: "AI Caddie & Club Recommendations", gp: "yes", arccos: "paid", birdies: "yes", grint: "no", tag: "" },
+                      { feature: "Personal Updatable Playbooks", gp: "yes", arccos: "no", birdies: "no", grint: "no", tag: "Nowhere else" },
+                      { feature: "Weather Simulation", gp: "yes", arccos: "no", birdies: "no", grint: "no", tag: "Nowhere else" },
+                      { feature: "Wind, Slope & Altitude Adjust", gp: "yes", arccos: "yes", birdies: "paid", grint: "no", tag: "" },
+                      { feature: "Aim Lines (Draw/Fade)", gp: "yes", arccos: "no", birdies: "no", grint: "no", tag: "Nowhere else" },
+                      { feature: "Printed Strategy Guides", gp: "soon", arccos: "no", birdies: "no", grint: "no", tag: "" },
+                    ] as { feature: string; gp: string; arccos: string; birdies: string; grint: string; tag: string }[]).map((row) => (
+                      <tr key={row.feature} className="border-b border-border/30 last:border-0">
+                        <td className="sticky left-0 z-10 bg-background px-4 py-3 md:px-6">
+                          <span>{row.feature}</span>
+                          {row.tag && (
+                            <span className="ml-2 inline-block rounded-full bg-[#08401B]/10 px-2 py-0.5 text-[10px] font-medium text-[#08401B] dark:bg-primary/10 dark:text-primary">
+                              {row.tag}
+                            </span>
+                          )}
+                        </td>
+                        {[
+                          { val: row.gp, isPrimary: true },
+                          { val: row.arccos, isPrimary: false, hideClass: "" },
+                          { val: row.birdies, isPrimary: false, hideClass: "" },
+                          { val: row.grint, isPrimary: false, hideClass: "" },
+                        ].map((col, ci) => (
+                          <td key={ci} className={`px-3 py-3 text-center md:px-6 ${col.hideClass || ""}`}>
+                            {col.val === "yes" && <CheckIcon className={`mx-auto h-5 w-5 ${col.isPrimary ? "text-[#08401B] dark:text-primary" : "text-muted-foreground/50"}`} />}
+                            {col.val === "no" && <XIcon className="mx-auto h-4 w-4 text-muted-foreground/30" />}
+                            {col.val === "paid" && <span className="text-xs text-muted-foreground">Paid</span>}
+                            {col.val === "soon" && <span className="text-xs text-muted-foreground">Soon</span>}
+                            {!["yes", "no", "paid", "soon"].includes(col.val) && (
+                              <span className={`text-xs font-medium ${col.isPrimary ? "text-[#08401B] dark:text-primary" : "text-muted-foreground"}`}>
+                                {col.val}
+                                {col.isPrimary && col.val.includes("%") && (
+                                  <span className="block text-[10px] font-normal text-[#08401B]/60 dark:text-primary/60">Growing</span>
+                                )}
+                              </span>
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </BlurFade>
 
+        </div>
+      </section>
+
+      {/* See It In Action - Video Section */}
+      <section className="px-6 py-20 md:py-24">
+        <div className="mx-auto max-w-6xl">
+          <BlurFade delay={0.1}>
+            <div className="text-center">
+              <Badge variant="secondary" className="mb-4">
+                See It In Action
+              </Badge>
+              <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+                Watch the flyover
+              </h2>
+              <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+                3D course preview from every tee — plan your round before you play
+              </p>
+            </div>
+          </BlurFade>
+          <BlurFade delay={0.2}>
+            <VideoCarousel
+              slides={videoSlides}
+              className="mt-12"
+            />
+          </BlurFade>
         </div>
       </section>
 
