@@ -32,7 +32,7 @@ export default function TermsPage() {
       <main className="mx-auto max-w-3xl px-6 py-12">
         <h1 className="text-3xl font-bold tracking-tight">Terms of Service</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Last Updated: January 2026 | Effective Date: January 2026
+          Last Updated: March 2026 | Effective Date: March 2026
         </p>
         <p className="mt-4 text-muted-foreground">
           Welcome to Golf Playbook, operated by Expert Craft Inc. (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;).
@@ -90,12 +90,16 @@ export default function TermsPage() {
                 round tracking, and personalized notes for golf courses.
               </li>
               <li>
-                <strong>AI Caddie:</strong> AI-powered club recommendations and course strategy suggestions based
-                on your playing data. These recommendations are advisory only and should not be considered
-                professional golf instruction.
+                <strong>AI Caddie:</strong> On-device club recommendations and course strategy suggestions powered
+                by Apple Intelligence. Processes your data locally on your device. These recommendations are
+                advisory only and should not be considered professional golf instruction.
               </li>
               <li>
                 <strong>Print Products:</strong> Physical printed playbooks that you can order for your favorite courses.
+              </li>
+              <li>
+                <strong>Cloud Backup:</strong> Automatic backup of your playbooks, rounds, and settings to our
+                cloud servers. Backups are encrypted and enable data recovery across devices.
               </li>
               <li>
                 <strong>Community Features:</strong> Ability to share playbooks with other users and discover

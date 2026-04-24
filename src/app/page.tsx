@@ -11,28 +11,23 @@ import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { Marquee } from "@/components/ui/marquee";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { WordRotate } from "@/components/ui/word-rotate";
 import { Particles } from "@/components/ui/particles";
 import {
   TargetIcon,
-  TrendingDownIcon,
   ArrowRightIcon,
   CheckIcon,
   StarIcon,
   MenuIcon,
   XIcon,
   ShieldIcon,
+  SmartphoneIcon,
 } from "lucide-react";
 import { BeforeAfterSlider } from "@/components/ui/before-after-slider";
-import { VideoCarousel } from "@/components/ui/video-carousel";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const APP_STORE_URL = "https://apps.apple.com/us/app/golf-playbook/id1557162395";
-
-const videoSlides = [
-  { src: "/appstore/preview1-web.mp4", poster: "/appstore/3DView.png" },
-  { src: "/appstore/preview2-web.mp4", poster: "/appstore/Playbooks.png" },
-];
 
 const testimonials = [
   {
@@ -54,12 +49,10 @@ const testimonials = [
 ];
 
 const benefits = [
-  "Unlimited playbook creation",
-  "AI-powered club recommendations",
-  "Professional print exports",
-  "Share with unlimited friends",
-  "Access community playbooks",
-  "Works offline on iOS",
+  "Unlimited playbooks",
+  "AI Caddie",
+  "Works offline",
+  "Risk zones on every hole",
 ];
 
 export default function Home() {
@@ -93,26 +86,22 @@ export default function Home() {
             />
             <span className="text-xl font-bold tracking-tight">Golf Playbook</span>
           </Link>
-          <div className="hidden items-center gap-6 md:flex">
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/for-tournaments">Tournaments</Link>
-            </Button>
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/for-courses">Courses</Link>
-            </Button>
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/partners">Partners</Link>
-            </Button>
-          </div>
           <div className="flex items-center gap-2">
             <ThemeToggle />
             <Button size="sm" asChild className="hidden sm:inline-flex">
               <Link href="/login">Sign In</Link>
             </Button>
+            <ShimmerButton
+              className="hidden h-9 px-4 sm:inline-flex"
+              background="#F5C518"
+              onClick={handleAppStoreClick}
+            >
+              <span className="text-sm font-semibold text-[#000000]">Download</span>
+            </ShimmerButton>
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden"
+              className="sm:hidden"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? (
@@ -126,21 +115,18 @@ export default function Home() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="border-t border-border/40 bg-background/95 backdrop-blur-xl md:hidden">
+          <div className="border-t border-border/40 bg-background/95 backdrop-blur-xl sm:hidden">
             <div className="flex flex-col gap-2 px-6 py-4">
-              <Button variant="ghost" size="sm" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
-                <Link href="/for-tournaments">Tournaments</Link>
-              </Button>
-              <Button variant="ghost" size="sm" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
-                <Link href="/for-courses">Courses</Link>
-              </Button>
-              <Button variant="ghost" size="sm" className="justify-start" asChild onClick={() => setMobileMenuOpen(false)}>
-                <Link href="/partners">Partners</Link>
-              </Button>
-              <Separator className="my-2" />
               <Button size="sm" asChild onClick={() => setMobileMenuOpen(false)}>
                 <Link href="/login">Sign In</Link>
               </Button>
+              <ShimmerButton
+                className="h-9 w-full"
+                background="#F5C518"
+                onClick={() => { setMobileMenuOpen(false); handleAppStoreClick(); }}
+              >
+                <span className="text-sm font-semibold text-[#000000]">Download</span>
+              </ShimmerButton>
             </div>
           </div>
         )}
@@ -157,7 +143,7 @@ export default function Home() {
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
                 </span>
                 <AnimatedShinyText className="text-sm font-medium">
-                  Free on the App Store
+                  Now in App Store &middot; v3.0
                 </AnimatedShinyText>
               </div>
             </div>
@@ -165,20 +151,15 @@ export default function Home() {
 
           <BlurFade delay={0.2}>
             <h1 className="mt-8 text-center text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl">
-              Play Every Hole With{" "}
-              <span className="block">
-                <WordRotate
-                  words={["Strategy", "Confidence", "Purpose"]}
-                  className="text-primary"
-                />
-              </span>
+              Aim for your miss,
+              <br />
+              <span className="text-primary">not a miracle.</span>
             </h1>
           </BlurFade>
 
           <BlurFade delay={0.3}>
             <p className="mx-auto mt-6 max-w-2xl text-center text-lg text-muted-foreground md:text-xl">
-              Most golf apps charge $$$ for GPS and yardages. We give you that plus
-              risk zones, AI Caddie, and course strategy — free. Pro extras like printed playbooks when you want them.
+              Amateurs aim at the pin. Pros aim at the safe miss. Golf Playbook shows you where that is — on every hole, before you swing.
             </p>
           </BlurFade>
 
@@ -186,12 +167,12 @@ export default function Home() {
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <ShimmerButton className="h-12 px-8" background="#F5C518" onClick={handleAppStoreClick}>
                 <span className="flex items-center gap-2 text-base font-semibold text-[#000000]">
-                  Download for iOS
+                  Download free
                   <ArrowRightIcon className="h-4 w-4" />
                 </span>
               </ShimmerButton>
               <Button variant="outline" size="lg" className="h-12 px-8" asChild>
-                <Link href="#features">See How It Works</Link>
+                <Link href="#hero-demo">See How It Works</Link>
               </Button>
             </div>
           </BlurFade>
@@ -200,44 +181,40 @@ export default function Home() {
             <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground md:gap-8">
               <div className="flex items-center gap-2">
                 <TargetIcon className="h-4 w-4 text-primary" />
-                <span>Playbooks for 100s of courses created</span>
+                <span>3,744 US courses indexed</span>
               </div>
               <Separator orientation="vertical" className="hidden h-4 md:block" />
               <div className="flex items-center gap-2">
                 <StarIcon className="h-4 w-4 fill-primary text-primary" />
-                <span>5.0 App Store Rating</span>
+                <span>5.0 rating — App Store</span>
               </div>
               <Separator orientation="vertical" className="hidden h-4 md:block" />
               <div className="flex items-center gap-2">
-                <TrendingDownIcon className="h-4 w-4 text-primary" />
-                <span>Play smarter, score better</span>
+                <SmartphoneIcon className="h-4 w-4 text-primary" />
+                <span>Built for iOS 26</span>
               </div>
             </div>
           </BlurFade>
         </div>
       </section>
 
-      {/* Features Bento Grid Section */}
-      <section id="features" className="border-y border-border/40 bg-muted/30 px-6 py-20 md:py-24">
+      {/* Risk Demo Section — the one visual that sells the app */}
+      <section id="hero-demo" className="border-y border-border/40 bg-muted/30 px-6 py-20 md:py-24">
         <div className="mx-auto max-w-6xl">
           <BlurFade delay={0.1}>
             <div className="text-center">
-              <Badge variant="secondary" className="mb-4">
-                What Makes Us Different
-              </Badge>
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                Not just another GPS app
+                The one thing other golf apps don&apos;t show you
               </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-                Features you won&apos;t find anywhere else — free or paid
+              <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
+                Slide to see the difference between aiming at the pin and aiming at the safe miss.
               </p>
             </div>
           </BlurFade>
 
-          {/* 1. RISK COLOR-CODING - Full width with slider */}
           <BlurFade delay={0.2}>
-            <div className="mt-12 overflow-hidden rounded-2xl border border-border/50 bg-background">
-              <div className="flex flex-col md:h-[420px] md:flex-row md:items-center">
+            <div className="mt-12 overflow-hidden rounded-2xl border border-border/50 bg-background shadow-lg">
+              <div className="flex flex-col md:h-[480px] md:flex-row md:items-center">
                 <div className="p-6 md:w-1/3 md:p-8">
                   <div className="mb-2 flex items-center gap-2">
                     <ShieldIcon className="h-5 w-5 text-red-400" />
@@ -247,16 +224,16 @@ export default function Home() {
                   <p className="mt-2 text-muted-foreground">
                     Red, amber, green zones show where trouble lurks. The only GPS app with color-coded risk visualization.
                   </p>
-                  <p className="mt-2 text-sm font-medium text-primary">Patent Pending</p>
                 </div>
-                <div className="h-[280px] p-4 md:h-full md:w-2/3 md:p-6">
+                {/* TODO(assets): Replace with dedicated amateur-aim vs smart-aim images when available */}
+                <div className="h-[320px] p-4 md:h-full md:w-2/3 md:p-6">
                   <BeforeAfterSlider
                     beforeImage="/images/risk-risky.png"
                     afterImage="/images/risk-smart.png"
-                    beforeLabel="Risky"
-                    afterLabel="Smart"
-                    beforeAlt="Risky approach"
-                    afterAlt="Smart approach"
+                    beforeLabel="Amateur aim"
+                    afterLabel="Smart aim"
+                    beforeAlt="Amateur aiming at the pin"
+                    afterAlt="Smart aiming at the safe miss"
                     className="rounded-xl shadow-lg"
                   />
                 </div>
@@ -264,107 +241,16 @@ export default function Home() {
             </div>
           </BlurFade>
 
-          {/* 2. COMPARISON TABLE */}
           <BlurFade delay={0.3}>
-            <div className="mt-8 overflow-hidden rounded-2xl border border-border/50 bg-background">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-border/50">
-                      <th className="sticky left-0 z-10 min-w-[180px] bg-background px-4 py-3 text-left font-semibold md:px-6">Feature</th>
-                      <th className="px-3 py-3 text-center font-semibold text-[#08401B] dark:text-primary md:px-6">
-                        Golf Playbook
-                        <span className="block text-xs font-normal text-[#08401B]/80 dark:text-primary/80">Free</span>
-                      </th>
-                      <th className="px-3 py-3 text-center font-semibold text-muted-foreground md:px-6">
-                        Arccos
-                        <span className="block text-xs font-normal">$$$ + sensors</span>
-                      </th>
-                      <th className="px-3 py-3 text-center font-semibold text-muted-foreground md:px-6">
-                        18Birdies
-                        <span className="block text-xs font-normal">$$</span>
-                      </th>
-                      <th className="px-3 py-3 text-center font-semibold text-muted-foreground md:px-6">
-                        Grint
-                        <span className="block text-xs font-normal">$$</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {([
-                      { feature: "US Course Coverage", gp: "Top ~50%", arccos: "100%", birdies: "100%", grint: "100%", tag: "Request a course" },
-                      { feature: "GPS & Yardages", gp: "yes", arccos: "yes", birdies: "yes", grint: "yes", tag: "" },
-                      { feature: "Color-Coded Risk Zones (R/A/G)", gp: "yes", arccos: "no", birdies: "no", grint: "no", tag: "Nowhere else" },
-                      { feature: "Weather-Compensated Dispersion", gp: "yes", arccos: "no", birdies: "no", grint: "no", tag: "Nowhere else" },
-                      { feature: "AI Caddie & Club Recommendations", gp: "yes", arccos: "paid", birdies: "yes", grint: "no", tag: "" },
-                      { feature: "Personal Updatable Playbooks", gp: "yes", arccos: "no", birdies: "no", grint: "no", tag: "Nowhere else" },
-                      { feature: "Weather Simulation", gp: "yes", arccos: "no", birdies: "no", grint: "no", tag: "Nowhere else" },
-                      { feature: "Wind, Slope & Altitude Adjust", gp: "yes", arccos: "yes", birdies: "paid", grint: "no", tag: "" },
-                      { feature: "Aim Lines (Draw/Fade)", gp: "yes", arccos: "no", birdies: "no", grint: "no", tag: "Nowhere else" },
-                      { feature: "Printed Strategy Guides", gp: "soon", arccos: "no", birdies: "no", grint: "no", tag: "" },
-                    ] as { feature: string; gp: string; arccos: string; birdies: string; grint: string; tag: string }[]).map((row) => (
-                      <tr key={row.feature} className="border-b border-border/30 last:border-0">
-                        <td className="sticky left-0 z-10 bg-background px-4 py-3 md:px-6">
-                          <span>{row.feature}</span>
-                          {row.tag && (
-                            <span className="ml-2 inline-block rounded-full bg-[#08401B]/10 px-2 py-0.5 text-[10px] font-medium text-[#08401B] dark:bg-primary/10 dark:text-primary">
-                              {row.tag}
-                            </span>
-                          )}
-                        </td>
-                        {[
-                          { val: row.gp, isPrimary: true },
-                          { val: row.arccos, isPrimary: false, hideClass: "" },
-                          { val: row.birdies, isPrimary: false, hideClass: "" },
-                          { val: row.grint, isPrimary: false, hideClass: "" },
-                        ].map((col, ci) => (
-                          <td key={ci} className={`px-3 py-3 text-center md:px-6 ${col.hideClass || ""}`}>
-                            {col.val === "yes" && <CheckIcon className={`mx-auto h-5 w-5 ${col.isPrimary ? "text-[#08401B] dark:text-primary" : "text-muted-foreground/50"}`} />}
-                            {col.val === "no" && <XIcon className="mx-auto h-4 w-4 text-muted-foreground/30" />}
-                            {col.val === "paid" && <span className="text-xs text-muted-foreground">Paid</span>}
-                            {col.val === "soon" && <span className="text-xs text-muted-foreground">Soon</span>}
-                            {!["yes", "no", "paid", "soon"].includes(col.val) && (
-                              <span className={`text-xs font-medium ${col.isPrimary ? "text-[#08401B] dark:text-primary" : "text-muted-foreground"}`}>
-                                {col.val}
-                                {col.isPrimary && col.val.includes("%") && (
-                                  <span className="block text-[10px] font-normal text-[#08401B]/60 dark:text-primary/60">Growing</span>
-                                )}
-                              </span>
-                            )}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+            <div className="mt-8 text-center">
+              <Link
+                href="/compare"
+                className="inline-flex items-center gap-2 text-base font-semibold text-foreground underline underline-offset-4 decoration-primary/40 transition-colors hover:decoration-primary md:text-lg"
+              >
+                How we stack up against Arccos, 18Birdies, and Grint
+                <ArrowRightIcon className="h-3.5 w-3.5" />
+              </Link>
             </div>
-          </BlurFade>
-
-        </div>
-      </section>
-
-      {/* See It In Action - Video Section */}
-      <section className="px-6 py-20 md:py-24">
-        <div className="mx-auto max-w-6xl">
-          <BlurFade delay={0.1}>
-            <div className="text-center">
-              <Badge variant="secondary" className="mb-4">
-                See It In Action
-              </Badge>
-              <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                Watch the flyover
-              </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-                3D course preview from every tee — plan your round before you play
-              </p>
-            </div>
-          </BlurFade>
-          <BlurFade delay={0.2}>
-            <VideoCarousel
-              slides={videoSlides}
-              className="mt-12"
-            />
           </BlurFade>
         </div>
       </section>
@@ -377,16 +263,12 @@ export default function Home() {
         <div className="mx-auto max-w-6xl">
           <BlurFade delay={0.1}>
             <div className="text-center">
-              <Badge variant="secondary" className="mb-4">
+              <Badge className="mb-4 bg-primary px-4 py-1.5 text-sm text-primary-foreground">
                 Testimonials
               </Badge>
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                Golfers are shooting lower
+                What early players say
               </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-                Join thousands of golfers who have improved their game with
-                strategic course management.
-              </p>
             </div>
           </BlurFade>
 
@@ -420,19 +302,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why It's Free Section */}
+      {/* What You Get Section */}
       <section className="px-6 py-20 md:py-24">
         <div className="mx-auto max-w-4xl">
           <BlurFade delay={0.1}>
             <div className="text-center">
-              <Badge variant="secondary" className="mb-4">
-                Our Mission
+              <Badge className="mb-4 bg-primary px-4 py-1.5 text-sm text-primary-foreground">
+                Pricing
               </Badge>
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                Why is Golf Playbook free?
+                Mostly free.
               </h2>
               <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-                Golf is a beautiful game. The core strategy tools shouldn&apos;t be locked behind a paywall.
+                Strategy, GPS, risk zones, AI Caddie — free forever.
               </p>
             </div>
           </BlurFade>
@@ -442,33 +324,33 @@ export default function Home() {
               <Card className="border-border/50">
                 <CardContent className="p-6 text-center">
                   <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                    <span className="text-2xl">🗺️</span>
+                    <span className="text-2xl">&#x2714;&#xFE0F;</span>
                   </div>
-                  <h3 className="mt-4 font-semibold">We Built Our Own Data</h3>
+                  <h3 className="mt-4 font-semibold">Free forever — the core</h3>
                   <p className="mt-2 text-sm text-muted-foreground">
-                    Most golf apps license a third-party database and wrap GPS around it. We built our course intelligence from open terrain data — every risk zone, every contour, from the ground up.
+                    Strategy, GPS, risk zones, on-device AI Caddie, unlimited playbooks. On-device AI and open course data mean zero per-user cost to us.
                   </p>
                 </CardContent>
               </Card>
               <Card className="border-border/50">
                 <CardContent className="p-6 text-center">
                   <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                    <span className="text-2xl">🤖</span>
+                    <span className="text-2xl">&#x1F4E6;</span>
                   </div>
-                  <h3 className="mt-4 font-semibold">AI Runs On Your Device</h3>
+                  <h3 className="mt-4 font-semibold">Paid — physical goods</h3>
                   <p className="mt-2 text-sm text-muted-foreground">
-                    Our AI Caddie processes your game data locally — no expensive cloud servers. That means the features that cost others $200+/year cost us almost nothing to deliver.
+                    Printed playbooks ($20–$65) for courses you play often. Real paper, real shipping, real fulfillment.
                   </p>
                 </CardContent>
               </Card>
               <Card className="border-border/50">
                 <CardContent className="p-6 text-center">
                   <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                    <span className="text-2xl">🎯</span>
+                    <span className="text-2xl">&#x1F680;</span>
                   </div>
-                  <h3 className="mt-4 font-semibold">Strategy for Everyone</h3>
+                  <h3 className="mt-4 font-semibold">Paid — premium intelligence (coming)</h3>
                   <p className="mt-2 text-sm text-muted-foreground">
-                    The college kid who can&apos;t afford Arccos. The weekend player who won&apos;t pay for 18Birdies Premium. They deserve real course strategy tools — not a stripped-down free tier. AI and open source made it possible.
+                    Cloud LLM queries, advanced analytics, tournament-grade features. These have per-user cost, so they earn a subscription. Core app stays free.
                   </p>
                 </CardContent>
               </Card>
@@ -486,16 +368,15 @@ export default function Home() {
                 <div className="grid gap-8 md:grid-cols-2 md:gap-12">
                   <div>
                     <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                      Ready to play smarter?
+                      Ready to aim for your miss?
                     </h2>
                     <p className="mt-4 text-muted-foreground">
-                      Full strategy. No subscription. No catch. Risk zones, AI Caddie,
-                      GPS, shot tracking — free. Premium extras like printed playbooks when you&apos;re ready.
+                      Download free. Play your next round smarter.
                     </p>
                     <div className="mt-8">
                       <ShimmerButton className="h-12 px-8" background="#F5C518" onClick={handleAppStoreClick}>
                         <span className="flex items-center gap-2 text-base font-semibold text-[#000000]">
-                          Get Started Free
+                          Download free
                           <ArrowRightIcon className="h-4 w-4" />
                         </span>
                       </ShimmerButton>

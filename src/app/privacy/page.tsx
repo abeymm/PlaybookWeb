@@ -32,7 +32,7 @@ export default function PrivacyPage() {
       <main className="mx-auto max-w-3xl px-6 py-12">
         <h1 className="text-3xl font-bold tracking-tight">Privacy Policy</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Last Updated: January 2026 | Effective Date: January 2026
+          Last Updated: March 2026 | Effective Date: March 2026
         </p>
         <p className="mt-4 text-muted-foreground">
           This Privacy Policy explains how Expert Craft Inc. (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;)
@@ -88,6 +88,14 @@ export default function PrivacyPage() {
               <li>You can disable location access in your device settings</li>
             </ul>
 
+            <h3 className="mt-4 font-medium">Cloud Backup Data</h3>
+            <ul className="mt-2 list-disc space-y-1 pl-6 text-muted-foreground">
+              <li>Playbooks, round scores, and app settings are automatically backed up to our cloud servers (AWS)</li>
+              <li>Backup data is encrypted in transit (TLS) and at rest (AES-256)</li>
+              <li>Backups enable you to restore your data if you switch devices or reinstall the app</li>
+              <li>You can request deletion of all cloud backup data by deleting your account</li>
+            </ul>
+
             <h3 className="mt-4 font-medium">Usage Data</h3>
             <ul className="mt-2 list-disc space-y-1 pl-6 text-muted-foreground">
               <li>Features used and actions taken</li>
@@ -104,9 +112,9 @@ export default function PrivacyPage() {
 
             <h3 className="mt-4 font-medium">AI Interactions</h3>
             <ul className="mt-2 list-disc space-y-1 pl-6 text-muted-foreground">
-              <li>Queries and requests made to AI Caddie</li>
-              <li>Recommendations provided to you</li>
-              <li>This data helps improve AI accuracy and personalization</li>
+              <li>AI Caddie is powered by Apple Intelligence and runs entirely on your device</li>
+              <li>Your club data, shot patterns, and course strategy queries are processed locally — they are not sent to our servers or any third-party AI service</li>
+              <li>We may collect anonymous, aggregated usage metrics (e.g., how often AI Caddie is used) to improve the feature</li>
             </ul>
           </section>
 
@@ -184,6 +192,8 @@ export default function PrivacyPage() {
               <li><strong>Playbooks & Notes:</strong> Until deleted by you.</li>
               <li><strong>Round Data:</strong> 3 years from creation date.</li>
               <li><strong>Payment Records:</strong> 7 years (legal and tax requirements).</li>
+              <li><strong>Cloud Backup Data:</strong> Until you delete your account, plus 30 days for processing.</li>
+              <li><strong>AI Usage Metrics:</strong> Aggregated usage data retained for 1 year. No personal AI interaction data is stored on our servers.</li>
               <li><strong>Analytics Data:</strong> 2 years in aggregated form; 90 days for individual-level data.</li>
               <li><strong>Support Communications:</strong> 2 years from last contact.</li>
             </ul>
@@ -243,7 +253,8 @@ export default function PrivacyPage() {
               Here&apos;s what you should know:
             </p>
             <ul className="mt-3 list-disc space-y-2 pl-6 text-muted-foreground">
-              <li><strong>How It Works:</strong> AI Caddie analyzes your playing data, club distances, and course information to generate club recommendations and strategy suggestions.</li>
+              <li><strong>On-Device Processing:</strong> AI Caddie is powered by Apple Intelligence and runs entirely on your device. Your golf data is not sent to our servers or any third-party AI service for processing.</li>
+              <li><strong>How It Works:</strong> AI Caddie analyzes your club distances, shot dispersion, and course terrain to generate club recommendations and strategy suggestions.</li>
               <li><strong>No Legal Effects:</strong> AI recommendations do not have legal or similarly significant effects on you. They are advisory suggestions only.</li>
               <li><strong>Opt-Out:</strong> You can choose not to use AI Caddie features. Your core app experience will not be affected.</li>
               <li><strong>Human Review:</strong> You always make the final decision on the course. AI recommendations are meant to assist, not replace, your judgment.</li>
@@ -312,7 +323,21 @@ export default function PrivacyPage() {
             </p>
             <p className="mt-3 text-muted-foreground leading-relaxed">
               For users in the European Economic Area (EEA), we rely on standard contractual clauses and other
-              appropriate safeguards for international data transfers.
+              appropriate safeguards for international data transfers. Under the GDPR, you have additional rights:
+            </p>
+            <ul className="mt-3 list-disc space-y-2 pl-6 text-muted-foreground">
+              <li><strong>Right of Access:</strong> Request a copy of your personal data.</li>
+              <li><strong>Right to Erasure:</strong> Request deletion of your personal data.</li>
+              <li><strong>Right to Portability:</strong> Receive your data in a structured, machine-readable format.</li>
+              <li><strong>Right to Object:</strong> Object to processing of your personal data for certain purposes.</li>
+              <li><strong>Right to Restrict Processing:</strong> Request that we limit how we use your data.</li>
+            </ul>
+            <p className="mt-3 text-muted-foreground leading-relaxed">
+              To exercise these rights, contact us at{" "}
+              <a href="mailto:support@playbook.golf" className="text-primary hover:underline">
+                support@playbook.golf
+              </a>
+              . We will respond within 30 days.
             </p>
           </section>
 

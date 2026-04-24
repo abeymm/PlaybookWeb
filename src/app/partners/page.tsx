@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -13,19 +12,9 @@ import {
   CardDescription,
   CardFooter,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { BlurFade } from "@/components/ui/blur-fade";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { ProtectedEmail } from "@/components/ui/protected-email";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -37,7 +26,6 @@ import {
   StarIcon,
   ZapIcon,
   MailIcon,
-  PhoneIcon,
   HandshakeIcon,
   CodeIcon,
   HeadphonesIcon,
@@ -146,47 +134,6 @@ const faqs = [
 ];
 
 export default function PartnersPage() {
-  const [formState, setFormState] = useState({
-    companyName: "",
-    contactName: "",
-    email: "",
-    partnerType: "",
-    website: "",
-    description: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
-
-    try {
-      const response = await fetch("/api/submit-form", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          formType: "partner-inquiry",
-          subject: `New Partner Inquiry: ${formState.companyName} (${formState.partnerType})`,
-          email: formState.email,
-          formData: formState,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to submit inquiry");
-      }
-
-      setIsSubmitted(true);
-    } catch {
-      setError("Something went wrong. Please try again or email us directly.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -472,149 +419,23 @@ export default function PartnersPage() {
         </div>
       </section>
 
-      {/* Inquiry Form Section */}
+      {/* Contact Section */}
       <section id="inquiry-form" className="px-6 py-20">
         <div className="mx-auto max-w-2xl">
           <BlurFade delay={0.1}>
-            <div className="text-center">
-              <Badge variant="secondary" className="mb-4">
-                Get Started
-              </Badge>
-              <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                Start a Conversation
-              </h2>
-              <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-                Tell us about your company and how you&apos;d like to integrate.
-                We&apos;ll be in touch within 48 hours.
-              </p>
-            </div>
-          </BlurFade>
-
-          <BlurFade delay={0.2}>
-            {isSubmitted ? (
-              <Card className="mt-12 border-primary/20 bg-primary/5">
-                <CardContent className="p-8 text-center">
-                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/20">
-                    <CheckIcon className="h-8 w-8 text-primary" />
-                  </div>
-                  <h3 className="mt-6 text-xl font-semibold">Thanks for reaching out!</h3>
-                  <p className="mt-2 text-muted-foreground">
-                    We&apos;ll review your inquiry and get back to you within 48 hours.
-                  </p>
-                </CardContent>
-              </Card>
-            ) : (
-              <Card className="mt-12">
-                <CardContent className="p-6 md:p-8">
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid gap-6 sm:grid-cols-2">
-                      <div className="space-y-2">
-                        <Label htmlFor="companyName">
-                          Company Name <span className="text-destructive">*</span>
-                        </Label>
-                        <Input
-                          id="companyName"
-                          required
-                          value={formState.companyName}
-                          onChange={(e) =>
-                            setFormState((prev) => ({ ...prev, companyName: e.target.value }))
-                          }
-                          placeholder="Acme Golf Tech"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="contactName">
-                          Contact Name <span className="text-destructive">*</span>
-                        </Label>
-                        <Input
-                          id="contactName"
-                          required
-                          value={formState.contactName}
-                          onChange={(e) =>
-                            setFormState((prev) => ({ ...prev, contactName: e.target.value }))
-                          }
-                          placeholder="Your name"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid gap-6 sm:grid-cols-2">
-                      <div className="space-y-2">
-                        <Label htmlFor="email">
-                          Email <span className="text-destructive">*</span>
-                        </Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          required
-                          value={formState.email}
-                          onChange={(e) =>
-                            setFormState((prev) => ({ ...prev, email: e.target.value }))
-                          }
-                          placeholder="you@company.com"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="partnerType">
-                          Partner Type <span className="text-destructive">*</span>
-                        </Label>
-                        <Select
-                          value={formState.partnerType}
-                          onValueChange={(value) =>
-                            setFormState((prev) => ({ ...prev, partnerType: value }))
-                          }
-                          required
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="mapping-pins">Mapping & Pin Positions</SelectItem>
-                            <SelectItem value="launch-monitors">Launch Monitors & Simulators</SelectItem>
-                            <SelectItem value="course-software">Course & Tournament Software</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="website">Website (optional)</Label>
-                      <Input
-                        id="website"
-                        type="url"
-                        value={formState.website}
-                        onChange={(e) =>
-                          setFormState((prev) => ({ ...prev, website: e.target.value }))
-                        }
-                        placeholder="https://yourcompany.com"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="description">
-                        How would you like to integrate? (optional)
-                      </Label>
-                      <Textarea
-                        id="description"
-                        value={formState.description}
-                        onChange={(e) =>
-                          setFormState((prev) => ({ ...prev, description: e.target.value }))
-                        }
-                        placeholder="Tell us about your product and the integration you have in mind..."
-                        rows={4}
-                      />
-                    </div>
-
-                    {error && <p className="text-sm text-destructive">{error}</p>}
-
-                    <Button type="submit" className="h-12 w-full" disabled={isSubmitting}>
-                      {isSubmitting ? "Submitting..." : "Submit Inquiry"}
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            )}
+            <Card className="border-primary/20 bg-gradient-to-br from-primary/5 via-background to-background">
+              <CardContent className="p-8 text-center md:p-12">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/20">
+                  <MailIcon className="h-8 w-8 text-primary" />
+                </div>
+                <h2 className="mt-6 text-2xl font-bold tracking-tight md:text-3xl">
+                  Interested?
+                </h2>
+                <p className="mt-4 text-muted-foreground">
+                  Email <ProtectedEmail d="cGFydG5lcnM=" /> to start a conversation about integrating with Golf Playbook.
+                </p>
+              </CardContent>
+            </Card>
           </BlurFade>
         </div>
       </section>
@@ -623,24 +444,8 @@ export default function PartnersPage() {
       <section className="border-t border-border/40 bg-muted/30 px-6 py-12">
         <div className="mx-auto max-w-4xl text-center">
           <p className="text-muted-foreground">
-            Have questions? Reach out to us directly.
+            Have questions? Email <ProtectedEmail d="cGFydG5lcnM=" />.
           </p>
-          <div className="mt-4 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-8">
-            <a
-              href="mailto:support@playbook.golf"
-              className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-            >
-              <MailIcon className="h-4 w-4" />
-              support@playbook.golf
-            </a>
-            <a
-              href="tel:832-533-7573"
-              className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-            >
-              <PhoneIcon className="h-4 w-4" />
-              832-533-7573
-            </a>
-          </div>
         </div>
       </section>
 

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -16,17 +15,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { BlurFade } from "@/components/ui/blur-fade";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { ProtectedEmail } from "@/components/ui/protected-email";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -41,8 +30,6 @@ import {
   BarChartIcon,
   PrinterIcon,
   MailIcon,
-  PhoneIcon,
-  UsersIcon,
   RefreshCwIcon,
   SparklesIcon,
 } from "lucide-react";
@@ -174,58 +161,6 @@ const faqs = [
 ];
 
 export default function ForCoursesPage() {
-  const [formState, setFormState] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    courseName: "",
-    role: "",
-    roundsPerYear: "",
-    interestedIn: [] as string[],
-    notes: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleInterestChange = (interest: string, checked: boolean) => {
-    setFormState((prev) => ({
-      ...prev,
-      interestedIn: checked
-        ? [...prev.interestedIn, interest]
-        : prev.interestedIn.filter((i) => i !== interest),
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
-
-    try {
-      const response = await fetch("/api/submit-form", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          formType: "course-lead",
-          subject: `New Course Lead: ${formState.courseName}`,
-          email: formState.email,
-          formData: formState,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to submit request");
-      }
-
-      setIsSubmitted(true);
-    } catch {
-      setError("Something went wrong. Please try again or email us directly.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -756,214 +691,23 @@ export default function ForCoursesPage() {
         </div>
       </section>
 
-      {/* Lead Capture Form Section */}
+      {/* Contact Section */}
       <section id="lead-form" className="px-6 py-20">
         <div className="mx-auto max-w-2xl">
           <BlurFade delay={0.1}>
-            <div className="text-center">
-              <Badge variant="secondary" className="mb-4">
-                Get Started
-              </Badge>
-              <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                Request a Demo
-              </h2>
-              <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-                See how Golf Playbook can help engage your players and drive revenue.
-                We&apos;ll be in touch within 24 hours.
-              </p>
-            </div>
-          </BlurFade>
-
-          <BlurFade delay={0.2}>
-            {isSubmitted ? (
-              <Card className="mt-12 border-primary/20 bg-primary/5">
-                <CardContent className="p-8 text-center">
-                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/20">
-                    <CheckIcon className="h-8 w-8 text-primary" />
-                  </div>
-                  <h3 className="mt-6 text-xl font-semibold">Thanks for your interest!</h3>
-                  <p className="mt-2 text-muted-foreground">
-                    We&apos;ll reach out within 24 hours to schedule your demo.
-                  </p>
-                </CardContent>
-              </Card>
-            ) : (
-              <Card className="mt-12">
-                <CardContent className="p-6 md:p-8">
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid gap-6 sm:grid-cols-2">
-                      <div className="space-y-2">
-                        <Label htmlFor="name">
-                          Name <span className="text-destructive">*</span>
-                        </Label>
-                        <Input
-                          id="name"
-                          required
-                          value={formState.name}
-                          onChange={(e) =>
-                            setFormState((prev) => ({ ...prev, name: e.target.value }))
-                          }
-                          placeholder="Your name"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="email">
-                          Email <span className="text-destructive">*</span>
-                        </Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          required
-                          value={formState.email}
-                          onChange={(e) =>
-                            setFormState((prev) => ({ ...prev, email: e.target.value }))
-                          }
-                          placeholder="you@example.com"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid gap-6 sm:grid-cols-2">
-                      <div className="space-y-2">
-                        <Label htmlFor="phone">Phone (optional)</Label>
-                        <Input
-                          id="phone"
-                          type="tel"
-                          value={formState.phone}
-                          onChange={(e) =>
-                            setFormState((prev) => ({ ...prev, phone: e.target.value }))
-                          }
-                          placeholder="(555) 123-4567"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="courseName">
-                          Course Name <span className="text-destructive">*</span>
-                        </Label>
-                        <Input
-                          id="courseName"
-                          required
-                          value={formState.courseName}
-                          onChange={(e) =>
-                            setFormState((prev) => ({
-                              ...prev,
-                              courseName: e.target.value,
-                            }))
-                          }
-                          placeholder="Pine Valley Golf Club"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid gap-6 sm:grid-cols-2">
-                      <div className="space-y-2">
-                        <Label htmlFor="role">Your Role</Label>
-                        <Select
-                          value={formState.role}
-                          onValueChange={(value) =>
-                            setFormState((prev) => ({ ...prev, role: value }))
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select your role" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="gm">General Manager</SelectItem>
-                            <SelectItem value="director-of-golf">
-                              Director of Golf
-                            </SelectItem>
-                            <SelectItem value="head-pro">Head Pro</SelectItem>
-                            <SelectItem value="marketing">Marketing</SelectItem>
-                            <SelectItem value="owner">Owner</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="roundsPerYear">Annual Rounds</Label>
-                        <Select
-                          value={formState.roundsPerYear}
-                          onValueChange={(value) =>
-                            setFormState((prev) => ({ ...prev, roundsPerYear: value }))
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Estimated rounds" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="under-20k">Under 20,000</SelectItem>
-                            <SelectItem value="20-40k">20,000 - 40,000</SelectItem>
-                            <SelectItem value="40-60k">40,000 - 60,000</SelectItem>
-                            <SelectItem value="60k-plus">60,000+</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <Label>Interested In</Label>
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-2">
-                          <Checkbox
-                            id="course-partnership"
-                            checked={formState.interestedIn.includes("course-partnership")}
-                            onCheckedChange={(checked) =>
-                              handleInterestChange("course-partnership", checked === true)
-                            }
-                          />
-                          <Label htmlFor="course-partnership" className="font-normal">
-                            Full course partnership ($2,400/year)
-                          </Label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Checkbox
-                            id="printed-books"
-                            checked={formState.interestedIn.includes("printed-books")}
-                            onCheckedChange={(checked) =>
-                              handleInterestChange("printed-books", checked === true)
-                            }
-                          />
-                          <Label htmlFor="printed-books" className="font-normal">
-                            Printed yardage books for pro shop
-                          </Label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Checkbox
-                            id="both"
-                            checked={formState.interestedIn.includes("both")}
-                            onCheckedChange={(checked) =>
-                              handleInterestChange("both", checked === true)
-                            }
-                          />
-                          <Label htmlFor="both" className="font-normal">
-                            Both options
-                          </Label>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="notes">Additional Notes (optional)</Label>
-                      <Textarea
-                        id="notes"
-                        value={formState.notes}
-                        onChange={(e) =>
-                          setFormState((prev) => ({ ...prev, notes: e.target.value }))
-                        }
-                        placeholder="Any questions, special requirements, or details about your course..."
-                        rows={4}
-                      />
-                    </div>
-
-                    {error && <p className="text-sm text-destructive">{error}</p>}
-
-                    <Button type="submit" className="h-12 w-full" disabled={isSubmitting}>
-                      {isSubmitting ? "Submitting..." : "Submit Request"}
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            )}
+            <Card className="border-primary/20 bg-gradient-to-br from-primary/5 via-background to-background">
+              <CardContent className="p-8 text-center md:p-12">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/20">
+                  <MailIcon className="h-8 w-8 text-primary" />
+                </div>
+                <h2 className="mt-6 text-2xl font-bold tracking-tight md:text-3xl">
+                  Interested?
+                </h2>
+                <p className="mt-4 text-muted-foreground">
+                  Email <ProtectedEmail d="Y291cnNlcw==" /> to start a conversation about partnering with Golf Playbook.
+                </p>
+              </CardContent>
+            </Card>
           </BlurFade>
         </div>
       </section>
@@ -972,24 +716,8 @@ export default function ForCoursesPage() {
       <section className="border-t border-border/40 bg-muted/30 px-6 py-12">
         <div className="mx-auto max-w-4xl text-center">
           <p className="text-muted-foreground">
-            Have questions? Reach out to us directly.
+            Have questions? Email <ProtectedEmail d="Y291cnNlcw==" />.
           </p>
-          <div className="mt-4 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-8">
-            <a
-              href="mailto:support@playbook.golf"
-              className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-            >
-              <MailIcon className="h-4 w-4" />
-              support@playbook.golf
-            </a>
-            <a
-              href="tel:832-533-7573"
-              className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-            >
-              <PhoneIcon className="h-4 w-4" />
-              832-533-7573
-            </a>
-          </div>
         </div>
       </section>
 

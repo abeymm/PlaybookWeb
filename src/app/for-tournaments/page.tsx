@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -9,22 +8,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { BlurFade } from "@/components/ui/blur-fade";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { ProtectedEmail } from "@/components/ui/protected-email";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
   CheckIcon,
-  FileTextIcon,
   TruckIcon,
   MessageSquareIcon,
   MegaphoneIcon,
@@ -34,10 +22,8 @@ import {
   TableIcon,
   ImageIcon,
   UsersIcon,
-  DollarSignIcon,
   HeartHandshakeIcon,
   MailIcon,
-  PhoneIcon,
 } from "lucide-react";
 
 const whatIsIncluded = [
@@ -144,59 +130,6 @@ const faqs = [
 ];
 
 export default function TournamentsPage() {
-  const [formState, setFormState] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    tournamentName: "",
-    courseName: "",
-    eventDate: "",
-    playerCount: "",
-    interests: [] as string[],
-    notes: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleInterestChange = (interest: string, checked: boolean) => {
-    setFormState((prev) => ({
-      ...prev,
-      interests: checked
-        ? [...prev.interests, interest]
-        : prev.interests.filter((i) => i !== interest),
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
-
-    try {
-      const response = await fetch("/api/submit-form", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          formType: "tournament-lead",
-          subject: `New Tournament Lead: ${formState.tournamentName} at ${formState.courseName}`,
-          email: formState.email,
-          formData: formState,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to submit request");
-      }
-
-      setIsSubmitted(true);
-    } catch {
-      setError("Something went wrong. Please try again or email us directly.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -746,218 +679,23 @@ export default function TournamentsPage() {
         </div>
       </section>
 
-      {/* Lead Capture Form Section */}
+      {/* Contact Section */}
       <section id="quote" className="px-6 py-20">
         <div className="mx-auto max-w-2xl">
           <BlurFade delay={0.1}>
-            <div className="text-center">
-              <Badge variant="secondary" className="mb-4">
-                Get Started
-              </Badge>
-              <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                Request a Quote
-              </h2>
-              <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-                Tell us about your tournament and we&apos;ll get back to you within 24 hours
-                with a custom quote.
-              </p>
-            </div>
-          </BlurFade>
-
-          <BlurFade delay={0.2}>
-            {isSubmitted ? (
-              <Card className="mt-12 border-primary/20 bg-primary/5">
-                <CardContent className="p-8 text-center">
-                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/20">
-                    <CheckIcon className="h-8 w-8 text-primary" />
-                  </div>
-                  <h3 className="mt-6 text-xl font-semibold">Thanks for your request!</h3>
-                  <p className="mt-2 text-muted-foreground">
-                    We&apos;ll be in touch within 24 hours with your custom quote.
-                  </p>
-                </CardContent>
-              </Card>
-            ) : (
-              <Card className="mt-12">
-                <CardContent className="p-6 md:p-8">
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid gap-6 sm:grid-cols-2">
-                      <div className="space-y-2">
-                        <Label htmlFor="name">
-                          Name <span className="text-destructive">*</span>
-                        </Label>
-                        <Input
-                          id="name"
-                          required
-                          value={formState.name}
-                          onChange={(e) =>
-                            setFormState((prev) => ({ ...prev, name: e.target.value }))
-                          }
-                          placeholder="Your name"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="email">
-                          Email <span className="text-destructive">*</span>
-                        </Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          required
-                          value={formState.email}
-                          onChange={(e) =>
-                            setFormState((prev) => ({ ...prev, email: e.target.value }))
-                          }
-                          placeholder="you@example.com"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Phone (optional)</Label>
-                      <Input
-                        id="phone"
-                        type="tel"
-                        value={formState.phone}
-                        onChange={(e) =>
-                          setFormState((prev) => ({ ...prev, phone: e.target.value }))
-                        }
-                        placeholder="(555) 123-4567"
-                      />
-                    </div>
-
-                    <div className="grid gap-6 sm:grid-cols-2">
-                      <div className="space-y-2">
-                        <Label htmlFor="tournamentName">
-                          Tournament Name <span className="text-destructive">*</span>
-                        </Label>
-                        <Input
-                          id="tournamentName"
-                          required
-                          value={formState.tournamentName}
-                          onChange={(e) =>
-                            setFormState((prev) => ({
-                              ...prev,
-                              tournamentName: e.target.value,
-                            }))
-                          }
-                          placeholder="Annual Charity Golf Classic"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="courseName">
-                          Course Name <span className="text-destructive">*</span>
-                        </Label>
-                        <Input
-                          id="courseName"
-                          required
-                          value={formState.courseName}
-                          onChange={(e) =>
-                            setFormState((prev) => ({ ...prev, courseName: e.target.value }))
-                          }
-                          placeholder="Pebble Beach Golf Links"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid gap-6 sm:grid-cols-2">
-                      <div className="space-y-2">
-                        <Label htmlFor="eventDate">Event Date (optional)</Label>
-                        <Input
-                          id="eventDate"
-                          type="date"
-                          value={formState.eventDate}
-                          onChange={(e) =>
-                            setFormState((prev) => ({ ...prev, eventDate: e.target.value }))
-                          }
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="playerCount">Estimated Players</Label>
-                        <Select
-                          value={formState.playerCount}
-                          onValueChange={(value) =>
-                            setFormState((prev) => ({ ...prev, playerCount: value }))
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select range" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="50-100">50-100 players</SelectItem>
-                            <SelectItem value="100-200">100-200 players</SelectItem>
-                            <SelectItem value="200+">200+ players</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <Label>Interested In</Label>
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-2">
-                          <Checkbox
-                            id="player-funded"
-                            checked={formState.interests.includes("player-funded")}
-                            onCheckedChange={(checked) =>
-                              handleInterestChange("player-funded", checked === true)
-                            }
-                          />
-                          <Label htmlFor="player-funded" className="font-normal">
-                            Player-funded playbooks
-                          </Label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Checkbox
-                            id="sponsor-funded"
-                            checked={formState.interests.includes("sponsor-funded")}
-                            onCheckedChange={(checked) =>
-                              handleInterestChange("sponsor-funded", checked === true)
-                            }
-                          />
-                          <Label htmlFor="sponsor-funded" className="font-normal">
-                            Sponsor-funded playbooks
-                          </Label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Checkbox
-                            id="both"
-                            checked={formState.interests.includes("both")}
-                            onCheckedChange={(checked) =>
-                              handleInterestChange("both", checked === true)
-                            }
-                          />
-                          <Label htmlFor="both" className="font-normal">
-                            Both options
-                          </Label>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="notes">Additional Notes (optional)</Label>
-                      <Textarea
-                        id="notes"
-                        value={formState.notes}
-                        onChange={(e) =>
-                          setFormState((prev) => ({ ...prev, notes: e.target.value }))
-                        }
-                        placeholder="Any special requirements, questions, or details about your event..."
-                        rows={4}
-                      />
-                    </div>
-
-                    {error && (
-                      <p className="text-sm text-destructive">{error}</p>
-                    )}
-
-                    <Button type="submit" className="w-full h-12" disabled={isSubmitting}>
-                      {isSubmitting ? "Submitting..." : "Submit Request"}
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            )}
+            <Card className="border-primary/20 bg-gradient-to-br from-primary/5 via-background to-background">
+              <CardContent className="p-8 text-center md:p-12">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/20">
+                  <MailIcon className="h-8 w-8 text-primary" />
+                </div>
+                <h2 className="mt-6 text-2xl font-bold tracking-tight md:text-3xl">
+                  Interested?
+                </h2>
+                <p className="mt-4 text-muted-foreground">
+                  Email <ProtectedEmail d="dG91cm5hbWVudHM=" /> to request a quote for your event.
+                </p>
+              </CardContent>
+            </Card>
           </BlurFade>
         </div>
       </section>
@@ -966,24 +704,8 @@ export default function TournamentsPage() {
       <section className="border-t border-border/40 bg-muted/30 px-6 py-12">
         <div className="mx-auto max-w-4xl text-center">
           <p className="text-muted-foreground">
-            Have questions? Reach out to us directly.
+            Have questions? Email <ProtectedEmail d="dG91cm5hbWVudHM=" />.
           </p>
-          <div className="mt-4 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-8">
-            <a
-              href="mailto:support@playbook.golf"
-              className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-            >
-              <MailIcon className="h-4 w-4" />
-              support@playbook.golf
-            </a>
-            <a
-              href="tel:832-533-7573"
-              className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-            >
-              <PhoneIcon className="h-4 w-4" />
-              832-533-7573
-            </a>
-          </div>
         </div>
       </section>
 
