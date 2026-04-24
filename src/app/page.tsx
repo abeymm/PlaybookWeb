@@ -181,7 +181,7 @@ export default function Home() {
             <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground md:gap-8">
               <div className="flex items-center gap-2">
                 <TargetIcon className="h-4 w-4 text-primary" />
-                <span>3,744 US courses indexed</span>
+                <span>~9,000 US courses</span>
               </div>
               <Separator orientation="vertical" className="hidden h-4 md:block" />
               <div className="flex items-center gap-2">
@@ -222,7 +222,7 @@ export default function Home() {
                   </div>
                   <h3 className="text-2xl font-bold">See danger instantly</h3>
                   <p className="mt-2 text-muted-foreground">
-                    Red, amber, green zones show where trouble lurks. The only GPS app with color-coded risk visualization.
+                    Red, amber, green zones show where trouble lurks. ~7,000 US courses get a full distance + risk-based strategy. Another ~2,000 get a distance-only strategy.
                   </p>
                 </div>
                 {/* TODO(assets): Replace with dedicated amateur-aim vs smart-aim images when available */}
