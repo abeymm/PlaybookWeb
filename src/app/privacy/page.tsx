@@ -1,7 +1,17 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeftIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { canonical } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description:
+    "How Golf Playbook collects, uses, and protects your information when you use our app and website.",
+  alternates: canonical("/privacy"),
+  robots: { index: true, follow: true },
+};
 
 export default function PrivacyPage() {
   return (

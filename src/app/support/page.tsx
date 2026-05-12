@@ -1,8 +1,33 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeftIcon, MailIcon, FileTextIcon, ShieldIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { canonical, OG_IMAGE } from "@/lib/seo";
+
+const supportTitle = "Golf Playbook Support — Help, Contact, and FAQs";
+const supportDescription =
+  "Get help with Golf Playbook. Contact support, browse common questions, and find documentation for the iOS app and printed strategy guides.";
+
+export const metadata: Metadata = {
+  title: "Support",
+  description: supportDescription,
+  alternates: canonical("/support"),
+  openGraph: {
+    title: supportTitle,
+    description: supportDescription,
+    url: "/support",
+    type: "website",
+    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: supportTitle }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: supportTitle,
+    description: supportDescription,
+    images: [OG_IMAGE],
+  },
+};
 
 export default function SupportPage() {
   return (
