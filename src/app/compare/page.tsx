@@ -1,7 +1,63 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, CheckIcon, XIcon } from "lucide-react";
+import { JsonLd } from "@/components/seo/JsonLd";
+import {
+  breadcrumbSchema,
+  faqSchema,
+  webPageSchema,
+} from "@/lib/structuredData";
+import { canonical, OG_IMAGE } from "@/lib/seo";
+
+const comparePath = "/compare";
+const compareTitle =
+  "Golf Playbook vs Arccos vs 18Birdies vs The Grint — Feature Comparison";
+const compareDescription =
+  "How Golf Playbook compares to Arccos, 18Birdies, and The Grint. Side-by-side breakdown of risk zones, weather-compensated dispersion, AI caddie, and printed yardage books.";
+
+const compareFaqs = [
+  {
+    question: "How is Golf Playbook different from Arccos and 18Birdies?",
+    answer:
+      "Golf Playbook focuses on pre-round strategy rather than just tracking. Color-coded risk zones, weather-compensated dispersion, aim lines for draws and fades, and printable yardage books are included on every hole. Arccos and 18Birdies center on shot tracking and post-round stats.",
+  },
+  {
+    question: "Does Golf Playbook cover every course?",
+    answer:
+      "Golf Playbook currently covers roughly the top half of US courses by play volume. If your course isn't yet supported, you can request it from inside the app and we map it.",
+  },
+  {
+    question: "Is Golf Playbook free?",
+    answer:
+      "Yes. You can download Golf Playbook from the App Store and use the core features at no cost. Optional add-ons like printed strategy guides are paid.",
+  },
+  {
+    question: "Does Golf Playbook work offline?",
+    answer:
+      "Yes. Once a playbook is downloaded to your phone, you can use it without a network connection during the round.",
+  },
+];
+
+export const metadata: Metadata = {
+  title: "Golf Playbook vs Arccos, 18Birdies, The Grint",
+  description: compareDescription,
+  alternates: canonical(comparePath),
+  openGraph: {
+    title: compareTitle,
+    description: compareDescription,
+    url: comparePath,
+    type: "website",
+    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: compareTitle }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: compareTitle,
+    description: compareDescription,
+    images: [OG_IMAGE],
+  },
+};
 
 export default function ComparePage() {
   const rows: { feature: string; gp: string; arccos: string; birdies: string; grint: string; tag: string }[] = [
@@ -19,6 +75,22 @@ export default function ComparePage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <JsonLd
+        id="ld-compare-page"
+        data={webPageSchema({
+          title: compareTitle,
+          description: compareDescription,
+          path: comparePath,
+        })}
+      />
+      <JsonLd
+        id="ld-compare-breadcrumb"
+        data={breadcrumbSchema([
+          { name: "Home", url: "/" },
+          { name: "Compare", url: comparePath },
+        ])}
+      />
+      <JsonLd id="ld-compare-faq" data={faqSchema(compareFaqs)} />
       <header className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <Link href="/" className="text-xl font-bold tracking-tight">

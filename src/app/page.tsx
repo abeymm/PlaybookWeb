@@ -26,8 +26,39 @@ import {
 } from "lucide-react";
 import { BeforeAfterSlider } from "@/components/ui/before-after-slider";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { faqSchema } from "@/lib/structuredData";
 
 const APP_STORE_URL = "https://apps.apple.com/us/app/golf-playbook/id1557162395";
+
+const homeFaqs = [
+  {
+    question: "What is Golf Playbook?",
+    answer:
+      "Golf Playbook is a strategy GPS app for golfers. It builds a personal playbook for every hole — color-coded risk zones, AI caddie, weather-compensated dispersion, aim lines for draws and fades — so you know exactly where to aim before you swing.",
+  },
+  {
+    question: "Is Golf Playbook free?",
+    answer:
+      "Yes. Golf Playbook is free to download from the App Store and the core features are free to use. Optional printed strategy guides are paid.",
+  },
+  {
+    question: "Which courses does Golf Playbook cover?",
+    answer:
+      "Roughly the top half of US courses by play volume are mapped today. You can request a course from inside the app if yours isn't yet supported.",
+  },
+  {
+    question: "Does Golf Playbook work offline?",
+    answer:
+      "Yes. Once your playbook is downloaded, it works without a network connection during the round.",
+  },
+  {
+    question: "How is Golf Playbook different from Arccos or 18Birdies?",
+    answer:
+      "Arccos and 18Birdies are primarily shot trackers focused on post-round stats. Golf Playbook is built for pre-round strategy: color-coded risk zones, weather-compensated dispersion, aim lines, and printable yardage books are included on every hole.",
+  },
+];
+
+const HOME_FAQ_JSONLD = JSON.stringify(faqSchema(homeFaqs));
 
 const testimonials = [
   {
@@ -64,6 +95,11 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-background">
+      <script
+        id="ld-home-faq"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: HOME_FAQ_JSONLD }}
+      />
       {/* Particles Background */}
       <Particles
         className="absolute inset-0 -z-10"

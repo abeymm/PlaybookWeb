@@ -1,7 +1,17 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeftIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { canonical } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "Terms of Service",
+  description:
+    "The terms that govern your use of the Golf Playbook app, website, and services.",
+  alternates: canonical("/terms"),
+  robots: { index: true, follow: true },
+};
 
 export default function TermsPage() {
   return (
