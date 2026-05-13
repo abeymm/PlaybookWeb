@@ -41,7 +41,8 @@ export function websiteSchema() {
 
 /**
  * MobileApplication schema for the iOS Golf Playbook app.
- * aggregateRating is intentionally omitted — populate from App Store data only when verified.
+ * aggregateRating reflects the App Store listing — keep ratingCount/ratingValue
+ * in sync with apps.apple.com when reviews update.
  */
 export function mobileAppSchema() {
   return {
@@ -57,6 +58,14 @@ export function mobileAppSchema() {
       "@type": "Offer",
       price: "0",
       priceCurrency: "USD",
+    },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "5",
+      bestRating: "5",
+      worstRating: "1",
+      ratingCount: "15",
+      reviewCount: "15",
     },
     publisher: {
       "@type": "Organization",
