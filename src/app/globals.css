@@ -221,3 +221,30 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Legal pages (Terms, Privacy): styles the HTML rendered from Markdown.
+   See src/lib/legal.ts and src/app/{terms,privacy}/page.tsx. */
+.legal-prose h2 {
+  @apply text-xl font-semibold mt-8 first:mt-0;
+}
+.legal-prose h3 {
+  @apply text-base font-medium mt-6;
+}
+.legal-prose p {
+  @apply mt-3 text-muted-foreground leading-relaxed;
+}
+.legal-prose ul {
+  @apply mt-3 list-disc space-y-2 pl-6 text-muted-foreground;
+}
+.legal-prose ol {
+  @apply mt-3 list-decimal space-y-2 pl-6 text-muted-foreground;
+}
+.legal-prose strong {
+  @apply font-semibold text-foreground;
+}
+.legal-prose a {
+  @apply text-primary hover:underline;
+}
+.legal-prose code {
+  @apply rounded bg-muted px-1 py-0.5 text-sm;
+}

@@ -7,6 +7,20 @@ frontend:
     build:
       commands:
         - npm run build
+    postBuild:
+      commands:
+        # Render legal markdown to standalone HTML + legal-manifest.json and upload to S3.
+        # Requires env vars AMPLIFY_LEGAL_BUCKET and AWS_REGION configured in the Amplify
+        # Hosting environment. The build role also needs s3:PutObject on
+        # ${AMPLIFY_LEGAL_BUCKET}/public/docs/*. If those are absent we still want the
+        # web build to succeed, so wrap in a guard that downgrades upload-failure to a warning.
+        - |
+          if [ -n "$AMPLIFY_LEGAL_BUCKET" ] && [ -n "$AWS_REGION" ]; then
+            npm run build:legal-assets -- --upload || echo "[amplify.yml] WARNING: legal-assets upload failed; web build continues"
+          else
+            echo "[amplify.yml] AMPLIFY_LEGAL_BUCKET or AWS_REGION not set; running legal-assets build in dry-run mode"
+            npm run build:legal-assets -- --dry-run
+          fi
   artifacts:
     baseDirectory: .next
     files:

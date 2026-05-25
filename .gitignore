@@ -43,3 +43,6 @@ next-env.d.ts
 # amplify
 .amplify/
 tmp/
+
+# legal-asset build output (rendered from src/content/legal/*.md by Scripts/build-legal-assets.ts)
+.legal-build/

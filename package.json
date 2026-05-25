@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "build:legal-assets": "tsx Scripts/build-legal-assets.ts"
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^6.13.2",
@@ -19,22 +23,29 @@
     "aws-amplify": "^6.15.10",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "gray-matter": "^4.0.3",
     "lucide-react": "^0.562.0",
     "motion": "^12.26.2",
     "next": "16.1.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "remark": "^15.0.1",
+    "remark-html": "^16.0.1",
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
+    "@aws-sdk/client-s3": "^3.1053.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/coverage-v8": "^4.1.7",
     "eslint": "^9",
     "eslint-config-next": "16.1.3",
     "tailwindcss": "^4",
+    "tsx": "^4.22.3",
     "tw-animate-css": "^1.4.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.7"
   }
 }
