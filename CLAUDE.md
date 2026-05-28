@@ -132,3 +132,16 @@ npx shadcn@latest add "https://magicui.design/r/[component]"
 | Import errors | Magic UI uses named exports: `{ Component }` |
 | Theme not applying | Check globals.css OKLCH values |
 | Backend features not working | Ensure amplify_outputs.json is present |
+
+## gstack (recommended)
+
+This project uses [gstack](https://github.com/garrytan/gstack) for AI-assisted workflows.
+Install it for the best experience:
+
+```bash
+git clone --depth 1 https://github.com/garrytan/gstack.git ~/.claude/skills/gstack
+cd ~/.claude/skills/gstack && ./setup --team
+```
+
+Skills like /qa, /ship, /review, /investigate, and /browse become available after install.
+Use /browse for all web browsing. Use ~/.claude/skills/gstack/... for gstack file paths.
