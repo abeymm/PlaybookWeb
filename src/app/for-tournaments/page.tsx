@@ -188,11 +188,12 @@ export default function TournamentsPage() {
                   For Tournament Directors
                 </Badge>
                 <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
-                  Professional Yardage Books for Your Event
+                  Give Every Player a Book Worth Keeping
                 </h1>
                 <p className="mt-6 text-lg text-muted-foreground">
-                  Give every player a printed strategy playbook—sponsored by your partners
-                  or included in registration.
+                  A pocket-sized strategy playbook in your tournament&apos;s colors—the
+                  kind players show off, not toss. Sponsored by your partners or
+                  included in registration.
                 </p>
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                   <ShimmerButton
