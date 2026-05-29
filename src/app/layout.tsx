@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Fraunces, Hanken_Grotesk } from "next/font/google";
 import "./globals.css";
 import AmplifyProvider from "@/components/AmplifyProvider";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -20,8 +20,17 @@ import {
   APP_STORE_ID,
 } from "@/lib/seo";
 
-const inter = Inter({
-  variable: "--font-inter",
+// Body: a clean humanist grotesque — readable, warm, and distinctly NOT a
+// default system stack. Headings: Fraunces, a high-contrast display serif that
+// reads premium and heritage (a fit for the keepsake yardage-book product).
+const hankenGrotesk = Hanken_Grotesk({
+  variable: "--font-hanken",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
   display: "swap",
 });
@@ -141,7 +150,7 @@ export default function RootLayout({
         <JsonLd id="ld-website" data={websiteSchema()} />
         <JsonLd id="ld-mobileapp" data={mobileAppSchema()} />
       </head>
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${hankenGrotesk.variable} ${fraunces.variable} font-sans antialiased`}>
         <AmplifyProvider>{children}</AmplifyProvider>
       </body>
     </html>
