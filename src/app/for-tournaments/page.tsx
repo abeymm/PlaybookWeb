@@ -13,8 +13,6 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
   CheckIcon,
-  TruckIcon,
-  MessageSquareIcon,
   MegaphoneIcon,
   BookOpenIcon,
   MapPinIcon,
@@ -25,6 +23,27 @@ import {
   HeartHandshakeIcon,
   MailIcon,
 } from "lucide-react";
+
+const howItWorks = [
+  {
+    step: 1,
+    title: "Share Your Event Details",
+    description:
+      "Tell us your course, date, and player count. We'll create a custom playbook tailored to your tournament.",
+  },
+  {
+    step: 2,
+    title: "Add Sponsor Ads (Optional)",
+    description:
+      "Offset costs or generate revenue with premium ad placements in every book.",
+  },
+  {
+    step: 3,
+    title: "We Print & Ship",
+    description:
+      "Professional pocket-sized booklets delivered to your event, ready to hand out.",
+  },
+];
 
 const whatIsIncluded = [
   { icon: MapPinIcon, text: "Hole-by-hole strategy with distances" },
@@ -222,75 +241,32 @@ export default function TournamentsPage() {
       <section className="border-y border-border/40 bg-muted/30 px-6 py-20">
         <div className="mx-auto max-w-6xl">
           <BlurFade delay={0.1}>
-            <div className="text-center">
+            <div className="max-w-2xl">
               <Badge variant="secondary" className="mb-4">
                 How It Works
               </Badge>
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                Three simple steps
+                From your event details to players&apos; hands
               </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-                From your event details to professional playbooks in players&apos; hands.
+              <p className="mt-4 text-muted-foreground">
+                Three steps and a few weeks of lead time. We handle design, print,
+                and delivery.
               </p>
             </div>
           </BlurFade>
 
           <BlurFade delay={0.2}>
-            <div className="mt-12 grid gap-8 md:grid-cols-3">
-              <Card className="relative overflow-hidden border-border/50">
-                <CardContent className="p-6">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                    <MessageSquareIcon className="h-6 w-6 text-primary" />
-                  </div>
-                  <div className="mt-4">
-                    <span className="text-sm font-medium text-muted-foreground">
-                      Step 1
-                    </span>
-                    <h3 className="mt-1 text-xl font-semibold">Share Your Event Details</h3>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      Tell us your course, date, and player count. We&apos;ll create a custom
-                      playbook tailored to your tournament.
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="relative overflow-hidden border-border/50">
-                <CardContent className="p-6">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                    <MegaphoneIcon className="h-6 w-6 text-primary" />
-                  </div>
-                  <div className="mt-4">
-                    <span className="text-sm font-medium text-muted-foreground">
-                      Step 2
-                    </span>
-                    <h3 className="mt-1 text-xl font-semibold">Add Sponsor Ads (Optional)</h3>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      Offset costs or generate revenue with premium ad placements in every
-                      book.
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="relative overflow-hidden border-border/50">
-                <CardContent className="p-6">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                    <TruckIcon className="h-6 w-6 text-primary" />
-                  </div>
-                  <div className="mt-4">
-                    <span className="text-sm font-medium text-muted-foreground">
-                      Step 3
-                    </span>
-                    <h3 className="mt-1 text-xl font-semibold">We Print & Ship</h3>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      Professional pocket-sized booklets delivered to your event, ready
-                      to hand out.
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+            <ol className="mt-14 grid gap-x-8 gap-y-12 md:grid-cols-3">
+              {howItWorks.map((item) => (
+                <li key={item.step} className="border-t-2 border-primary/30 pt-5">
+                  <span className="font-display text-5xl font-semibold leading-none tabular-nums md:text-6xl">
+                    {String(item.step).padStart(2, "0")}
+                  </span>
+                  <h3 className="mt-5 text-xl font-semibold">{item.title}</h3>
+                  <p className="mt-2 text-muted-foreground">{item.description}</p>
+                </li>
+              ))}
+            </ol>
           </BlurFade>
         </div>
       </section>

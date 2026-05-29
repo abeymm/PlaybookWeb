@@ -20,9 +20,7 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
   CheckIcon,
-  BookOpenIcon,
   QrCodeIcon,
-  DollarSignIcon,
   SmartphoneIcon,
   PaletteIcon,
   UtensilsIcon,
@@ -36,21 +34,18 @@ import {
 
 const howItWorks = [
   {
-    icon: BookOpenIcon,
     step: 1,
     title: "We Build Your Playbook",
     description:
       "Work with your Head Pro to create custom hole-by-hole strategy, hazard guidance, and course tips tailored to your layout.",
   },
   {
-    icon: QrCodeIcon,
     step: 2,
     title: "Players Scan & Play",
     description:
       "Display QR codes in the pro shop and on scorecards. Players scan to instantly access your branded digital playbook.",
   },
   {
-    icon: DollarSignIcon,
     step: 3,
     title: "Engage & Convert",
     description:
@@ -232,40 +227,32 @@ export default function ForCoursesPage() {
       >
         <div className="mx-auto max-w-6xl">
           <BlurFade delay={0.1}>
-            <div className="text-center">
+            <div className="max-w-2xl">
               <Badge variant="secondary" className="mb-4">
                 How It Works
               </Badge>
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                Three simple steps
+                From layout to loyalty, in three moves
               </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-                From consultation to engagement, we make it easy to connect with your players.
+              <p className="mt-4 text-muted-foreground">
+                We do the heavy lifting. You connect with players from the first tee
+                to the parking lot.
               </p>
             </div>
           </BlurFade>
 
           <BlurFade delay={0.2}>
-            <div className="mt-12 grid gap-8 md:grid-cols-3">
+            <ol className="mt-14 grid gap-x-8 gap-y-12 md:grid-cols-3">
               {howItWorks.map((item) => (
-                <Card key={item.step} className="relative overflow-hidden border-border/50">
-                  <CardContent className="p-6">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                      <item.icon className="h-6 w-6 text-primary" />
-                    </div>
-                    <div className="mt-4">
-                      <span className="text-sm font-medium text-muted-foreground">
-                        Step {item.step}
-                      </span>
-                      <h3 className="mt-1 text-xl font-semibold">{item.title}</h3>
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        {item.description}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
+                <li key={item.step} className="border-t-2 border-primary/30 pt-5">
+                  <span className="font-display text-5xl font-semibold leading-none tabular-nums md:text-6xl">
+                    {String(item.step).padStart(2, "0")}
+                  </span>
+                  <h3 className="mt-5 text-xl font-semibold">{item.title}</h3>
+                  <p className="mt-2 text-muted-foreground">{item.description}</p>
+                </li>
               ))}
-            </div>
+            </ol>
           </BlurFade>
         </div>
       </section>
