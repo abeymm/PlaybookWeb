@@ -120,6 +120,11 @@ const artStyles = [
     image: "/images/print/samples/futuristic.jpeg",
     description: "Bold neon and modern lines",
   },
+  {
+    name: "3D Claymation",
+    image: "/images/print/samples/fun3D.jpeg",
+    description: "Playful dimensional look",
+  },
 ];
 
 const faqs = [
@@ -470,7 +475,7 @@ export default function ForCoursesPage() {
           </BlurFade>
 
           <BlurFade delay={0.2}>
-            <div className="mt-12 grid gap-6 sm:grid-cols-3">
+            <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {artStyles.map((style, index) => (
                 <Card
                   key={style.name}
