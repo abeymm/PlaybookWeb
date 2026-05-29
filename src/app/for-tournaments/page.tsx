@@ -549,15 +549,6 @@ export default function TournamentsPage() {
         </div>
       </section>
 
-      {/* Footer CTA */}
-      <section className="border-t border-border/40 bg-muted/30 px-6 py-12">
-        <div className="mx-auto max-w-4xl text-center">
-          <p className="text-muted-foreground">
-            Have questions? Email <ProtectedEmail d="dG91cm5hbWVudHM=" />.
-          </p>
-        </div>
-      </section>
-
       {/* Footer */}
       <footer className="border-t border-border/40 px-6 py-12">
         <div className="mx-auto max-w-6xl">
