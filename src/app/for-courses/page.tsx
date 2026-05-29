@@ -262,14 +262,14 @@ export default function ForCoursesPage() {
       <section className="px-6 py-20">
         <div className="mx-auto max-w-6xl">
           <BlurFade delay={0.1}>
-            <div className="text-center">
+            <div className="max-w-2xl">
               <Badge variant="secondary" className="mb-4">
                 What&apos;s Included
               </Badge>
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
                 Everything You Need to Engage Players
               </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+              <p className="mt-4 text-muted-foreground">
                 A complete platform for player engagement, from digital playbooks to
                 promotional tools.
               </p>
@@ -366,14 +366,14 @@ export default function ForCoursesPage() {
       <section className="px-6 py-20">
         <div className="mx-auto max-w-6xl">
           <BlurFade delay={0.1}>
-            <div className="text-center">
+            <div className="max-w-2xl">
               <Badge variant="secondary" className="mb-4">
                 Drive Revenue
               </Badge>
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
                 Reach Players When It Matters
               </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+              <p className="mt-4 text-muted-foreground">
                 Connect with players during their round and after they leave—turn casual
                 golfers into loyal regulars.
               </p>
