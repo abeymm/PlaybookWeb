@@ -6,7 +6,7 @@ import { canonical, OG_IMAGE } from "@/lib/seo";
 const title =
   "Golf Playbook for Tournaments — Player Strategy Guides for Events";
 const description =
-  "Run a sharper tournament. Hand every player a branded strategy guide with hole-by-hole yardages, risk zones, weather, and pin sheets. Built for charity events, club championships, and corporate outings.";
+  "Run a sharper tournament. Hand every player a branded strategy guide with hole-by-hole yardages, risk zones, wind charts, and a scorecard. Built for charity events, club championships, and corporate outings.";
 const path = "/for-tournaments";
 
 export const metadata: Metadata = {

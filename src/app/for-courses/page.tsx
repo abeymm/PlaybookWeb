@@ -151,7 +151,7 @@ const faqs = [
   {
     question: "What if our course layout changes?",
     answer:
-      "Annual updates are included at no extra cost. Whether it's a full renovation or seasonal pin positions, we'll update your playbook to reflect the changes.",
+      "Annual updates are included at no extra cost. Whether it's a full renovation or smaller seasonal course changes, we'll update your playbook to reflect them.",
   },
   {
     question: "How do printed yardage books work?",
