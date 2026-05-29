@@ -197,8 +197,9 @@ export default function ForCoursesPage() {
                 Turn Every Round Into a Return Visit
               </h1>
               <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-                Give your players personalized course strategy that keeps them engaged from
-                the first tee to the 19th hole—and brings them back for more.
+                Give your members a premium strategy tool—free to them, fully branded to
+                you—that keeps them engaged from the first tee to the 19th hole and brings
+                them back for more.
               </p>
               <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <ShimmerButton
@@ -334,6 +335,10 @@ export default function ForCoursesPage() {
                   playbook.
                 </p>
                 <ul className="mt-6 space-y-3">
+                  <li className="flex items-center gap-3">
+                    <CheckIcon className="h-5 w-5 text-primary" />
+                    <span>Free for your players—no fees, no subscription</span>
+                  </li>
                   <li className="flex items-center gap-3">
                     <CheckIcon className="h-5 w-5 text-primary" />
                     <span>No app download required (works in browser)</span>
