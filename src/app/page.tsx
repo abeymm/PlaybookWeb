@@ -179,7 +179,7 @@ export default function Home() {
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
                 </span>
                 <AnimatedShinyText className="text-sm font-medium">
-                  Now in App Store &middot; v3.0
+                  Now on the App Store
                 </AnimatedShinyText>
               </div>
             </div>
@@ -227,7 +227,7 @@ export default function Home() {
               <Separator orientation="vertical" className="hidden h-4 md:block" />
               <div className="flex items-center gap-2">
                 <SmartphoneIcon className="h-4 w-4 text-primary" />
-                <span>Built for iOS 26</span>
+                <span>Works on iOS 18+</span>
               </div>
             </div>
           </BlurFade>
@@ -242,7 +242,15 @@ export default function Home() {
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
                 The one thing other golf apps don&apos;t show you
               </h2>
-              <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
+              <div className="mx-auto mt-6 max-w-xl font-display text-lg italic leading-snug md:text-xl">
+                <p>Know where to hit it.</p>
+                <p>Know where to aim it.</p>
+                <p>Know when to go for it.</p>
+                <p>
+                  And know <span className="text-primary">where to miss.</span>
+                </p>
+              </div>
+              <p className="mx-auto mt-6 max-w-xl text-muted-foreground">
                 Slide to see the difference between aiming at the pin and aiming at the safe miss.
               </p>
             </div>
@@ -338,56 +346,85 @@ export default function Home() {
         </div>
       </section>
 
-      {/* What You Get Section */}
+      {/* What we make — free app + premium book */}
       <section className="px-6 py-20 md:py-24">
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-5xl">
           <BlurFade delay={0.1}>
             <div className="text-center">
               <Badge className="mb-4 bg-primary px-4 py-1.5 text-sm text-primary-foreground">
-                Pricing
+                What we make
               </Badge>
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                Mostly free.
+                A free app. A premium book.
               </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-                Strategy, GPS, risk zones, AI Caddie — free forever.
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
+                One to play with. One to keep.
               </p>
             </div>
           </BlurFade>
 
           <BlurFade delay={0.2}>
-            <div className="mt-12 grid gap-6 md:grid-cols-3">
+            <div className="mt-12 grid gap-6 md:grid-cols-2">
+              {/* App */}
               <Card className="border-border/50">
-                <CardContent className="p-6 text-center">
-                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                    <span className="text-2xl">&#x2714;&#xFE0F;</span>
-                  </div>
-                  <h3 className="mt-4 font-semibold">Free forever — the core</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    Strategy, GPS, risk zones, on-device AI Caddie, unlimited playbooks. On-device AI and open course data mean zero per-user cost to us.
+                <CardContent className="flex h-full flex-col p-8">
+                  <h3 className="text-2xl font-bold">The free app</h3>
+                  <p className="mt-3 text-muted-foreground">
+                    Strategy, GPS, color-coded risk zones, and an AI caddie — free forever, and it works offline.
                   </p>
+                  <ul className="mt-6 space-y-2 text-sm">
+                    {["Risk zones on every hole", "AI Caddie", "Unlimited playbooks", "Works offline"].map((b) => (
+                      <li key={b} className="flex items-center gap-2">
+                        <CheckIcon className="h-4 w-4 text-primary" />
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-8 pt-2">
+                    <ShimmerButton className="h-11 px-6" background="#F5C518" onClick={handleAppStoreClick}>
+                      <span className="flex items-center gap-2 text-sm font-semibold text-[#000000]">
+                        Download free
+                        <ArrowRightIcon className="h-4 w-4" />
+                      </span>
+                    </ShimmerButton>
+                  </div>
                 </CardContent>
               </Card>
-              <Card className="border-border/50">
-                <CardContent className="p-6 text-center">
-                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                    <span className="text-2xl">&#x1F4E6;</span>
-                  </div>
-                  <h3 className="mt-4 font-semibold">Paid — physical goods</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    Printed playbooks ($20–$65) for courses you play often. Real paper, real shipping, real fulfillment.
+
+              {/* Book — forest green, nods to the collateral */}
+              <Card className="border-transparent" style={{ backgroundColor: "#08401B", color: "#F5F1E6" }}>
+                <CardContent className="flex h-full flex-col p-8">
+                  <h3 className="font-display text-2xl font-bold" style={{ color: "#F5F1E6" }}>
+                    The premium book
+                  </h3>
+                  <p className="mt-3" style={{ color: "#D7DDCB" }}>
+                    A branded yardage book — hole-by-hole strategy in your course&apos;s colors and art. The keepsake your golfers actually keep.
                   </p>
-                </CardContent>
-              </Card>
-              <Card className="border-border/50">
-                <CardContent className="p-6 text-center">
-                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                    <span className="text-2xl">&#x1F680;</span>
+                  <ul className="mt-6 space-y-2 text-sm">
+                    {["Your course, your branding", "Choose the hole art", "Sold in your pro shop", "Companion to the app"].map((b) => (
+                      <li key={b} className="flex items-center gap-2">
+                        <CheckIcon className="h-4 w-4" style={{ color: "#F5C518" }} />
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-8 flex flex-wrap gap-4 pt-2">
+                    <Link
+                      href="/for-courses"
+                      className="inline-flex h-11 items-center gap-2 rounded-lg px-6 text-sm font-semibold"
+                      style={{ backgroundColor: "#F5C518", color: "#000" }}
+                    >
+                      For your course
+                      <ArrowRightIcon className="h-4 w-4" />
+                    </Link>
+                    <Link
+                      href="/for-tournaments"
+                      className="inline-flex h-11 items-center rounded-lg border px-6 text-sm font-medium"
+                      style={{ borderColor: "rgba(245,197,24,0.5)", color: "#F5F1E6" }}
+                    >
+                      For tournaments
+                    </Link>
                   </div>
-                  <h3 className="mt-4 font-semibold">Paid — premium intelligence (coming)</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    Cloud LLM queries, advanced analytics, tournament-grade features. These have per-user cost, so they earn a subscription. Core app stays free.
-                  </p>
                 </CardContent>
               </Card>
             </div>
