@@ -32,9 +32,9 @@ const steps = [
 
 const artStyles = [
   { name: "Watercolor", image: "/images/print/samples/waterColor.jpeg" },
-  { name: "Color Pencil", image: "/images/print/samples/colorPencil.jpeg" },
-  { name: "Futuristic", image: "/images/print/samples/futuristic.jpeg" },
-  { name: "3D Claymation", image: "/images/print/samples/fun3D.jpeg" },
+  { name: "Pencil Sketch", image: "/images/print/samples/colorPencil.jpeg" },
+  { name: "Neon", image: "/images/print/samples/futuristic.jpeg" },
+  { name: "Oil", image: "/images/print/samples/fun3D.jpeg" },
 ];
 
 const golferGets = [
@@ -140,8 +140,8 @@ export default function ForCoursesPage() {
             <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {artStyles.map((style) => (
                 <div key={style.name} className="overflow-hidden rounded-xl shadow-sm" style={{ backgroundColor: WHITE, border: `1px solid ${RULE}` }}>
-                  <div className="relative h-72 overflow-hidden">
-                    <Image src={style.image} alt={`${style.name} hole art`} width={400} height={600} className="h-full w-full object-cover" />
+                  <div className="relative aspect-[4/5] overflow-hidden">
+                    <Image src={style.image} alt={`${style.name} hole art`} width={400} height={600} className="h-full w-full object-cover object-top" />
                   </div>
                   <div className="p-4 text-center">
                     <h3 className="text-base" style={{ color: GREEN }}>{style.name}</h3>
