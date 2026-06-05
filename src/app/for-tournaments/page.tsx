@@ -82,7 +82,7 @@ export default function TournamentsPage() {
                 Request a Quote
                 <ArrowRightIcon className="h-4 w-4" />
               </a>
-              <Link href="/images/print/samples/SampleYardagePebble.pdf" target="_blank" rel="noopener noreferrer" className="flex h-12 items-center rounded-lg border px-8 text-base font-medium" style={{ borderColor: "rgba(245,197,24,0.5)", color: CREAM }}>
+              <Link href="/images/print/samples/SampleYardage.pdf" target="_blank" rel="noopener noreferrer" className="flex h-12 items-center rounded-lg border px-8 text-base font-medium" style={{ borderColor: "rgba(245,197,24,0.5)", color: CREAM }}>
                 See a sample
               </Link>
             </div>
