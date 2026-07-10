@@ -56,6 +56,11 @@ const homeFaqs = [
     answer:
       "Arccos and 18Birdies are primarily shot trackers focused on post-round stats. Golf Playbook is built for pre-round strategy: color-coded risk zones, weather-compensated dispersion, aim lines, and printable yardage books are included on every hole.",
   },
+  {
+    question: "I'm a golf parent / coach — is this for me?",
+    answer:
+      "Yes. You can build and print a hole-by-hole playbook for a junior golfer or student without ever playing a round in the app yourself. Set the strategy together, print it, and hand it to them for the round.",
+  },
 ];
 
 const HOME_FAQ_JSONLD = JSON.stringify(faqSchema(homeFaqs));
@@ -104,7 +109,7 @@ export default function Home() {
       <Particles
         className="absolute inset-0 -z-10"
         quantity={40}
-        color="#F5C518"
+        color="#FFBF00"
         ease={80}
         refresh
       />
@@ -129,7 +134,7 @@ export default function Home() {
             </Button>
             <ShimmerButton
               className="hidden h-9 px-4 sm:inline-flex"
-              background="#F5C518"
+              background="#FFBF00"
               onClick={handleAppStoreClick}
             >
               <span className="text-sm font-semibold text-[#000000]">Download</span>
@@ -158,7 +163,7 @@ export default function Home() {
               </Button>
               <ShimmerButton
                 className="h-9 w-full"
-                background="#F5C518"
+                background="#FFBF00"
                 onClick={() => { setMobileMenuOpen(false); handleAppStoreClick(); }}
               >
                 <span className="text-sm font-semibold text-[#000000]">Download</span>
@@ -201,7 +206,7 @@ export default function Home() {
 
           <BlurFade delay={0.4}>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <ShimmerButton className="h-12 px-8" background="#F5C518" onClick={handleAppStoreClick}>
+              <ShimmerButton className="h-12 px-8" background="#FFBF00" onClick={handleAppStoreClick}>
                 <span className="flex items-center gap-2 text-base font-semibold text-[#000000]">
                   Download free
                   <ArrowRightIcon className="h-4 w-4" />
@@ -299,6 +304,49 @@ export default function Home() {
         </div>
       </section>
 
+      {/* The Loop Section */}
+      <section className="px-6 py-20 md:py-24">
+        <div className="mx-auto max-w-5xl">
+          <BlurFade delay={0.1}>
+            <div className="text-center">
+              <Badge className="mb-4 bg-primary px-4 py-1.5 text-sm text-primary-foreground">
+                How it works
+              </Badge>
+              <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+                The plan gets smarter every round
+              </h2>
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
+                One loop, every time you play.
+              </p>
+            </div>
+          </BlurFade>
+
+          <BlurFade delay={0.2}>
+            <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                { step: "Plan", detail: "Build your strategy for every hole before you tee off." },
+                { step: "Preview", detail: "Walk the course on your phone and check your aim points." },
+                { step: "Print", detail: "Take a paper yardage book with you, tournament-legal." },
+                { step: "Play", detail: "Carry your plan in your pocket during the round." },
+                { step: "Record", detail: "Log what actually happened, hole by hole." },
+                { step: "Review", detail: "See where the plan held up and where it didn't." },
+                { step: "Share", detail: "Send the playbook to a parent, coach, or playing partner." },
+              ].map((item, i) => (
+                <Card key={item.step} className="border-border/50">
+                  <CardContent className="p-6">
+                    <span className="text-sm font-semibold text-primary">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <h3 className="mt-2 text-lg font-bold">{item.step}</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">{item.detail}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </BlurFade>
+        </div>
+      </section>
+
       {/* Testimonials Section */}
       <section
         id="testimonials"
@@ -381,7 +429,7 @@ export default function Home() {
                     ))}
                   </ul>
                   <div className="mt-8 pt-2">
-                    <ShimmerButton className="h-11 px-6" background="#F5C518" onClick={handleAppStoreClick}>
+                    <ShimmerButton className="h-11 px-6" background="#FFBF00" onClick={handleAppStoreClick}>
                       <span className="flex items-center gap-2 text-sm font-semibold text-[#000000]">
                         Download free
                         <ArrowRightIcon className="h-4 w-4" />
@@ -403,7 +451,7 @@ export default function Home() {
                   <ul className="mt-6 space-y-2 text-sm">
                     {["Your course, your branding", "Choose the hole art", "Sold in your pro shop", "Companion to the app"].map((b) => (
                       <li key={b} className="flex items-center gap-2">
-                        <CheckIcon className="h-4 w-4" style={{ color: "#F5C518" }} />
+                        <CheckIcon className="h-4 w-4" style={{ color: "#FFBF00" }} />
                         {b}
                       </li>
                     ))}
@@ -412,7 +460,7 @@ export default function Home() {
                     <Link
                       href="/for-courses"
                       className="inline-flex h-11 items-center gap-2 rounded-lg px-6 text-sm font-semibold"
-                      style={{ backgroundColor: "#F5C518", color: "#000" }}
+                      style={{ backgroundColor: "#FFBF00", color: "#000" }}
                     >
                       For your course
                       <ArrowRightIcon className="h-4 w-4" />
@@ -447,7 +495,7 @@ export default function Home() {
                       Download free. Play your next round smarter.
                     </p>
                     <div className="mt-8">
-                      <ShimmerButton className="h-12 px-8" background="#F5C518" onClick={handleAppStoreClick}>
+                      <ShimmerButton className="h-12 px-8" background="#FFBF00" onClick={handleAppStoreClick}>
                         <span className="flex items-center gap-2 text-base font-semibold text-[#000000]">
                           Download free
                           <ArrowRightIcon className="h-4 w-4" />

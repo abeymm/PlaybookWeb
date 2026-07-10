@@ -181,7 +181,7 @@ export default function PartnersPage() {
               <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <ShimmerButton
                   className="h-12 px-8"
-                  background="#F5C518"
+                  background="#FFBF00"
                   onClick={() => document.getElementById("inquiry-form")?.scrollIntoView({ behavior: "smooth" })}
                 >
                   <span className="flex items-center gap-2 text-base font-semibold text-[#000000]">

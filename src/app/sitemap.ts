@@ -9,6 +9,7 @@ const publicRoutes: Array<{
   priority: number;
 }> = [
   { path: "/", changeFrequency: "weekly", priority: 1.0 },
+  { path: "/get", changeFrequency: "yearly", priority: 0.8 },
   { path: "/compare", changeFrequency: "monthly", priority: 0.9 },
   { path: "/for-courses", changeFrequency: "monthly", priority: 0.8 },
   { path: "/for-tournaments", changeFrequency: "monthly", priority: 0.8 },

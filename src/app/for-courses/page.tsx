@@ -8,7 +8,7 @@ import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, MailIcon } from "lucide-react
 
 /* Fixed collateral palette — these pages render the same in light or dark theme. */
 const GREEN = "#08401B";
-const GOLD = "#F5C518";
+const GOLD = "#FFBF00";
 const GOLD_DEEP = "#B8860B";
 const CREAM = "#F5F1E6";
 const WHITE = "#FFFFFF";

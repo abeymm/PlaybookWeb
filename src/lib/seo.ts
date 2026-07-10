@@ -14,7 +14,7 @@ export const OG_IMAGE_ALT = "Golf Playbook — strategy GPS app for golfers";
 export const DEFAULT_LOCALE = "en_US";
 
 export const PRIMARY_DESCRIPTION =
-  "Golf Playbook is the strategy GPS app for golfers. Plan every shot with color-coded risk zones, AI caddie, weather-compensated dispersion, and personal updatable playbooks. Lower your score with smarter pre-round planning.";
+  "Golf Playbook is the strategy GPS app for golfers, parents, and coaches. Plan every shot with color-coded risk zones, AI caddie, weather-compensated dispersion, and personal updatable playbooks. Lower your score with smarter pre-round planning.";
 
 export const PRIMARY_KEYWORDS = [
   "golf playbook",

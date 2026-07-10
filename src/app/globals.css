@@ -92,9 +92,8 @@
 
 :root {
   /* ===== Brand Colors (from GolfPlaybook_Theme_System.md) ===== */
-  --color-primary-gold: #F5C518;
+  --color-primary-gold: #FFBF00;
   --color-fairway-green: #4CAF50;
-  --color-wind-pink: #FF6B9D;
 
   /* ===== Semantic Colors ===== */
   --color-success: #4CAF50;
@@ -117,8 +116,8 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.15 0.01 0);
 
-  /* Primary Gold (#F5C518) */
-  --primary: oklch(0.846 0.176 86);
+  /* Primary Gold (#FFBF00) */
+  --primary: oklch(0.840 0.172 84);
   --primary-foreground: oklch(0 0 0);
 
   /* Secondary - warm gray */
@@ -139,10 +138,10 @@
   /* Borders - warm gray (#E5E5E0) */
   --border: oklch(0.91 0.005 100);
   --input: oklch(0.91 0.005 100);
-  --ring: oklch(0.846 0.176 86);
+  --ring: oklch(0.840 0.172 84);
 
   /* Chart colors */
-  --chart-1: oklch(0.846 0.176 86);
+  --chart-1: oklch(0.840 0.172 84);
   --chart-2: oklch(0.648 0.164 145);
   --chart-3: oklch(0.628 0.258 27);
   --chart-4: oklch(0.65 0.2 250);
@@ -156,7 +155,7 @@
   --sidebar-accent: oklch(0.95 0.005 100);
   --sidebar-accent-foreground: oklch(0.25 0.01 0);
   --sidebar-border: oklch(0.91 0.005 100);
-  --sidebar-ring: oklch(0.846 0.176 86);
+  --sidebar-ring: oklch(0.840 0.172 84);
 }
 
 .dark {
@@ -172,8 +171,8 @@
   --popover: oklch(0.20 0.005 270);
   --popover-foreground: oklch(1 0 0);
 
-  /* Primary Gold (#F5C518) - same in dark */
-  --primary: oklch(0.846 0.176 86);
+  /* Primary Gold (#FFBF00) - same in dark */
+  --primary: oklch(0.840 0.172 84);
   --primary-foreground: oklch(0 0 0);
 
   /* Background Tertiary (#2C2C2E) */
@@ -194,10 +193,10 @@
   /* Borders - subtle separator (#38383A) */
   --border: oklch(0.32 0.005 270);
   --input: oklch(0.32 0.005 270);
-  --ring: oklch(0.846 0.176 86);
+  --ring: oklch(0.840 0.172 84);
 
   /* Chart colors */
-  --chart-1: oklch(0.846 0.176 86);
+  --chart-1: oklch(0.840 0.172 84);
   --chart-2: oklch(0.696 0.17 162);
   --chart-3: oklch(0.769 0.188 70);
   --chart-4: oklch(0.627 0.265 304);
@@ -206,12 +205,12 @@
   /* Sidebar */
   --sidebar: oklch(0 0 0);
   --sidebar-foreground: oklch(1 0 0);
-  --sidebar-primary: oklch(0.846 0.176 86);
+  --sidebar-primary: oklch(0.840 0.172 84);
   --sidebar-primary-foreground: oklch(0 0 0);
   --sidebar-accent: oklch(0.28 0.005 270);
   --sidebar-accent-foreground: oklch(0.93 0.01 0);
   --sidebar-border: oklch(0.32 0.005 270);
-  --sidebar-ring: oklch(0.846 0.176 86);
+  --sidebar-ring: oklch(0.840 0.172 84);
 }
 
 @layer base {

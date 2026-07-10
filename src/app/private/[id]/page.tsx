@@ -26,7 +26,7 @@ export default function PrivatePlaybookPage({
       <Particles
         className="absolute inset-0 -z-10"
         quantity={30}
-        color="#F5C518"
+        color="#FFBF00"
         ease={80}
         refresh
       />

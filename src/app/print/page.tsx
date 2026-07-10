@@ -206,14 +206,14 @@ export default function PrintPage() {
                   Print Service
                 </Badge>
                 <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
-                  Print Your Perfect Round
+                  Print your Playbook
                 </h1>
                 <p className="mt-6 text-lg text-muted-foreground">
-                  Professional-quality playbooks delivered to your door. From course
-                  strategy to your hands in days.
+                  Paper for the plan, phone for the moment. A tournament-legal
+                  yardage book, built from the strategy you made.
                 </p>
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                  <ShimmerButton className="h-12 px-8" background="#F5C518" onClick={handleAppStoreClick}>
+                  <ShimmerButton className="h-12 px-8" background="#FFBF00" onClick={handleAppStoreClick}>
                     <span className="flex items-center gap-2 text-base font-semibold text-[#000000]">
                       Order in App
                       <ArrowRightIcon className="h-4 w-4" />
@@ -546,14 +546,14 @@ export default function PrintPage() {
               printed playbook today.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <ShimmerButton className="h-12 px-8" background="#F5C518" onClick={handleAppStoreClick}>
+              <ShimmerButton className="h-12 px-8" background="#FFBF00" onClick={handleAppStoreClick}>
                 <span className="flex items-center gap-2 text-base font-semibold text-[#000000]">
                   Download for iOS
                   <ArrowRightIcon className="h-4 w-4" />
                 </span>
               </ShimmerButton>
               <Button variant="outline" size="lg" className="h-12 px-8" asChild>
-                <Link href="/#features">Learn More</Link>
+                <Link href="/#hero-demo">Learn More</Link>
               </Button>
             </div>
           </BlurFade>
