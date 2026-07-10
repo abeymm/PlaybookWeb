@@ -1,0 +1,15 @@
+# Amplify Hosting custom headers.
+#
+# next.config.ts headers() does NOT apply to static public/ assets on Amplify
+# Hosting — this file is the mechanism Amplify actually honors. Without the
+# JSON content type, Apple's AASA validator rejects the file: their CDN
+# returns 404 for playbook.golf, webcredentials association fails on-device,
+# and Password AutoFill offers credentials but refuses to release them into
+# the app (tap → shake, no fill). Universal Links (applinks) fail the same way.
+customHeaders:
+  - pattern: '/.well-known/apple-app-site-association'
+    headers:
+      - key: 'Content-Type'
+        value: 'application/json'
+      - key: 'Cache-Control'
+        value: 'max-age=3600'
