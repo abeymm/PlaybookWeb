@@ -28,7 +28,9 @@ import type {
   CourseDataVersion,
   QcReport,
 } from "./types";
+import type { SeedJson, SeedSaveResult } from "./seed";
 import { courseKeyFor } from "./geo";
+import outputs from "../../../amplify_outputs.json";
 
 // ---- generated GraphQL field names (single source to change if schema differs) ----
 export const GQL = {
@@ -47,6 +49,7 @@ export const PREFIX = {
   mlgen: "public/osm-cache-mlgen/",
   staging: "public/osm-cache-mlgen/staging/",
   reports: "qc-reports/",
+  seeds: "seeds/",
 } as const;
 
 // Narrow the client type to avoid the deep-generic explosion generateClient() infers when no
@@ -340,6 +343,38 @@ export async function downloadReport(courseKey: string): Promise<QcReport | null
   } catch {
     return null;
   }
+}
+
+// ---- Manual course seeding (/admin/seed) ----
+
+/**
+ * Save a hand-clicked course seed. The Backend saveCourseSeed mutation (admin-only) validates the
+ * payload, writes seeds/manual-<slug>.json, and returns {ok, key, cacheKey, findings} or a failure
+ * with structured findings. AWSJSON is a string scalar, so the seed is JSON-stringified in and the
+ * response is JSON-parsed out.
+ */
+export async function saveCourseSeed(seed: SeedJson): Promise<SeedSaveResult> {
+  const query = `mutation S($seed: AWSJSON!) { saveCourseSeed(seed: $seed) }`;
+  const data = await gql(query, { seed: JSON.stringify(seed) });
+  return parseJson<SeedSaveResult>(data.saveCourseSeed);
+}
+
+/** List saved seeds under seeds/ (admin group has list access — like the mlgen prefix). */
+export async function listSeeds(): Promise<StorageObject[]> {
+  return listStorage(PREFIX.seeds);
+}
+
+/** Download + parse a saved seed JSON by its full storage key (e.g. seeds/manual-foo.json). */
+export async function downloadSeed(key: string): Promise<SeedJson> {
+  const { body } = await downloadData({ path: key }).result;
+  const text = await body.text();
+  return JSON.parse(text) as SeedJson;
+}
+
+/** The S3 bucket name (from amplify_outputs.json) — used to build the "aws s3 cp" next-steps line. */
+export function storageBucket(): string {
+  const storage = (outputs as { storage?: { bucket_name?: string } }).storage;
+  return storage?.bucket_name ?? "<bucket>";
 }
 
 /** Convenience: courseKey for an osmId (re-exported so components import one module). */

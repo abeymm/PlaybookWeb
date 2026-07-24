@@ -21,6 +21,7 @@ import {
   ServerIcon,
   DatabaseIcon,
   BarChart3Icon,
+  MapPinPlusIcon,
   ShieldAlertIcon,
   LogOutIcon,
 } from "lucide-react";
@@ -34,6 +35,7 @@ const NAV = [
   { icon: ClipboardCheckIcon, label: "Review", href: "/admin/review" },
   { icon: ListIcon, label: "Courses", href: "/admin/courses" },
   { icon: ServerIcon, label: "Jobs", href: "/admin/jobs" },
+  { icon: MapPinPlusIcon, label: "Seed", href: "/admin/seed" },
   { icon: DatabaseIcon, label: "Storage", href: "/admin/storage" },
   { icon: BarChart3Icon, label: "Metrics", href: "/admin/metrics" },
 ];
