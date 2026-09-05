@@ -27,6 +27,7 @@ import type {
   SaveVerdict,
   CourseDataVersion,
   QcReport,
+  ValidationFinding,
 } from "./types";
 import type { SeedJson, SeedSaveResult } from "./seed";
 import { courseKeyFor } from "./geo";
@@ -226,6 +227,67 @@ export async function resolveCourse(osmId: string, contentVersion?: string): Pro
 }
 
 // ---- Editor mutations (Addendum §2, N2 baseETag, DX4) ----
+//
+// BOUNDARY NORMALIZATION — do not skip. All five editor ops are declared `.returns(a.json())`,
+// so AppSync hands the Lambda's object back verbatim and the Lambda's `EditorResult`
+// (Backend/amplify/functions/course-data-editor-function/shared.ts) IS the wire contract. It
+// names things differently from this module's Web-side types: `s3ETag` / `eTag` for what we call
+// `etag`, and the failure code+message inside `errors[0]` rather than a top-level `code`/`error`.
+// `parseJson` is an unchecked cast, so a drift is invisible to tsc AND to component tests that
+// build their own fixtures — which is exactly how the N2 optimistic lock, the R9 regen banner and
+// the delete-failure reason all shipped dead. Every mapping lives here, once, and is pinned by
+// __tests__/api.test.ts against literal Lambda payloads.
+
+/** The raw editor-Lambda response (shared.ts `EditorResult`). */
+interface EditorResult {
+  ok: boolean;
+  errors?: ValidationFinding[];
+  warnings?: ValidationFinding[];
+  s3VersionId?: string;
+  s3ETag?: string;
+  indexSyncWarning?: boolean;
+  versions?: RawVersionEntry[];
+  restoredFrom?: string;
+  deletedKey?: string;
+  key?: string;
+  cacheKey?: string;
+  findings?: ValidationFinding[];
+}
+
+/** The raw version row (shared.ts `VersionEntry`) — note `eTag`, not `etag`. */
+interface RawVersionEntry {
+  versionId: string;
+  lastModified?: string;
+  size?: number;
+  eTag?: string;
+  isLatest?: boolean;
+  isDeleteMarker?: boolean;
+}
+
+function toSaveVerdict(raw: EditorResult): SaveVerdict {
+  return {
+    ok: raw.ok,
+    errors: raw.errors,
+    warnings: raw.warnings,
+    s3VersionId: raw.s3VersionId,
+    etag: raw.s3ETag,
+    indexSyncWarning: raw.indexSyncWarning,
+    // The Lambda has no top-level code — it is the first coded finding
+    // (etag-conflict, staging-missing, version-not-found, …).
+    code: raw.errors?.[0]?.code,
+  };
+}
+
+function toVersion(raw: RawVersionEntry): CourseDataVersion {
+  return {
+    versionId: raw.versionId,
+    lastModified: raw.lastModified,
+    size: raw.size,
+    etag: raw.eTag,
+    isLatest: raw.isLatest,
+    isDeleteMarker: raw.isDeleteMarker,
+  };
+}
 
 export async function saveCourseData(
   courseKey: string,
@@ -237,7 +299,7 @@ export async function saveCourseData(
     saveCourseData(courseKey: $courseKey, rendition: $rendition, stagingKey: $stagingKey, baseETag: $baseETag)
   }`;
   const data = await gql(query, { courseKey, rendition, stagingKey, baseETag });
-  return parseJson<SaveVerdict>(data.saveCourseData);
+  return toSaveVerdict(parseJson<EditorResult>(data.saveCourseData));
 }
 
 export async function listCourseDataVersions(
@@ -248,10 +310,9 @@ export async function listCourseDataVersions(
     listCourseDataVersions(courseKey: $courseKey, rendition: $rendition)
   }`;
   const data = await gql(query, { courseKey, rendition });
-  const parsed = parseJson<CourseDataVersion[] | { versions: CourseDataVersion[] }>(
-    data.listCourseDataVersions
-  );
-  return Array.isArray(parsed) ? parsed : (parsed?.versions ?? []);
+  const parsed = parseJson<RawVersionEntry[] | EditorResult>(data.listCourseDataVersions);
+  const rows = Array.isArray(parsed) ? parsed : (parsed?.versions ?? []);
+  return rows.map(toVersion);
 }
 
 export async function restoreCourseDataVersion(
@@ -263,13 +324,18 @@ export async function restoreCourseDataVersion(
     restoreCourseDataVersion(courseKey: $courseKey, rendition: $rendition, versionId: $versionId)
   }`;
   const data = await gql(query, { courseKey, rendition, versionId });
-  return parseJson<SaveVerdict>(data.restoreCourseDataVersion);
+  return toSaveVerdict(parseJson<EditorResult>(data.restoreCourseDataVersion));
 }
 
-export async function deleteCourseArtifact(key: string): Promise<{ ok: boolean; error?: string }> {
+/** `error` carries the Lambda's real reason — an allowlist rejection (never retry) reads
+ *  differently from an s3-throttled failure (retry works); `code` distinguishes them. */
+export async function deleteCourseArtifact(
+  key: string
+): Promise<{ ok: boolean; error?: string; code?: string }> {
   const query = `mutation D($key: String!) { deleteCourseArtifact(key: $key) }`;
   const data = await gql(query, { key });
-  return parseJson<{ ok: boolean; error?: string }>(data.deleteCourseArtifact);
+  const raw = parseJson<EditorResult>(data.deleteCourseArtifact);
+  return { ok: raw.ok, error: raw.errors?.[0]?.msg, code: raw.errors?.[0]?.code };
 }
 
 // ---- Storage ----
@@ -352,11 +418,30 @@ export async function downloadReport(courseKey: string): Promise<QcReport | null
  * payload, writes seeds/manual-<slug>.json, and returns {ok, key, cacheKey, findings} or a failure
  * with structured findings. AWSJSON is a string scalar, so the seed is JSON-stringified in and the
  * response is JSON-parsed out.
+ *
+ * Shape asymmetry the Lambda genuinely has (save-seed.ts): the SUCCESS path names its warnings
+ * `findings`, the FAILURE path names them `errors` + `warnings`. Both are flattened into
+ * `findings` here so the /admin/seed panel renders the blocking reasons instead of the bare
+ * "Rejected by the server." — every point-level `seed-far-point` / `seed-position-mismatch`
+ * message was being dropped on the floor.
  */
 export async function saveCourseSeed(seed: SeedJson): Promise<SeedSaveResult> {
   const query = `mutation S($seed: AWSJSON!) { saveCourseSeed(seed: $seed) }`;
   const data = await gql(query, { seed: JSON.stringify(seed) });
-  return parseJson<SeedSaveResult>(data.saveCourseSeed);
+  const raw = parseJson<EditorResult>(data.saveCourseSeed);
+  const findings: ValidationFinding[] = [
+    ...(raw.findings ?? []),
+    ...(raw.errors ?? []),
+    ...(raw.warnings ?? []),
+  ];
+  return {
+    ok: raw.ok,
+    key: raw.key,
+    cacheKey: raw.cacheKey,
+    findings,
+    // Headline reason (the renderer shows it only when it has no list to show).
+    error: raw.errors?.[0]?.msg,
+  };
 }
 
 /** List saved seeds under seeds/ (admin group has list access — like the mlgen prefix). */

@@ -74,8 +74,18 @@ export interface SeedSaveResult {
   error?: string;
 }
 
-/** Distance beyond which a hole is flagged as a likely misclick. */
+/**
+ * Distance beyond which a point/hole is flagged as a likely misclick. Mirrors the server's
+ * MAX_HOLE_POINT_DISTANCE_KM (Backend seed-validator.ts) — keep the two in step.
+ */
 export const FAR_HOLE_METERS = 15_000;
+
+/**
+ * Maximum holes in one seed. Mirrors the server's MAX_HOLES (Backend seed-validator.ts), which
+ * bounds BOTH holes.length and every holeNumber and rejects — the editor auto-assigns max+1 with
+ * no cap of its own.
+ */
+export const MAX_HOLES = 27;
 
 // ---------------------------------------------------------------------------
 // slugify — lowercase kebab (a-z0-9-), collapse repeats, trim.
@@ -170,6 +180,15 @@ export function validateDraft(draft: SeedDraft): ValidationFinding[] {
     out.push({ level: "error", code: "no-holes", path: "holes", msg: "Add at least one hole." });
   }
 
+  if (draft.holes.length > MAX_HOLES) {
+    out.push({
+      level: "error",
+      code: "seed-holes-count",
+      path: "holes",
+      msg: `A seed holds at most ${MAX_HOLES} holes — this one has ${draft.holes.length}.`,
+    });
+  }
+
   draft.holes.forEach((h, i) => {
     if (h.points.length < 2) {
       out.push({
@@ -177,6 +196,15 @@ export function validateDraft(draft: SeedDraft): ValidationFinding[] {
         code: "hole-min-points",
         path: `holes[${i}]`,
         msg: `Hole ${h.holeNumber} needs at least 2 points (tee + green).`,
+      });
+    }
+    // Server parity: holeNumber must be an int in 1..MAX_HOLES or saveCourseSeed rejects.
+    if (!Number.isInteger(h.holeNumber) || h.holeNumber < 1 || h.holeNumber > MAX_HOLES) {
+      out.push({
+        level: "error",
+        code: "seed-bad-range",
+        path: `holes[${i}]`,
+        msg: `Hole number ${h.holeNumber} is outside 1-${MAX_HOLES}.`,
       });
     }
   });
@@ -194,6 +222,28 @@ export function validateDraft(draft: SeedDraft): ValidationFinding[] {
       });
     }
   }
+
+  // Far-POINT guard — the server's rule, ported exactly (seed-far-point). buildSeedJson sets the
+  // seed's latitude/longitude to the centroid of ALL points, and the server then measures EVERY
+  // centerline point against that and rejects past FAR_HOLE_METERS. The sibling-centroid warning
+  // below is a different, softer signal: one misclicked point among 36 moves a hole's centroid by
+  // only half the error, so it can stay silent on a draft the server refuses. Both run.
+  const seedCentre = centroidOf(draft.holes.flatMap((h) => h.points));
+  draft.holes.forEach((h, i) => {
+    h.points.forEach((p, pi) => {
+      const d = haversineMeters(p, seedCentre);
+      if (d > FAR_HOLE_METERS) {
+        out.push({
+          level: "error",
+          code: "seed-far-point",
+          path: `holes[${i}].points[${pi}]`,
+          msg:
+            `Point ${pi + 1} of hole ${h.holeNumber} is ${(d / 1000).toFixed(1)} km from the ` +
+            `course centre — past the ${FAR_HOLE_METERS / 1000} km limit the server enforces.`,
+        });
+      }
+    });
+  });
 
   // Far-hole misclick guard: a hole whose centroid is >15 km from the other holes' centroid.
   if (draft.holes.length > 1) {

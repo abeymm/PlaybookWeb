@@ -11,9 +11,19 @@ export function shouldBlockSave(findings: ValidationFinding[]): boolean {
 
 export type VerdictKind = "ok" | "conflict" | "error";
 
-/** Classify a save verdict for the UI: ok | conflict (etag/version) | error. */
+/** Conflict codes that route to the "reload and re-apply" recovery UI rather than a plain error. */
+const CONFLICT_CODES = new Set(["version-conflict", "etag-conflict"]);
+
+/**
+ * Classify a save verdict for the UI: ok | conflict (etag/version) | error.
+ *
+ * `code` is normalized from the Lambda's `errors[0].code` by api.ts; the fallback below reads the
+ * finding directly so an un-normalized verdict cannot silently downgrade a real 412 to a generic
+ * error and strand the conflict-recovery UI — which is exactly what shipped, since the Lambda
+ * never sets a top-level `code`.
+ */
 export function classifyVerdict(verdict: SaveVerdict): VerdictKind {
   if (verdict.ok) return "ok";
-  if (verdict.code === "version-conflict" || verdict.code === "etag-conflict") return "conflict";
-  return "error";
+  const code = verdict.code ?? verdict.errors?.[0]?.code;
+  return code !== undefined && CONFLICT_CODES.has(code) ? "conflict" : "error";
 }

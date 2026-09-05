@@ -36,4 +36,25 @@ describe("saveFlow — verdict classification (etag-conflict path)", () => {
     expect(classifyVerdict({ ok: false, code: "s3-put-failed" })).toBe("error");
     expect(classifyVerdict({ ok: false })).toBe("error");
   });
+
+  it("falls back to errors[0].code, so a raw Lambda verdict still classifies (C23/C17)", () => {
+    // The editor Lambda never sets a top-level `code` — save-course-data.ts:153 puts it in
+    // errors[0]. api.ts normalizes it, but classification must not depend on that having run.
+    const rawConflict: SaveVerdict = {
+      ok: false,
+      errors: [{
+        level: "error",
+        code: "etag-conflict",
+        path: "baseETag",
+        msg: "the object changed since you loaded it (If-Match precondition failed)",
+      }],
+    };
+    expect(classifyVerdict(rawConflict)).toBe("conflict");
+
+    const rawOther: SaveVerdict = {
+      ok: false,
+      errors: [{ level: "error", code: "staging-missing", path: "stagingKey", msg: "not found" }],
+    };
+    expect(classifyVerdict(rawOther)).toBe("error");
+  });
 });

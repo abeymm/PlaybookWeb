@@ -6,6 +6,7 @@ import {
   draftFromSeed,
   validateDraft,
   isSaveable,
+  MAX_HOLES,
   parseGoToInput,
   centroidOf,
   haversineMeters,
@@ -163,7 +164,7 @@ describe("seed — validateDraft / isSaveable", () => {
     expect(isSaveable(d)).toBe(false);
   });
 
-  it("warns (not errors) on a hole >15km from the others", () => {
+  it("still warns on a hole >15km from the others, and now also blocks it", () => {
     const d = sampleDraft();
     // Move hole 2 ~200km away.
     d.holes[1].points = [
@@ -174,7 +175,17 @@ describe("seed — validateDraft / isSaveable", () => {
     expect(f).toContainEqual(
       expect.objectContaining({ code: "hole-far", level: "warning", path: "holes[1]" })
     );
-    // A warning does not block saving.
+    // The advisory warning alone never blocked; the ported server rule does, because
+    // saveCourseSeed rejects this exact draft with seed-far-point. Save must not be enabled
+    // on something the server will refuse.
+    expect(f).toContainEqual(expect.objectContaining({ code: "seed-far-point", level: "error" }));
+    expect(isSaveable(d)).toBe(false);
+  });
+
+  it("a warning-only draft still saves (warnings never block)", () => {
+    const d = sampleDraft();
+    d.holes[1].holeNumber = 1; // duplicate number -> warning only
+    expect(validateDraft(d).some((x) => x.level === "error")).toBe(false);
     expect(isSaveable(d)).toBe(true);
   });
 
@@ -191,6 +202,92 @@ describe("seed — validateDraft / isSaveable", () => {
     const d: SeedDraft = { name: "One", slug: "one", holes: [sampleDraft().holes[0]] };
     const f = validateDraft(d);
     expect(f.some((x) => x.code === "hole-far")).toBe(false);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Server parity — every rule below is an ERROR in Backend seed-validator.ts, so a draft that
+// trips one CANNOT be saveable here or the admin gets Save enabled on a payload saveCourseSeed
+// rejects (and, before the api.ts findings fix, a bare "Rejected by the server.").
+// ---------------------------------------------------------------------------
+describe("seed — validateDraft parity with the server's seed validator", () => {
+  /** n holes of 2 points, clustered at `lat`/`lng`; hole `farHole`'s green is 0.18deg (~20km) north. */
+  function clusteredDraft(n: number, farHole: number | null = null): SeedDraft {
+    const lat = 36.5;
+    const lng = -121.95;
+    return {
+      name: "Cluster",
+      slug: "cluster",
+      holes: Array.from({ length: n }, (_, i) => ({
+        holeNumber: i + 1,
+        points: [
+          { lat: lat + i * 0.0005, lng },
+          { lat: (farHole === i ? lat + 0.18 : lat + i * 0.0005 + 0.0005), lng },
+        ],
+      })),
+    };
+  }
+
+  it("blocks a single misclicked point the centroid-vs-siblings warning cannot see", () => {
+    // 18 holes, one green 20km north. The all-points centroid shifts only 20/36 ~= 0.56km, so the
+    // server measures ~19.4km and REJECTS; the sibling-centroid check measures that hole at ~10km
+    // and stays silent. Before this rule the client emitted nothing at all for this draft.
+    const d = clusteredDraft(18, 3);
+    const f = validateDraft(d);
+
+    expect(f.some((x) => x.code === "hole-far")).toBe(false); // the old check is blind here
+    expect(f).toContainEqual(
+      expect.objectContaining({ code: "seed-far-point", level: "error", path: "holes[3].points[1]" })
+    );
+    expect(f.filter((x) => x.code === "seed-far-point")).toHaveLength(1); // only the bad point
+    expect(isSaveable(d)).toBe(false);
+  });
+
+  it("blocks a single-hole draft whose tee and green are far apart", () => {
+    // The sibling-centroid check is skipped entirely for one hole; the server still rejects.
+    const d: SeedDraft = {
+      name: "One",
+      slug: "one",
+      holes: [{ holeNumber: 1, points: [{ lat: 36.5, lng: -121.95 }, { lat: 36.86, lng: -121.95 }] }],
+    };
+    const f = validateDraft(d);
+    expect(f.filter((x) => x.code === "seed-far-point")).toHaveLength(2); // both ends, ~20km each
+    expect(isSaveable(d)).toBe(false);
+  });
+
+  it("accepts a tight draft (no far-point findings)", () => {
+    const d = clusteredDraft(18);
+    expect(validateDraft(d).some((x) => x.code === "seed-far-point")).toBe(false);
+    expect(isSaveable(d)).toBe(true);
+  });
+
+  it("blocks more than MAX_HOLES holes", () => {
+    const d = clusteredDraft(MAX_HOLES + 1);
+    const f = validateDraft(d);
+    expect(f).toContainEqual(
+      expect.objectContaining({ code: "seed-holes-count", level: "error", path: "holes" })
+    );
+    expect(isSaveable(d)).toBe(false);
+  });
+
+  it("accepts exactly MAX_HOLES holes (inclusive bound)", () => {
+    const d = clusteredDraft(MAX_HOLES);
+    expect(validateDraft(d).some((x) => x.level === "error")).toBe(false);
+    expect(isSaveable(d)).toBe(true);
+  });
+
+  it("blocks a holeNumber outside 1..MAX_HOLES (the editor auto-assigns max+1 uncapped)", () => {
+    const d = clusteredDraft(2);
+    d.holes[1].holeNumber = MAX_HOLES + 1;
+    const f = validateDraft(d);
+    expect(f).toContainEqual(
+      expect.objectContaining({ code: "seed-bad-range", level: "error", path: "holes[1]" })
+    );
+    expect(isSaveable(d)).toBe(false);
+
+    const zero = clusteredDraft(1);
+    zero.holes[0].holeNumber = 0;
+    expect(validateDraft(zero).some((x) => x.code === "seed-bad-range")).toBe(true);
   });
 });
 

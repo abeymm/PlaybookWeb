@@ -233,6 +233,12 @@ export interface CourseDataVersion {
   size?: number;
   etag?: string;
   isLatest?: boolean;
+  /**
+   * True for an S3 DELETE MARKER, not a stored object: the artifact was deleted, so it has no
+   * etag/size and nothing may be restored *to* it. When the latest row is a delete marker the
+   * course has no current mlgen object — do not adopt an older version as the base ETag (C14).
+   */
+  isDeleteMarker?: boolean;
   metadata?: Record<string, string>;
 }
 

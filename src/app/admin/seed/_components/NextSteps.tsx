@@ -61,7 +61,10 @@ function FailurePanel({ result, onDismiss }: { result: SeedSaveResult; onDismiss
   const findings = result.findings ?? [];
   return (
     <Panel onDismiss={onDismiss} title="Save failed" tone="error">
-      {result.error && <p className="text-xs text-destructive">{result.error}</p>}
+      {/* Headline only when there is no structured list — findings[0] already carries it. */}
+      {findings.length === 0 && result.error && (
+        <p className="text-xs text-destructive">{result.error}</p>
+      )}
       {findings.length > 0 ? (
         <ul className="mt-1 space-y-1">
           {findings.map((f, i) => (
