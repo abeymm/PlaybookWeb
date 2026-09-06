@@ -302,6 +302,12 @@ export async function saveCourseData(
   return toSaveVerdict(parseJson<EditorResult>(data.saveCourseData));
 }
 
+/**
+ * Throws on a Lambda failure envelope (`{ok:false, errors:[...]}`) rather than mapping it to `[]`
+ * — an empty list reads as "no version history", which lets a caller adopt a null baseEtag against
+ * an object that still exists and turns a transient failure (e.g. s3-throttled) into a guaranteed
+ * `IfNoneMatch:'*'` 412 on the next save (#3). Callers must not swallow this into `[]`.
+ */
 export async function listCourseDataVersions(
   courseKey: string,
   rendition: "mlgen" = "mlgen"
@@ -311,8 +317,11 @@ export async function listCourseDataVersions(
   }`;
   const data = await gql(query, { courseKey, rendition });
   const parsed = parseJson<RawVersionEntry[] | EditorResult>(data.listCourseDataVersions);
-  const rows = Array.isArray(parsed) ? parsed : (parsed?.versions ?? []);
-  return rows.map(toVersion);
+  if (Array.isArray(parsed)) return parsed.map(toVersion);
+  if (!parsed.ok) {
+    throw new Error(parsed.errors?.[0]?.msg ?? "listCourseDataVersions failed");
+  }
+  return (parsed.versions ?? []).map(toVersion);
 }
 
 export async function restoreCourseDataVersion(

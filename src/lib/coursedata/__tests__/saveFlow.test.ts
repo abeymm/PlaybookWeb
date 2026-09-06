@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { shouldBlockSave, classifyVerdict } from "../saveFlow";
+import { shouldBlockSave, classifyVerdict, baseEtagFromVersions } from "../saveFlow";
 import { validateCourseData } from "../validator";
-import type { CourseData, SaveVerdict } from "../types";
+import type { CourseData, CourseDataVersion, SaveVerdict } from "../types";
 
 const golden = JSON.parse(
   readFileSync(
@@ -56,5 +56,32 @@ describe("saveFlow — verdict classification (etag-conflict path)", () => {
       errors: [{ level: "error", code: "staging-missing", path: "stagingKey", msg: "not found" }],
     };
     expect(classifyVerdict(rawOther)).toBe("error");
+  });
+});
+
+describe("saveFlow — baseEtagFromVersions (a delete marker is not an object, C14)", () => {
+  it("returns the latest version's etag when it is a real object", () => {
+    const versions: CourseDataVersion[] = [
+      { versionId: "v2", isLatest: true, etag: '"e2"' },
+      { versionId: "v1", isLatest: false, etag: '"e1"' },
+    ];
+    expect(baseEtagFromVersions(versions)).toBe('"e2"');
+  });
+
+  it("returns null when the latest entry is a delete marker, even though it is isLatest", () => {
+    const versions: CourseDataVersion[] = [
+      { versionId: "dm1", isLatest: true, isDeleteMarker: true },
+      { versionId: "v1", isLatest: false, etag: '"e1"' },
+    ];
+    expect(baseEtagFromVersions(versions)).toBeNull();
+  });
+
+  it("returns null for an empty version list", () => {
+    expect(baseEtagFromVersions([])).toBeNull();
+  });
+
+  it("falls back to the first entry when no row is flagged isLatest, still respecting a delete marker", () => {
+    const versions: CourseDataVersion[] = [{ versionId: "dm1", isDeleteMarker: true }];
+    expect(baseEtagFromVersions(versions)).toBeNull();
   });
 });

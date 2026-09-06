@@ -50,7 +50,7 @@ import {
   courseKeyFor,
 } from "@/lib/coursedata/api";
 import { validateCourseData, splitFindings } from "@/lib/coursedata/validator";
-import { shouldBlockSave, classifyVerdict } from "@/lib/coursedata/saveFlow";
+import { shouldBlockSave, classifyVerdict, baseEtagFromVersions } from "@/lib/coursedata/saveFlow";
 import { ALL_CLASSES, ACTIVE_CLASSES } from "@/lib/coursedata/featureTags";
 import { classSwatch } from "@/lib/coursedata/colors";
 import {
@@ -91,6 +91,7 @@ export default function CourseDetail({ osmId }: { osmId: string }) {
   const [report, setReport] = useState<QcReport | null>(null);
   const [versions, setVersions] = useState<CourseDataVersion[]>([]);
   const [versionsLoading, setVersionsLoading] = useState(true);
+  const [versionsError, setVersionsError] = useState<string | null>(null);
   const [baseEtag, setBaseEtag] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<unknown>(null);
@@ -118,6 +119,7 @@ export default function CourseDetail({ osmId }: { osmId: string }) {
   const [saving, setSaving] = useState(false);
   const [saveVerdict, setSaveVerdict] = useState<SaveVerdict | null>(null);
   const [conflict, setConflict] = useState<SaveVerdict | null>(null);
+  const [reloadError, setReloadError] = useState<string | null>(null);
   const [note, setNote] = useState("");
 
   // Draft restore
@@ -129,11 +131,11 @@ export default function CourseDetail({ osmId }: { osmId: string }) {
     let cancelled = false;
     setLoading(true);
     setLoadError(null);
+    setVersionsError(null);
     (async () => {
       try {
-        const [mlgen, versionsRes, indexRow, rep] = await Promise.all([
+        const [mlgen, indexRow, rep] = await Promise.all([
           downloadMlgen(courseKey),
-          listCourseDataVersions(courseKey).catch(() => [] as CourseDataVersion[]),
           getCourse(osmId).catch(() => null),
           downloadReport(courseKey).catch(() => null),
         ]);
@@ -143,10 +145,22 @@ export default function CourseDetail({ osmId }: { osmId: string }) {
         setRow(indexRow);
         setReport(rep);
         setNote(indexRow?.reviewNote ?? "");
-        setVersions(versionsRes);
-        setVersionsLoading(false);
-        const latest = versionsRes.find((v) => v.isLatest) ?? versionsRes[0];
-        const etag = latest?.etag ?? null;
+
+        // Version history is load-bearing for the optimistic-lock baseEtag — a listing failure
+        // must NOT be swallowed into "no versions" (that silently null's baseEtag and turns the
+        // next save into a guaranteed etag-conflict, #3). Surface it and leave baseEtag null.
+        let etag: string | null = null;
+        try {
+          const versionsRes = await listCourseDataVersions(courseKey);
+          if (cancelled) return;
+          setVersions(versionsRes);
+          etag = baseEtagFromVersions(versionsRes);
+        } catch (err) {
+          if (cancelled) return;
+          setVersionsError(err instanceof Error ? err.message : String(err));
+        } finally {
+          if (!cancelled) setVersionsLoading(false);
+        }
         setBaseEtag(etag);
 
         // Draft restore-on-open + stale-vs-regenerated (R9).
@@ -339,18 +353,25 @@ export default function CourseDetail({ osmId }: { osmId: string }) {
     }
   };
 
+  // The sole recovery path out of the etag-conflict dialog — must not itself be the fragile path
+  // (#8). On failure, keep the dialog open (don't clear `conflict`) and surface the error instead
+  // of leaving an unhandled rejection with the dialog already dismissed and baseEtag still null.
   const reloadFromServer = async () => {
-    setConflict(null);
-    const mlgen = await downloadMlgen(courseKey);
-    setCourse(mlgen[0] ?? null);
-    pastRef.current = [];
-    futureRef.current = [];
-    setDirty(false);
-    const vs = await listCourseDataVersions(courseKey);
-    setVersions(vs);
-    const latest = vs.find((v) => v.isLatest) ?? vs[0];
-    setBaseEtag(latest?.etag ?? null);
-    forceStacks((n) => n + 1);
+    setReloadError(null);
+    try {
+      const mlgen = await downloadMlgen(courseKey);
+      const vs = await listCourseDataVersions(courseKey);
+      setCourse(mlgen[0] ?? null);
+      pastRef.current = [];
+      futureRef.current = [];
+      setDirty(false);
+      setVersions(vs);
+      setBaseEtag(baseEtagFromVersions(vs));
+      forceStacks((n) => n + 1);
+      setConflict(null);
+    } catch (e) {
+      setReloadError(e instanceof Error ? e.message : String(e));
+    }
   };
 
   // ---- publish callbacks ----
@@ -411,6 +432,11 @@ export default function CourseDetail({ osmId }: { osmId: string }) {
         </div>
       </div>
 
+      {versionsError && (
+        <div className="border-b border-destructive/40 bg-destructive/10 px-4 py-1.5 text-xs text-destructive">
+          Version history unavailable — reload before saving. ({versionsError})
+        </div>
+      )}
       {regenBanner && (
         <div className="border-b border-amber-300 bg-amber-50 px-4 py-1.5 text-xs text-amber-800 dark:border-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
           This course was regenerated after your last local edit — your draft is based on older data.
@@ -668,11 +694,21 @@ export default function CourseDetail({ osmId }: { osmId: string }) {
       {/* Etag conflict recovery */}
       <Dialog
         open={!!conflict}
-        onClose={() => setConflict(null)}
+        onClose={() => {
+          setConflict(null);
+          setReloadError(null);
+        }}
         title="Course changed since you loaded it"
         footer={
           <>
-            <Button variant="outline" size="sm" onClick={() => setConflict(null)}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setConflict(null);
+                setReloadError(null);
+              }}
+            >
               Keep my edits
             </Button>
             <Button size="sm" onClick={reloadFromServer}>
@@ -685,6 +721,12 @@ export default function CourseDetail({ osmId }: { osmId: string }) {
           The canonical object was modified after you loaded it (version conflict). Reload the latest
           data (discarding your unsaved edits) or keep editing and re-save to try again.
         </p>
+        {reloadError && (
+          <p className="mt-2 text-destructive">
+            Reload failed: {reloadError}. The conflict is still unresolved — try again once the
+            underlying issue clears.
+          </p>
+        )}
       </Dialog>
     </div>
   );

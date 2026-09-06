@@ -1,7 +1,7 @@
 // saveFlow.ts — pure decision helpers for the editor save state machine (E1/N2), extracted so the
 // flow is unit-testable independently of the React component.
 
-import type { ValidationFinding, SaveVerdict } from "./types";
+import type { ValidationFinding, SaveVerdict, CourseDataVersion } from "./types";
 import { hasErrors } from "./validator";
 
 /** Preflight blocks the staging upload iff there is any error-level finding (warnings never block, R5). */
@@ -26,4 +26,15 @@ export function classifyVerdict(verdict: SaveVerdict): VerdictKind {
   if (verdict.ok) return "ok";
   const code = verdict.code ?? verdict.errors?.[0]?.code;
   return code !== undefined && CONFLICT_CODES.has(code) ? "conflict" : "error";
+}
+
+/**
+ * Derive the base ETag for the next optimistic-lock save from a version list. A delete marker is
+ * not an object — it has no ETag and cannot be the If-Match source for a PUT/CopyObject — so it
+ * must never supply a base ETag even when it is the newest (isLatest) row (C14).
+ */
+export function baseEtagFromVersions(versions: CourseDataVersion[]): string | null {
+  const latest = versions.find((v) => v.isLatest) ?? versions[0];
+  if (!latest || latest.isDeleteMarker) return null;
+  return latest.etag ?? null;
 }

@@ -124,12 +124,19 @@ describe("listCourseDataVersions — VersionEntry → CourseDataVersion", () => 
     expect(versions[0].etag).toBeUndefined();
   });
 
-  it("returns [] for a failure payload instead of leaking the error shape as rows", async () => {
+  it("throws with the first coded message on a failure envelope instead of returning [] as if there were no versions", async () => {
+    // A silent [] reads as "no version history" and lets the caller adopt a null baseEtag against
+    // an object that still exists — this must surface as a failure, not an empty list (#3).
     lambdaReplies("listCourseDataVersions", {
       ok: false,
       errors: [{ level: "error", code: "s3-throttled", path: "courseKey", msg: "SlowDown" }],
     });
-    expect(await listCourseDataVersions("way-1")).toEqual([]);
+    await expect(listCourseDataVersions("way-1")).rejects.toThrow("SlowDown");
+  });
+
+  it("throws a generic message when the failure envelope carries no errors array", async () => {
+    lambdaReplies("listCourseDataVersions", { ok: false });
+    await expect(listCourseDataVersions("way-1")).rejects.toThrow();
   });
 });
 

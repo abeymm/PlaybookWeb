@@ -338,15 +338,21 @@ export function VersionsPanel({
               <div className="min-w-0">
                 <div className="truncate font-mono text-[11px]">
                   {v.versionId === "null" ? "(pre-versioning)" : v.versionId}
-                  {v.isLatest && <span className="ml-1 text-primary">· latest</span>}
+                  {v.isDeleteMarker ? (
+                    <span className="ml-1 text-muted-foreground">(deleted)</span>
+                  ) : (
+                    v.isLatest && <span className="ml-1 text-primary">· latest</span>
+                  )}
                 </div>
                 <div className="text-[11px] text-muted-foreground">
                   {v.lastModified ? new Date(v.lastModified).toLocaleString() : "—"}
-                  {v.size != null && ` · ${(v.size / 1024).toFixed(0)} KB`}
+                  {!v.isDeleteMarker && v.size != null && ` · ${(v.size / 1024).toFixed(0)} KB`}
                   {v.metadata?.["edited-by"] && ` · ${v.metadata["edited-by"]}`}
                 </div>
               </div>
-              {!v.isLatest && (
+              {/* A delete marker is not a stored object — there is nothing to CopyObject-restore
+                  from, so it never gets a Restore button regardless of isLatest (C14). */}
+              {!v.isLatest && !v.isDeleteMarker && (
                 <Button size="sm" variant="outline" className="h-6 px-2 text-xs" onClick={() => setConfirm(v)}>
                   Restore
                 </Button>
