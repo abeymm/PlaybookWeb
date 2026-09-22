@@ -2,9 +2,13 @@
 
 // CourseMap — MapLibre viewer + terra-draw editor for one hole.
 //
-// Basemap: USGS NAIP ImageServer tiles (polygons are NAIP-true) with an OSM raster fallback
-// (Addendum item 9). NAIP tile errors auto-switch to OSM + a banner. Per-class fill/line styling
-// from colors.ts; primary + per-tee centerlines distinguishable; view-only boundary outline.
+// Basemap: USGS NAIP exportImage (the ImageServer's /tile endpoint has no CONUS-wide tile cache
+// and 404s at every zoom — exportImage is what the ML pipeline fetches, so we use maplibre's
+// {bbox-epsg-3857} raster-source template against it) with an Esri World Imagery raster fallback
+// (Addendum item 9). Repeated NAIP tile errors at zoom >= minzoom auto-switch to Esri + a banner.
+// OSM is reachable only through the manual basemap toggle. Per-class fill/line styling from
+// colors.ts (dimmed over aerial basemaps so fills stay readable over imagery); primary + per-tee
+// centerlines distinguishable; view-only boundary outline.
 // Rendition/diff: legacy = dashed outline, mlgen = filled (viewer.html convention).
 //
 // EDITING (terra-draw, mlgen only): select a feature (click) then "Edit geometry" loads just that
@@ -23,9 +27,26 @@ import { ringToCoords, type Bbox, type LngLat } from "@/lib/coursedata/geo";
 import type { Coordinate, FeatureClass } from "@/lib/coursedata/types";
 import { ALL_CLASSES } from "@/lib/coursedata/featureTags";
 
+// exportImage (not /tile — see file-header NOTE) with maplibre's {bbox-epsg-3857} raster-source
+// template, mirroring what the ML pipeline fetches from the same ImageServer.
 const NAIP_TILES =
-  "https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPPlus/ImageServer/tile/{z}/{y}/{x}";
+  "https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPPlus/ImageServer/exportImage" +
+  "?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=256,256&format=jpg&f=image";
+const NAIP_MINZOOM = 8;
+const NAIP_MAXZOOM = 19;
+// Consecutive NAIP failures (at usable zoom) before auto-falling back to Esri — avoids flapping on
+// a single missing tile (e.g. no NAIP coverage at that spot).
+const NAIP_FAIL_THRESHOLD = 2;
+const ESRI_TILES =
+  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
 const OSM_TILES = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+
+// Aerial basemaps are visually busier than OSM's flat cartography — dim the class fills so
+// imagery stays legible underneath. Shared palette (colors.ts) is unchanged; this scales it.
+const AERIAL_FILL_OPACITY = 0.35;
+function fillOpacityFor(basemap: CourseMapProps["basemap"]): unknown {
+  return basemap === "osm" ? classOpacityExpr() : AERIAL_FILL_OPACITY;
+}
 
 // Data-driven fill/line color: match on `cls`.
 function classColorExpr(prop: "fill" | "stroke"): unknown {
@@ -50,7 +71,7 @@ export interface CourseMapProps {
   visibleClasses: Set<FeatureClass>;
   rendition: "mlgen" | "legacy";
   diff: boolean;
-  basemap: "naip" | "osm";
+  basemap: "naip" | "esri" | "osm";
   selectedFid: string | null;
   editMode: "view" | "edit" | "draw";
   drawClass: FeatureClass;
@@ -68,6 +89,8 @@ export default function CourseMap(props: CourseMapProps) {
   const drawRef = useRef<any>(null);
   const propsRef = useRef(props);
   propsRef.current = props;
+  const naipFailRef = useRef(0);
+  const prevBasemapRef = useRef(props.basemap);
 
   // -- init map once --
   useEffect(() => {
@@ -81,7 +104,24 @@ export default function CourseMap(props: CourseMapProps) {
         style: {
           version: 8,
           sources: {
-            naip: { type: "raster", tiles: [NAIP_TILES], tileSize: 256, attribution: "USGS NAIP" },
+            naip: {
+              type: "raster",
+              tiles: [NAIP_TILES],
+              tileSize: 256,
+              // exportImage has no low-zoom cache either — without this, the default
+              // center/zoom=3 view before fitBounds fires a burst of guaranteed-error requests
+              // that stalls maplibre's "load" event (and therefore fitBounds, gated on it) for
+              // tens of seconds. minzoom stops those requests outright.
+              minzoom: NAIP_MINZOOM,
+              maxzoom: NAIP_MAXZOOM,
+              attribution: "USGS NAIP",
+            },
+            esri: {
+              type: "raster",
+              tiles: [ESRI_TILES],
+              tileSize: 256,
+              attribution: "Esri World Imagery",
+            },
             osm: {
               type: "raster",
               tiles: [OSM_TILES],
@@ -91,6 +131,7 @@ export default function CourseMap(props: CourseMapProps) {
           },
           layers: [
             { id: "naip", type: "raster", source: "naip", layout: { visibility: "visible" } },
+            { id: "esri", type: "raster", source: "esri", layout: { visibility: "none" } },
             { id: "osm", type: "raster", source: "osm", layout: { visibility: "none" } },
           ],
         },
@@ -101,14 +142,17 @@ export default function CourseMap(props: CourseMapProps) {
 
       map.on("error", (e: unknown) => {
         const err = e as { sourceId?: string };
-        if (err?.sourceId === "naip" && propsRef.current.basemap === "naip") {
+        if (err?.sourceId !== "naip" || propsRef.current.basemap !== "naip") return;
+        if (map.getZoom() < NAIP_MINZOOM) return;
+        naipFailRef.current += 1;
+        if (naipFailRef.current >= NAIP_FAIL_THRESHOLD) {
           propsRef.current.onNaipError();
         }
       });
 
       map.on("load", () => {
         if (cancelled) return;
-        addDataLayers(map);
+        addDataLayers(map, propsRef.current.basemap);
         readyRef.current = true;
         syncAll(map, propsRef.current);
 
@@ -142,6 +186,12 @@ export default function CourseMap(props: CourseMapProps) {
   useEffect(() => {
     const map = mapRef.current;
     if (map && readyRef.current) syncAll(map, props);
+    // A fresh switch back to NAIP (manual toggle) gets its own couple of tries before we
+    // auto-fall-back to Esri again.
+    if (props.basemap === "naip" && prevBasemapRef.current !== "naip") {
+      naipFailRef.current = 0;
+    }
+    prevBasemapRef.current = props.basemap;
   }, [props]);
 
   // -- terra-draw edit/draw lifecycle --
@@ -160,7 +210,7 @@ export default function CourseMap(props: CourseMapProps) {
       drawRef.current = null;
 
       if (props.editMode === "view") {
-        setFillOpacityHidden(map, null);
+        setFillOpacityHidden(map, null, props.basemap);
         return;
       }
 
@@ -199,7 +249,7 @@ export default function CourseMap(props: CourseMapProps) {
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ] as any);
             const tdId = added?.[0]?.id;
-            setFillOpacityHidden(map, props.selectedFid);
+            setFillOpacityHidden(map, props.selectedFid, props.basemap);
             draw.setMode("select");
             if (tdId != null) {
               try {
@@ -248,7 +298,7 @@ export default function CourseMap(props: CourseMapProps) {
       }
       drawRef.current = null;
       const m = mapRef.current;
-      if (m && readyRef.current) setFillOpacityHidden(m, null);
+      if (m && readyRef.current) setFillOpacityHidden(m, null, props.basemap);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.editMode, props.selectedFid, props.drawClass]);
@@ -258,7 +308,7 @@ export default function CourseMap(props: CourseMapProps) {
 
 // --- imperative map helpers ---
 
-function addDataLayers(map: MLMap) {
+function addDataLayers(map: MLMap, basemap: CourseMapProps["basemap"]) {
   const empty: GeoJSON.FeatureCollection = { type: "FeatureCollection", features: [] };
   map.addSource("mlgen", { type: "geojson", data: empty });
   map.addSource("legacy", { type: "geojson", data: empty });
@@ -270,7 +320,7 @@ function addDataLayers(map: MLMap) {
     type: "fill",
     source: "mlgen",
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    paint: { "fill-color": classColorExpr("fill") as any, "fill-opacity": classOpacityExpr() as any },
+    paint: { "fill-color": classColorExpr("fill") as any, "fill-opacity": fillOpacityFor(basemap) as any },
   });
   map.addLayer({
     id: "mlgen-line",
@@ -327,11 +377,10 @@ function safeSetData(map: MLMap, id: string, data: any) {
   src?.setData?.(data);
 }
 
-function setFillOpacityHidden(map: MLMap, hiddenFid: string | null) {
+function setFillOpacityHidden(map: MLMap, hiddenFid: string | null, basemap: CourseMapProps["basemap"]) {
   if (!map.getLayer("mlgen-fill")) return;
-  const expr = hiddenFid
-    ? ["case", ["==", ["get", "fid"], hiddenFid], 0, classOpacityExpr()]
-    : classOpacityExpr();
+  const base = fillOpacityFor(basemap);
+  const expr = hiddenFid ? ["case", ["==", ["get", "fid"], hiddenFid], 0, base] : base;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   map.setPaintProperty("mlgen-fill", "fill-opacity", expr as any);
 }
@@ -344,7 +393,14 @@ function syncAll(map: MLMap, p: CourseMapProps) {
 
   // Basemap toggle.
   map.setLayoutProperty("naip", "visibility", p.basemap === "naip" ? "visible" : "none");
+  map.setLayoutProperty("esri", "visibility", p.basemap === "esri" ? "visible" : "none");
   map.setLayoutProperty("osm", "visibility", p.basemap === "osm" ? "visible" : "none");
+
+  // Keep the fill dimmed/undimmed for the current basemap outside of edit mode (edit mode's
+  // hide-one-feature opacity is owned by the terra-draw lifecycle effect above).
+  if (p.editMode !== "edit") {
+    setFillOpacityHidden(map, null, p.basemap);
+  }
 
   // Class visibility.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

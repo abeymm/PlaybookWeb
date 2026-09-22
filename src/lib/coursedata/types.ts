@@ -62,6 +62,24 @@ export interface PerTeeCenterline {
 }
 
 /** A single hole. */
+/** Per-hole elevation grid embedded in courseData (see OSMHole.elevation). */
+export interface HoleElevationGrid {
+  cellM: number;
+  width: number;
+  height: number;
+  /** Outer north-west corner of cell (0, 0). */
+  origin: Coordinate;
+  /** Degrees per row (rows run south) / per column (east). */
+  latStep: number;
+  lngStep: number;
+  baseM: number;
+  nodata: number;
+  /** "int16le-dm,deflate-raw,base64" */
+  encoding: string;
+  source?: string;
+  values: string;
+}
+
 export interface OSMHole {
   id: string;
   osmId: string;
@@ -81,12 +99,70 @@ export interface OSMHole {
   centerlines?: PerTeeCenterline[];
   teePosition?: LatLngPosition;
   flagPosition?: LatLngPosition;
+  /**
+   * Embedded 3DEP elevation over the hole's window (centerline bbox + margin). Row-major int16
+   * decimetres above `baseM`, raw DEFLATE, base64; `nodata` marks voids. Cell centres sit at
+   * origin + (i + 0.5) * step; consumers sample bilinearly. Written by embed_elevation.py.
+   */
+  elevation?: HoleElevationGrid;
   featureIds: string[];
   teeIds: string[];
   greenIds: string[];
   fairwayIds: string[];
   teeClassifications?: { [teeId: string]: { color: string; type: string } };
   hasData: boolean;
+}
+
+/** One per-tee scorecard record in the pipeline's normalized shape (golfapi_to_course.tees_meta). */
+export interface ScorecardTeeRecord {
+  teeId: string;
+  name: string;
+  color: string | null;
+  /** Per-hole yards in hole order (0 = unknown). */
+  lengths: number[];
+  totalYards: number;
+  ratingMen: number | null;
+  slopeMen: number | null;
+  ratingWomen: number | null;
+  slopeWomen: number | null;
+}
+
+/** A value proposed by an external source for a checked field. */
+export interface CheckCandidate {
+  source: string;
+  /** Source-side identifier (e.g. the OpenGolfAPI course id). */
+  id?: string;
+  value: unknown;
+}
+
+/**
+ * One aspect of the course that needs human or tool verification. Written by a producer (e.g. the
+ * scorecard merge) instead of silently overwriting data; resolved in a later step with other
+ * evidence (distance checks, a scorecard from the course website, …). `id` is stable per
+ * (kind, path) so re-runs update open items and keep resolved ones.
+ */
+export interface CheckItem {
+  id: string;
+  kind: string;
+  /** JSON path within this course object, or "course" for course-level items. */
+  path: string;
+  severity: "error" | "warning" | "info";
+  status: "open" | "resolved" | "dismissed";
+  msg: string;
+  /** The value currently in the course (as stored, or derived — e.g. centerline yards). */
+  current?: unknown;
+  candidates?: CheckCandidate[];
+  /** Kinds of evidence that would settle this item (free-form tags). */
+  evidence?: string[];
+  createdAt: string;
+  createdBy: string;
+  resolvedAt?: string;
+  resolution?: string;
+}
+
+export interface ChecksSection {
+  version: 1;
+  items: CheckItem[];
 }
 
 /** A full course (root array element). */
@@ -117,6 +193,19 @@ export interface OSMCourse {
   osmVersion?: number;
   osmChangeset?: number;
   cacheUrl?: string;
+  // Scorecard passthrough keys (build_coursedata_nosam._COURSE_PASSTHROUGH): per-hole par/handicap
+  // arrays, per-tee scorecard records, and the representative USGA rating/slope. Populated by the
+  // /local OpenGolfAPI merge (localflow/scorecard.ts) or the golfapi.io converter; absent otherwise.
+  parsMen?: number[];
+  parsWomen?: number[];
+  indexesMen?: number[];
+  indexesWomen?: number[];
+  tees?: ScorecardTeeRecord[];
+  rating?: number | null;
+  slope?: number | null;
+  measure?: string;
+  /** Aspects flagged for verification (see CheckItem). Passthrough key in the pipeline. */
+  checks?: ChecksSection;
   // Emitter-only (fixture): raw/merged counts by class + source.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   generator?: Record<string, any>;

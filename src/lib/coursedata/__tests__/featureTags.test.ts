@@ -30,10 +30,12 @@ describe("featureTags — parity with coursedata_common.py", () => {
     expect(classFromTags({ golf: "water_hazard" })).toBe("water");
   });
 
-  it("B3.6 tree is greyed/disabled (no iOS GolfFeatureType case)", () => {
-    expect(isDisabledClass("tree")).toBe(true);
+  it("B3.6 tree is an active class (iOS GolfFeatureType.tree added 2026-09-18)", () => {
+    expect(isDisabledClass("tree")).toBe(false);
+    expect(ACTIVE_CLASSES).toContain("tree");
     for (const c of ACTIVE_CLASSES) expect(isDisabledClass(c)).toBe(false);
     expect(ALL_CLASSES[ALL_CLASSES.length - 1]).toBe("tree");
+    expect(ALL_CLASSES).toEqual(ACTIVE_CLASSES);
   });
 
   it("tagsForClass preserves non-owned keys (e.g. name) and replaces class markers", () => {

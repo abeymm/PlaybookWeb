@@ -9,10 +9,10 @@
 // Historical bugs preserved here: "water" ⇒ golf:water_hazard (had NO golf key before → iOS
 // rendered "unknown"); "rough" ⇒ golf:rough (had no entry at all).
 //
-// `tree` is INTENTIONALLY greyed/disabled in pickers: iOS GolfFeatureType has no `tree` case
-// (coursedata_common.py:32-36), so a golf:tree feature is decoded to nothing and rendered
-// nowhere in the current app (R14). It stays in the table only so existing tree features keep
-// a distinct class instead of being conflated with rough.
+// `tree` is an ACTIVE class: iOS added GolfFeatureType.tree → SurfaceType.trees on 2026-09-18
+// (commit eae558d1, OSMModelsV2.swift ~904-924), and the pipeline emits golf=tree features by
+// default (Training/segformer_green/golfapi_pipeline/coursedata_config.py DEFAULT_EMIT_CLASSES,
+// commit 1fea1e4). It used to be greyed/disabled in pickers — that stopped being true.
 
 import type { FeatureClass } from "./types";
 
@@ -24,7 +24,6 @@ export const FEATURE_TAGS: Record<FeatureClass, Record<string, string>> = {
   water: { golf: "water_hazard", natural: "water" },
   fairway: { golf: "fairway" },
   rough: { golf: "rough" },
-  // Not rendered by current iOS (no GolfFeatureType.tree). Greyed in pickers.
   tree: { golf: "tree" },
 };
 
@@ -36,14 +35,20 @@ export const ACTIVE_CLASSES: FeatureClass[] = [
   "water",
   "fairway",
   "rough",
+  "tree",
 ];
 
-/** All classes, tree last (shown disabled/greyed in the picker). */
-export const ALL_CLASSES: FeatureClass[] = [...ACTIVE_CLASSES, "tree"];
+/**
+ * All classes. Currently identical to ACTIVE_CLASSES (every FeatureClass iOS renders) — kept as
+ * a separate export for callers that mean "every known class" vs. "every pickable class", so a
+ * future class can land here ahead of iOS support without also becoming pickable.
+ */
+export const ALL_CLASSES: FeatureClass[] = [...ACTIVE_CLASSES];
 
-/** True if a class is not rendered by the current iOS app (currently only `tree`). */
+/** True if a class is not rendered by the current iOS app. None today; kept for a future class
+ *  added to ALL_CLASSES before iOS supports it. */
 export function isDisabledClass(cls: FeatureClass): boolean {
-  return cls === "tree";
+  return !ACTIVE_CLASSES.includes(cls);
 }
 
 /** Resolve a feature's class from its tags.golf value (inverse of FEATURE_TAGS). */
