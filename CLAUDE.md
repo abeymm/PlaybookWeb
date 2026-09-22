@@ -183,6 +183,71 @@ Backend schema (new `AWSCourseIndex` mlgen/review/batch fields + `saveCourseData
 `osmResolveCourse(contentVersion)`) to be deployed. If a field/mutation name in the deployed schema
 differs, the generated GraphQL field names are centralized in `src/lib/coursedata/api.ts` (`GQL`).
 
+## /local — the all-on-this-Mac courseData flow
+
+A separate route from `/admin` (which is bound to the sandbox). Nothing under `/local` touches
+Amplify, S3, or a Lambda: the page talks only to its own route handlers under `/local/api`, which
+run on the dev server and read/spawn against the sibling repos. Hosted builds return 404 for every
+handler (`isLocalFlowEnabled()`: `next dev` or `LOCAL_FLOW=1`).
+
+```
+src/lib/localflow/
+  config.ts   SERVER-ONLY paths (PLAYBOOK_ROOT defaults to Web's parent) + the dev gate + course-key guard
+  cohort.ts   pure: parse Scripts/regions/us/osm_cohort.json + name search (unit-tested)
+  jobs.ts     pure: one-job-per-(kind,key) registry over an injected spawner (unit-tested)
+  server.ts   SERVER-ONLY: cohort loader, the real spawner (logs to file), fs helpers
+  types.ts    response shapes shared with the page (safe for client imports)
+src/app/local/
+  api/search            GET ?q=            search the local cohort (centerline-ready courses rank first)
+  api/status/[key]      GET                cache/generated/report/playbook facts + both jobs + log tails
+  api/course/[key]      GET ?source=…, PUT read the generated (or cache) JSON; save corrections (strict-validated)
+  api/generate/[key]    POST, GET          make_coursedata.py --backend local → /tmp/coursedata_<key>/ (runbook layout)
+  api/export/[key]      POST, GET          iOS PlaybookArchiveExportTool → /tmp/coursedata_<key>/playbook/
+  api/export/[key]/file GET ?name=         download the .playbook
+  api/scorecard/search  GET ?q=&lat=&lng=  OpenGolfAPI course search (proximity-ranked near the course centre)
+  api/scorecard/course/[id] GET            normalized scorecard preview (par/handicap/yards per hole, tees, rating/slope)
+  api/scorecard/apply/[key] POST {id}      merge into runDir/input/<key>.json (Generate prefers it) AND the generated JSON
+  _components/          CoursePicker · RunPanel · ScorecardPanel · LocalCourseView (reuses admin CourseMap/mapdata/Panels + edit.ts)
+  (lib)  opengolfapi.ts SERVER-ONLY cache-first client (raw cache: Scripts/regions/us/cache_opengolfapi/raw, gitignored)
+         scorecard.ts   pure: OpenGolfAPI → OSMHole.par/handicap/length + course parsMen/indexesMen/tees/rating/slope (unit-tested)
+```
+
+**Scorecards come from OpenGolfAPI** (opengolfapi.org, ODbL — attribution is written into
+`tags["scorecard:attribution"]`), never from OSM `par` tags alone: OSM hole ways are often par-less
+(Meadows at Sunriver has `par: 0` on all 18 and fails strict validation). Reads are keyless; set
+`OPENGOLFAPI_KEY` for the `X-OpenGolf-Token` header (higher limits). The merge writes the pipeline's
+passthrough keys (`build_coursedata_nosam._COURSE_PASSTHROUGH`), so applying BEFORE Generate feeds
+real pars and per-tee lengths into generation; applying after only updates the app-facing fields.
+
+**The scorecard merge is a cross-check, not a source of truth.** It fills values that are missing
+or invalid, never overwrites an existing value, and writes everything that needs a human or tool
+decision into the course's `checks` section (`OSMCourse.checks`, a pipeline passthrough key):
+
+```
+"checks": { "version": 1, "items": [ {
+  "id": "par-disagreement:holes[4].par", "kind": "par-disagreement", "path": "holes[4].par",
+  "severity": "warning", "status": "open",
+  "msg": "hole 5: course par 3, scorecard par 4",
+  "current": 3, "candidates": [{ "source": "opengolfapi", "id": "…", "value": 4 }],
+  "evidence": ["scorecard:course-website", "distance:centerline-vs-par"],
+  "createdAt": "…", "createdBy": "scorecard-merge" } ] }
+```
+
+Kinds today (`src/lib/localflow/checks.ts`, unit-tested): `par-disagreement`, `par-filled` (a
+missing par taken from the card — verify), `par-placeholder-card` (flat card, not compared),
+`handicap-missing`, `handicap-disagreement`, `hole-count-mismatch`, `total-par-mismatch`,
+`yardage-vs-centerline` (card yardage vs the drawn centerline length, >15% and >25 yd: a shorter card
+suggests a wrong hole/orientation, a longer one a dogleg or another tee), `identity-disagreement`
+(name/phone/website). Ids are stable per (kind, path): re-running a producer refreshes its open
+items and keeps `resolved`/`dismissed` ones. The course view's **Checks** tab lists them (open
+first, jump to the hole); resolving them with other evidence is the following step.
+
+Flow: search by name → pick → attach the OpenGolfAPI scorecard → Generate (≈4 min per 18 holes on Apple silicon; log tail streams) →
+the map shows the result; edits use the same reducers as `/admin` and "Save to disk" writes back
+(previous file kept as `<key>.prev.json`) → Export builds the `.playbook` with the app's own
+import + export code (`iOS/PlaybookTests/Helpers/PlaybookArchiveExportTool.swift`; needs a booted
+simulator) → download → AirDrop to a phone. Env overrides: `PLAYBOOK_ROOT`, `LOCAL_FLOW_OUT_ROOT`.
+
 ## Components
 
 ### shadcn/ui (Base)
