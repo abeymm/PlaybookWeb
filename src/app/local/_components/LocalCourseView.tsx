@@ -16,6 +16,7 @@ import {
   changeFeatureClass, assignFeatureToHole, unassignFeatureFromHole, deleteFeature, updateFeatureGeometry,
 } from "@/lib/coursedata/edit";
 import { ACTIVE_CLASSES } from "@/lib/coursedata/featureTags";
+import { classSwatch } from "@/lib/coursedata/colors";
 import { cn } from "@/lib/utils";
 import type { OSMCourse, OSMHole, FeatureClass, Coordinate, ValidationFinding, CheckItem } from "@/lib/coursedata/types";
 
@@ -27,7 +28,9 @@ const PANEL_TABS: { id: PanelTab; label: string }[] = [
 ];
 
 const EMPTY_FC: GeoJSON.FeatureCollection = { type: "FeatureCollection", features: [] };
-const VISIBLE = new Set<FeatureClass>(ACTIVE_CLASSES);
+// Most batch-generated courses still carry golf=rough polygons that blanket the map, so default
+// them off here (unlike /admin, which defaults every class on). Toggleable via the class row below.
+const DEFAULT_VISIBLE = new Set<FeatureClass>(ACTIVE_CLASSES.filter((c) => c !== "rough"));
 
 // Single-button basemap toggle: cycle NAIP -> Esri World Imagery -> OSM -> NAIP.
 type Basemap = "naip" | "esri" | "osm";
@@ -51,6 +54,7 @@ export default function LocalCourseView(props: LocalCourseViewProps) {
   const [editMode, setEditMode] = useState<"view" | "edit">("view");
   const [basemap, setBasemap] = useState<Basemap>("naip");
   const [tab, setTab] = useState<PanelTab>("feature");
+  const [visibleClasses, setVisibleClasses] = useState<Set<FeatureClass>>(DEFAULT_VISIBLE);
 
   const hole: OSMHole | undefined = course.holes[holeIndex];
   const geos = useMemo(() => holeFeatureGeos(course, hole), [course, hole]);
@@ -152,14 +156,35 @@ export default function LocalCourseView(props: LocalCourseViewProps) {
             ))}
           </ul>
         </aside>
-        <div className="relative min-w-0 flex-1">
+        <div className="relative flex min-w-0 flex-1 flex-col">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-border bg-card px-3 py-1.5">
+            {ACTIVE_CLASSES.map((c) => (
+              <label key={c} className="flex cursor-pointer items-center gap-1.5 text-xs">
+                <input
+                  type="checkbox"
+                  checked={visibleClasses.has(c)}
+                  onChange={(e) =>
+                    setVisibleClasses((s) => {
+                      const n = new Set(s);
+                      if (e.target.checked) n.add(c);
+                      else n.delete(c);
+                      return n;
+                    })
+                  }
+                />
+                <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: classSwatch(c) }} />
+                {c}
+              </label>
+            ))}
+          </div>
+          <div className="relative min-h-0 flex-1">
           <CourseMap
             mlgenFC={polygonFC}
             legacyFC={EMPTY_FC}
             centerlineFC={clFC}
             boundaryFC={bFC}
             bbox={bbox}
-            visibleClasses={VISIBLE}
+            visibleClasses={visibleClasses}
             rendition="mlgen"
             diff={false}
             basemap={basemap}
@@ -174,6 +199,7 @@ export default function LocalCourseView(props: LocalCourseViewProps) {
             onDrawComplete={() => {}}
             onNaipError={() => setBasemap("esri")}
           />
+          </div>
         </div>
         <aside className="flex w-72 shrink-0 flex-col border-l border-border bg-card">
           <Tabs tabs={PANEL_TABS} active={tab} onChange={(id) => setTab(id as PanelTab)} />
