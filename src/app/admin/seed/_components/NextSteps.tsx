@@ -36,7 +36,7 @@ function SuccessPanel({
   const commands = [
     `aws s3 cp s3://${bucket}/seeds/manual-${slug}.json ${cacheDir}/manual-${slug}.json`,
     `cd ~/Projects/Playbook/Training/segformer_green/golfapi_pipeline`,
-    `../../.venv/bin/python make_coursedata.py --course-key manual-${slug} --osm-cache ${cacheDir} --out /tmp/coursedata_manual-${slug} --upload sandbox`,
+    `../../.venv/bin/python core/make_coursedata.py --course-key manual-${slug} --osm-cache ${cacheDir} --out /tmp/coursedata_manual-${slug} --upload sandbox`,
   ];
   const all = commands.join("\n");
 

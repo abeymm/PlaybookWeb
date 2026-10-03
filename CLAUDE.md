@@ -201,7 +201,7 @@ src/app/local/
   api/search            GET ?q=            search the local cohort (centerline-ready courses rank first)
   api/status/[key]      GET                cache/generated/report/playbook facts + both jobs + log tails
   api/course/[key]      GET ?source=…, PUT read the generated (or cache) JSON; save corrections (strict-validated)
-  api/generate/[key]    POST, GET          make_coursedata.py --backend local → /tmp/coursedata_<key>/ (runbook layout)
+  api/generate/[key]    POST, GET          generate_course.py (router: US→GolfAPI, else make_coursedata.py --backend local) → $LOCAL_FLOW_OUT_ROOT/coursedata_<key>/ (runbook layout)
   api/export/[key]      POST, GET          iOS PlaybookArchiveExportTool → /tmp/coursedata_<key>/playbook/
   api/export/[key]/file GET ?name=         download the .playbook
   api/scorecard/search  GET ?q=&lat=&lng=  OpenGolfAPI course search (proximity-ranked near the course centre)

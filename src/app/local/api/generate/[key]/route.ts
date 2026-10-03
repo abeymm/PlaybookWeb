@@ -20,8 +20,10 @@ export async function GET(_req: Request, ctx: KeyParams) {
 }
 
 /**
- * POST /local/api/generate/<key> — run make_coursedata.py locally for an OSM cache course
- * (Phase 1 of the runbook, no upload). Output lands in the runbook's run-dir convention.
+ * POST /local/api/generate/<key> — run generate_course.py (the router) locally for an OSM cache course
+ * (Phase 1 of the runbook, no upload). US courses go to GolfAPI generation (the id is found by name + location;
+ * an ambiguous match fails the job with the candidates in generate.log), other countries to make_coursedata.py.
+ * Output lands in the runbook's run-dir convention for both routes: <out>/cache/<key>.json.
  */
 export async function POST(_req: Request, ctx: KeyParams) {
   const blocked = gate();
@@ -40,7 +42,7 @@ export async function POST(_req: Request, ctx: KeyParams) {
   try {
     const job = jobRegistry().start("generate", key, {
       command: LOCAL_PATHS.python,
-      args: ["-u", "make_coursedata.py", "--course-key", key, "--osm-cache", osmCache, "--out", out],
+      args: ["-u", LOCAL_PATHS.generateScript, "--course-key", key, "--osm-cache", osmCache, "--out", out],
       cwd: LOCAL_PATHS.pipelineDir,
       logFile: generateLogPath(key),
     });

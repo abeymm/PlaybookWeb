@@ -189,7 +189,7 @@ export default function CourseApp({ courseKey }: CourseAppProps) {
         <>
           <RunPanel
             title={`Generate — ${displayName}`}
-            hint={`make_coursedata.py --course-key ${courseKey} (local backend) → ${status.paths.courseJson}`}
+            hint={`generate_course.py --course-key ${courseKey} (local backend; US → GolfAPI, else OSM) → ${status.paths.courseJson}`}
             view={status.jobs.generate}
             actionLabel={gen?.exists ? "Regenerate" : "Generate"}
             actionDisabled={!status.cache.exists}

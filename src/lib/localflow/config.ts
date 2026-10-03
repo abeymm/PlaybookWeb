@@ -2,7 +2,7 @@
 // component). Everything runs on this Mac against the sibling repos:
 //
 //   <root>/Scripts/regions/us/{osm_cohort.json,cache/}   course picker + pipeline input
-//   <root>/Training/segformer_green/golfapi_pipeline     make_coursedata.py (+ ../.venv)
+//   <root>/Training/segformer_green/golfapi_pipeline     generate_course.py (the router; + ../../.venv)
 //   <root>/iOS                                           the archive export tool (test target)
 //   <OUT_ROOT>/coursedata_<key>/                         run dir — the runbook's convention
 //
@@ -22,6 +22,8 @@ export const LOCAL_PATHS = {
   cohortFile: path.join(PLAYBOOK_ROOT, "Scripts/regions/us/osm_cohort.json"),
   cacheDir: path.join(PLAYBOOK_ROOT, "Scripts/regions/us/cache"),
   pipelineDir: path.join(PLAYBOOK_ROOT, "Training/segformer_green/golfapi_pipeline"),
+  /** The ONE generation entry point (relative to pipelineDir): US -> GolfAPI, elsewhere -> OSM. */
+  generateScript: "generate_course.py",
   python: path.join(PLAYBOOK_ROOT, "Training/.venv/bin/python"),
   iosDir: path.join(PLAYBOOK_ROOT, "iOS"),
 } as const;
