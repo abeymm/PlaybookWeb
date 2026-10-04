@@ -279,21 +279,6 @@ export interface CourseIndexRow {
   demandCount?: number | null;
 }
 
-/** CourseDataJob ledger row (Backend/amplify/data/resource.ts CourseDataJob). */
-export interface CourseDataJobRow {
-  id: string;
-  osmId: string;
-  runpodJobId?: string | null;
-  status: string; // QUEUED | SUBMITTED | IN_PROGRESS | COMPLETED | FAILED
-  s3Key?: string | null;
-  error?: string | null;
-  requestedBy?: string | null;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  options?: any;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
 /** Canonical structured validator finding (parity with validate_coursedata.py). */
 export interface ValidationFinding {
   level: "error" | "warning";

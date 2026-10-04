@@ -7,7 +7,7 @@
 import { PageHeader } from "../_components/PageHeader";
 import { ErrorState, LoadingState } from "../_components/states";
 import { useAsync } from "../_components/hooks";
-import { listAllCourses, listJobs, listStorage, PREFIX } from "@/lib/coursedata/api";
+import { listAllCourses, listStorage, PREFIX } from "@/lib/coursedata/api";
 import { isUnreviewedButServed } from "@/lib/coursedata/publish";
 import { cn } from "@/lib/utils";
 import type { CourseIndexRow, ReviewStatus } from "@/lib/coursedata/types";
@@ -26,7 +26,6 @@ interface Metrics {
   qcErrorCourses: number;
   qcWarningCourses: number;
   qcCleanCourses: number;
-  jobByStatus: Record<string, number>;
   storageBytes: Record<string, { bytes: number; count: number }>;
 }
 
@@ -64,10 +63,6 @@ async function computeMetrics(): Promise<Metrics> {
     else qcCleanCourses++;
   }
 
-  const jobs = await listJobs({ limit: 500 });
-  const jobByStatus: Record<string, number> = {};
-  for (const j of jobs.items) jobByStatus[j.status] = (jobByStatus[j.status] ?? 0) + 1;
-
   const storageBytes: Record<string, { bytes: number; count: number }> = {};
   for (const p of STORAGE_PREFIXES) {
     try {
@@ -92,7 +87,6 @@ async function computeMetrics(): Promise<Metrics> {
     qcErrorCourses,
     qcWarningCourses,
     qcCleanCourses,
-    jobByStatus,
     storageBytes,
   };
 }
@@ -211,18 +205,6 @@ export default function MetricsPage() {
                 <Stat label="Courses with errors" value={m.qcErrorCourses} tone={m.qcErrorCourses > 0 ? "hazard" : "default"} />
                 <Stat label="Warnings only" value={m.qcWarningCourses} />
                 <Stat label="Clean" value={m.qcCleanCourses} tone="good" />
-              </div>
-            </section>
-
-            {/* Jobs */}
-            <section>
-              <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Jobs (last 500)
-              </h2>
-              <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
-                {["QUEUED", "SUBMITTED", "IN_PROGRESS", "COMPLETED", "FAILED"].map((s) => (
-                  <Stat key={s} label={s} value={m.jobByStatus[s] ?? 0} tone={s === "FAILED" && (m.jobByStatus[s] ?? 0) > 0 ? "hazard" : "default"} />
-                ))}
               </div>
             </section>
 

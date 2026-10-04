@@ -3,7 +3,6 @@
 // Uses generateClient() with RAW GraphQL document strings (not generated types) because the
 // Backend schema is being edited in parallel; the SPEC shapes are the contract:
 //   - AWSCourseIndex: list-by-region GSI, list-by-dataTier, full list, get, update
-//   - CourseDataJob: list
 //   - AWSPlaybook: list-by-courseId (demand count)
 //   - osmResolveCourse(osmId, contentVersion)
 //   - editor mutations: saveCourseData / listCourseDataVersions / restoreCourseDataVersion /
@@ -22,7 +21,6 @@ import { generateClient } from "aws-amplify/api";
 import { downloadData, uploadData, list, getProperties } from "aws-amplify/storage";
 import type {
   CourseIndexRow,
-  CourseDataJobRow,
   CourseData,
   SaveVerdict,
   CourseDataVersion,
@@ -40,7 +38,6 @@ export const GQL = {
   listAll: "listAWSCourseIndices",
   get: "getAWSCourseIndex",
   update: "updateAWSCourseIndex",
-  listJobs: "listCourseDataJobs",
   listPlaybooksByCourse: "listAWSPlaybookByCourseId",
 } as const;
 
@@ -94,8 +91,6 @@ const INDEX_FIELDS = `
   mlgenAvailable mlgenServeAll mlgenVersion mlgenGeneratedAt
   reviewStatus reviewNote reviewedAt qcErrors qcWarnings apiCourseId apiClubId batchId
 `;
-const JOB_FIELDS = `id osmId runpodJobId status s3Key error requestedBy options createdAt updatedAt`;
-
 export interface Page<T> {
   items: T[];
   nextToken: string | null;
@@ -174,25 +169,6 @@ export async function updateCourseIndex(
   }`;
   const data = await gql(query, { input });
   return data[GQL.update] as CourseIndexRow;
-}
-
-// ---- CourseDataJob ----
-
-export async function listJobs(
-  opts: { filter?: object; limit?: number; nextToken?: string | null } = {}
-): Promise<Page<CourseDataJobRow>> {
-  const query = `query L($filter: ModelCourseDataJobFilterInput, $limit: Int, $nextToken: String) {
-    ${GQL.listJobs}(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items { ${JOB_FIELDS} } nextToken
-    }
-  }`;
-  const data = await gql(query, {
-    filter: opts.filter,
-    limit: opts.limit ?? 200,
-    nextToken: opts.nextToken ?? undefined,
-  });
-  const conn = data[GQL.listJobs];
-  return { items: conn.items as CourseDataJobRow[], nextToken: conn.nextToken ?? null };
 }
 
 // ---- AWSPlaybook demand count (F4) ----

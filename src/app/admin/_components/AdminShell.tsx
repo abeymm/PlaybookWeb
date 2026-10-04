@@ -18,7 +18,6 @@ import { useEffect, useState } from "react";
 import {
   ClipboardCheckIcon,
   ListIcon,
-  ServerIcon,
   DatabaseIcon,
   BarChart3Icon,
   MapPinPlusIcon,
@@ -34,7 +33,6 @@ Amplify.configure(outputs);
 const NAV = [
   { icon: ClipboardCheckIcon, label: "Review", href: "/admin/review" },
   { icon: ListIcon, label: "Courses", href: "/admin/courses" },
-  { icon: ServerIcon, label: "Jobs", href: "/admin/jobs" },
   { icon: MapPinPlusIcon, label: "Seed", href: "/admin/seed" },
   { icon: DatabaseIcon, label: "Storage", href: "/admin/storage" },
   { icon: BarChart3Icon, label: "Metrics", href: "/admin/metrics" },
