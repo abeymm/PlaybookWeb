@@ -2,7 +2,7 @@
 
 // SeedMap — MapLibre NAIP canvas for hand-clicking a course seed.
 //
-// Basemap: same USGS NAIP ImageServer tiles as the course editor (polygons are NAIP-true) with an
+// Basemap: same NAIP tiles as the course editor (PC mosaic tiler, src/lib/imagery/naipTiles.ts; polygons are NAIP-true) with an
 // OSM raster fallback that auto-engages on a NAIP tile error (+ a banner).
 //
 // CAPTURE: a single map click places the next point of the ACTIVE hole (first click = tee). A fast
@@ -23,9 +23,8 @@ import { CLASS_STYLES, CENTERLINE_PRIMARY } from "@/lib/coursedata/colors";
 import { coordsToRing, bboxOfLngLats, type Bbox, type LngLat } from "@/lib/coursedata/geo";
 import type { Coordinate } from "@/lib/coursedata/types";
 import type { SeedHole } from "@/lib/coursedata/seed";
+import { NAIP_ATTRIBUTION, NAIP_MAXZOOM, NAIP_MINZOOM, NAIP_TILES } from "@/lib/imagery/naipTiles";
 
-const NAIP_TILES =
-  "https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPPlus/ImageServer/tile/{z}/{y}/{x}";
 const OSM_TILES = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 
 /** The maplibre-gl module namespace (constructors live here — .Map/.Marker/.Popup). */
@@ -85,7 +84,14 @@ export default function SeedMap(props: SeedMapProps) {
         style: {
           version: 8,
           sources: {
-            naip: { type: "raster", tiles: [NAIP_TILES], tileSize: 256, attribution: "USGS NAIP" },
+            naip: {
+              type: "raster",
+              tiles: [NAIP_TILES],
+              tileSize: 256,
+              minzoom: NAIP_MINZOOM,
+              maxzoom: NAIP_MAXZOOM,
+              attribution: NAIP_ATTRIBUTION,
+            },
             osm: {
               type: "raster",
               tiles: [OSM_TILES],
@@ -94,8 +100,10 @@ export default function SeedMap(props: SeedMapProps) {
             },
           },
           layers: [
+            // OSM sits under NAIP only below the tiler's first served zoom (NAIP has no tiles there), so the
+            // opening continental view is not blank; the error handler below widens it to a full fallback.
+            { id: "osm", type: "raster", source: "osm", maxzoom: NAIP_MINZOOM, layout: { visibility: "visible" } },
             { id: "naip", type: "raster", source: "naip", layout: { visibility: "visible" } },
-            { id: "osm", type: "raster", source: "osm", layout: { visibility: "none" } },
           ],
         },
         center: [-98, 39],
@@ -109,6 +117,7 @@ export default function SeedMap(props: SeedMapProps) {
         if (err?.sourceId === "naip") {
           map.setLayoutProperty("naip", "visibility", "none");
           map.setLayoutProperty("osm", "visibility", "visible");
+          map.setLayerZoomRange("osm", 0, 24); // OSM becomes the full-zoom fallback
           setNaipFailed(true);
         }
       });

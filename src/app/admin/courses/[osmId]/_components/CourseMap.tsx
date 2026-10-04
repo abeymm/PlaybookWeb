@@ -2,10 +2,9 @@
 
 // CourseMap — MapLibre viewer + terra-draw editor for one hole.
 //
-// Basemap: USGS NAIP exportImage (the ImageServer's /tile endpoint has no CONUS-wide tile cache
-// and 404s at every zoom — exportImage is what the ML pipeline fetches, so we use maplibre's
-// {bbox-epsg-3857} raster-source template against it) with an Esri World Imagery raster fallback
-// (Addendum item 9). Repeated NAIP tile errors at zoom >= minzoom auto-switch to Esri + a banner.
+// Basemap: NAIP via the Microsoft Planetary Computer mosaic tiler (src/lib/imagery/naipTiles.ts — the one
+// NAIP definition; the USGS ImageServer is no longer used from the browser) with an Esri World Imagery
+// raster fallback (Addendum item 9). Repeated NAIP tile errors at zoom >= minzoom auto-switch to Esri + a banner.
 // OSM is reachable only through the manual basemap toggle. Per-class fill/line styling from
 // colors.ts (dimmed over aerial basemaps so fills stay readable over imagery); primary + per-tee
 // centerlines distinguishable; view-only boundary outline.
@@ -26,14 +25,8 @@ import { CLASS_STYLES, CENTERLINE_PRIMARY, CENTERLINE_PER_TEE } from "@/lib/cour
 import { ringToCoords, type Bbox, type LngLat } from "@/lib/coursedata/geo";
 import type { Coordinate, FeatureClass } from "@/lib/coursedata/types";
 import { ALL_CLASSES } from "@/lib/coursedata/featureTags";
+import { NAIP_ATTRIBUTION, NAIP_MAXZOOM, NAIP_MINZOOM, NAIP_TILES } from "@/lib/imagery/naipTiles";
 
-// exportImage (not /tile — see file-header NOTE) with maplibre's {bbox-epsg-3857} raster-source
-// template, mirroring what the ML pipeline fetches from the same ImageServer.
-const NAIP_TILES =
-  "https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPPlus/ImageServer/exportImage" +
-  "?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=256,256&format=jpg&f=image";
-const NAIP_MINZOOM = 8;
-const NAIP_MAXZOOM = 19;
 // Consecutive NAIP failures (at usable zoom) before auto-falling back to Esri — avoids flapping on
 // a single missing tile (e.g. no NAIP coverage at that spot).
 const NAIP_FAIL_THRESHOLD = 2;
@@ -108,13 +101,12 @@ export default function CourseMap(props: CourseMapProps) {
               type: "raster",
               tiles: [NAIP_TILES],
               tileSize: 256,
-              // exportImage has no low-zoom cache either — without this, the default
-              // center/zoom=3 view before fitBounds fires a burst of guaranteed-error requests
-              // that stalls maplibre's "load" event (and therefore fitBounds, gated on it) for
-              // tens of seconds. minzoom stops those requests outright.
+              // Without a minzoom, the default center/zoom=3 view before fitBounds fires a burst of
+              // whole-US mosaic requests that can stall maplibre's "load" event (and therefore
+              // fitBounds, gated on it). minzoom stops those requests outright.
               minzoom: NAIP_MINZOOM,
               maxzoom: NAIP_MAXZOOM,
-              attribution: "USGS NAIP",
+              attribution: NAIP_ATTRIBUTION,
             },
             esri: {
               type: "raster",
