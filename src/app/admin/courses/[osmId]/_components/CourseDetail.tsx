@@ -106,7 +106,7 @@ export default function CourseDetail({ osmId }: { osmId: string }) {
   const [holeIndex, setHoleIndex] = useState(0);
   const [rendition, setRendition] = useState<"mlgen" | "legacy">("mlgen");
   const [diff, setDiff] = useState(false);
-  const [basemap, setBasemap] = useState<"naip" | "esri" | "osm">("naip");
+  const [basemap, setBasemap] = useState<"naip" | "osm">("naip");
   const [naipFailed, setNaipFailed] = useState(false);
   const [visibleClasses, setVisibleClasses] = useState<Set<FeatureClass>>(new Set(ALL_CLASSES));
   const [selectedFid, setSelectedFid] = useState<string | null>(null);
@@ -443,9 +443,9 @@ export default function CourseDetail({ osmId }: { osmId: string }) {
           Review before saving.
         </div>
       )}
-      {naipFailed && basemap === "esri" && (
+      {naipFailed && basemap === "osm" && (
         <div className="border-b border-amber-300 bg-amber-50 px-4 py-1.5 text-xs text-amber-800 dark:border-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
-          NAIP imagery failed to load — switched to Esri World Imagery basemap.
+          NAIP imagery failed to load — switched to the OpenStreetMap street map (not imagery).
         </div>
       )}
 
@@ -498,12 +498,6 @@ export default function CourseDetail({ osmId }: { osmId: string }) {
               className={cn("rounded border px-2 py-1 text-xs", basemap === "naip" ? "border-primary bg-primary/10 text-primary" : "border-border")}
             >
               NAIP
-            </button>
-            <button
-              onClick={() => setBasemap("esri")}
-              className={cn("rounded border px-2 py-1 text-xs", basemap === "esri" ? "border-primary bg-primary/10 text-primary" : "border-border")}
-            >
-              Esri
             </button>
             <button
               onClick={() => setBasemap("osm")}
@@ -605,7 +599,7 @@ export default function CourseDetail({ osmId }: { osmId: string }) {
             onDrawComplete={onDrawComplete}
             onNaipError={() => {
               setNaipFailed(true);
-              setBasemap("esri");
+              setBasemap("osm");
             }}
           />
         </div>

@@ -32,10 +32,10 @@ const EMPTY_FC: GeoJSON.FeatureCollection = { type: "FeatureCollection", feature
 // them off here (unlike /admin, which defaults every class on). Toggleable via the class row below.
 const DEFAULT_VISIBLE = new Set<FeatureClass>(ACTIVE_CLASSES.filter((c) => c !== "rough"));
 
-// Single-button basemap toggle: cycle NAIP -> Esri World Imagery -> OSM -> NAIP.
-type Basemap = "naip" | "esri" | "osm";
-const BASEMAP_CYCLE: Record<Basemap, Basemap> = { naip: "esri", esri: "osm", osm: "naip" };
-const BASEMAP_LABEL: Record<Basemap, string> = { naip: "NAIP", esri: "Esri", osm: "OSM" };
+// Single-button basemap toggle: cycle NAIP -> OSM streets (not imagery) -> NAIP.
+type Basemap = "naip" | "osm";
+const BASEMAP_CYCLE: Record<Basemap, Basemap> = { naip: "osm", osm: "naip" };
+const BASEMAP_LABEL: Record<Basemap, string> = { naip: "NAIP", osm: "OSM" };
 
 export interface LocalCourseViewProps {
   course: OSMCourse;
@@ -197,7 +197,7 @@ export default function LocalCourseView(props: LocalCourseViewProps) {
             }}
             onGeometryChange={onGeometryChange}
             onDrawComplete={() => {}}
-            onNaipError={() => setBasemap("esri")}
+            onNaipError={() => setBasemap("osm")}
           />
           </div>
         </div>

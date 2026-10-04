@@ -3,9 +3,9 @@
 // CourseMap — MapLibre viewer + terra-draw editor for one hole.
 //
 // Basemap: NAIP via the Microsoft Planetary Computer mosaic tiler (src/lib/imagery/naipTiles.ts — the one
-// NAIP definition; the USGS ImageServer is no longer used from the browser) with an Esri World Imagery
-// raster fallback (Addendum item 9). Repeated NAIP tile errors at zoom >= minzoom auto-switch to Esri + a banner.
-// OSM is reachable only through the manual basemap toggle. Per-class fill/line styling from
+// NAIP definition; the USGS ImageServer is no longer used from the browser). NAIP is the ONLY imagery
+// source (single-source rule, 2026-10-04). Repeated NAIP tile errors at zoom >= minzoom auto-switch to the
+// OSM street map (not imagery) + a banner. OSM is also reachable through the manual basemap toggle. Per-class fill/line styling from
 // colors.ts (dimmed over aerial basemaps so fills stay readable over imagery); primary + per-tee
 // centerlines distinguishable; view-only boundary outline.
 // Rendition/diff: legacy = dashed outline, mlgen = filled (viewer.html convention).
@@ -27,11 +27,9 @@ import type { Coordinate, FeatureClass } from "@/lib/coursedata/types";
 import { ALL_CLASSES } from "@/lib/coursedata/featureTags";
 import { NAIP_ATTRIBUTION, NAIP_MAXZOOM, NAIP_MINZOOM, NAIP_TILES } from "@/lib/imagery/naipTiles";
 
-// Consecutive NAIP failures (at usable zoom) before auto-falling back to Esri — avoids flapping on
+// Consecutive NAIP failures (at usable zoom) before auto-falling back to OSM streets — avoids flapping on
 // a single missing tile (e.g. no NAIP coverage at that spot).
 const NAIP_FAIL_THRESHOLD = 2;
-const ESRI_TILES =
-  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
 const OSM_TILES = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 
 // Aerial basemaps are visually busier than OSM's flat cartography — dim the class fills so
@@ -64,7 +62,7 @@ export interface CourseMapProps {
   visibleClasses: Set<FeatureClass>;
   rendition: "mlgen" | "legacy";
   diff: boolean;
-  basemap: "naip" | "esri" | "osm";
+  basemap: "naip" | "osm";
   selectedFid: string | null;
   editMode: "view" | "edit" | "draw";
   drawClass: FeatureClass;
@@ -108,12 +106,6 @@ export default function CourseMap(props: CourseMapProps) {
               maxzoom: NAIP_MAXZOOM,
               attribution: NAIP_ATTRIBUTION,
             },
-            esri: {
-              type: "raster",
-              tiles: [ESRI_TILES],
-              tileSize: 256,
-              attribution: "Esri World Imagery",
-            },
             osm: {
               type: "raster",
               tiles: [OSM_TILES],
@@ -123,7 +115,6 @@ export default function CourseMap(props: CourseMapProps) {
           },
           layers: [
             { id: "naip", type: "raster", source: "naip", layout: { visibility: "visible" } },
-            { id: "esri", type: "raster", source: "esri", layout: { visibility: "none" } },
             { id: "osm", type: "raster", source: "osm", layout: { visibility: "none" } },
           ],
         },
@@ -179,7 +170,7 @@ export default function CourseMap(props: CourseMapProps) {
     const map = mapRef.current;
     if (map && readyRef.current) syncAll(map, props);
     // A fresh switch back to NAIP (manual toggle) gets its own couple of tries before we
-    // auto-fall-back to Esri again.
+    // auto-fall-back to OSM again.
     if (props.basemap === "naip" && prevBasemapRef.current !== "naip") {
       naipFailRef.current = 0;
     }
@@ -385,7 +376,6 @@ function syncAll(map: MLMap, p: CourseMapProps) {
 
   // Basemap toggle.
   map.setLayoutProperty("naip", "visibility", p.basemap === "naip" ? "visible" : "none");
-  map.setLayoutProperty("esri", "visibility", p.basemap === "esri" ? "visible" : "none");
   map.setLayoutProperty("osm", "visibility", p.basemap === "osm" ? "visible" : "none");
 
   // Keep the fill dimmed/undimmed for the current basemap outside of edit mode (edit mode's
