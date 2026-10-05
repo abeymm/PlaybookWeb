@@ -183,6 +183,30 @@ Backend schema (new `AWSCourseIndex` mlgen/review/batch fields + `saveCourseData
 `osmResolveCourse(contentVersion)`) to be deployed. If a field/mutation name in the deployed schema
 differs, the generated GraphQL field names are centralized in `src/lib/coursedata/api.ts` (`GQL`).
 
+### NAIP imagery and the datum shift (D24)
+
+Every browser map uses NAIP from the Microsoft Planetary Computer mosaic tiler (`src/lib/imagery/naipTiles.ts`
+is the one URL definition; `NAIP_TILES` is the raw tile template). Those tiles are georeferenced in **null-datum
+NAD83(2011)**: a feature is drawn 0.8 m (Augusta) to 1.3 m (Harding) away from its true WGS84 position, while our
+polygons are true WGS84. So map sources use `NAIP_PROTOCOL_TILES` (`naip://{z}/{x}/{y}`), never `NAIP_TILES`:
+
+```
+src/lib/imagery/
+  naipTiles.ts           raw PC URL, zoom range, attribution, NAIP_PROTOCOL_TILES
+  naipDatumShift.json    SHARED table (+ .sha256): byte-identical copy of Training/data/datum/naip_datum_shift_conus_1deg.json
+                         (1-degree grid, east/north metres; shift = null-datum position - true WGS84 position)
+  naipDatumShift.ts      pure: bilinear lookup naipDatumShift(lat,lng), tile math, planShiftedTile() draw plan
+  naipProtocol.ts        MapLibre custom protocol: fetch PC tile (+ neighbours the shift exposes), redraw offset, re-encode
+```
+
+- Applies at z >= 16 only (below that the shift is under half a pixel); outside CONUS the table returns null and the
+  plain tile is served (one `console.info`).
+- The tiler has no bbox endpoint, so each shifted tile costs up to 4 PC requests; neighbours are best-effort.
+- A failing MAIN tile rejects exactly like a failing raster tile, so the existing `map.on("error")` OSM fallback in
+  `SeedMap` / `CourseMap` is unchanged. A missing neighbour is not an error.
+- Do not edit `naipDatumShift.json` here: regenerate in Training and copy it; a test pins the hash to the manifest.
+- Register the scheme with `registerNaipProtocol(maplibregl)` before constructing any `Map` that uses it.
+
 ## /local — the all-on-this-Mac courseData flow
 
 A separate route from `/admin` (which is bound to the sandbox). Nothing under `/local` touches

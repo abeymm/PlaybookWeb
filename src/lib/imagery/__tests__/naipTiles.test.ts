@@ -3,6 +3,7 @@ import {
   NAIP_ATTRIBUTION,
   NAIP_MAXZOOM,
   NAIP_MINZOOM,
+  NAIP_PROTOCOL_TILES,
   NAIP_TILES,
   PC_NAIP_MOSAIC_BODY,
   PC_NAIP_MOSAIC_ID,
@@ -38,5 +39,9 @@ describe("naipTiles — the one PC NAIP tile definition", () => {
 
   it("carries the required attribution", () => {
     expect(NAIP_ATTRIBUTION).toBe("Imagery: USDA NAIP via Microsoft Planetary Computer");
+  });
+
+  it("exposes the datum-corrected protocol template that every map source must use", () => {
+    expect(NAIP_PROTOCOL_TILES).toBe("naip://{z}/{x}/{y}");
   });
 });

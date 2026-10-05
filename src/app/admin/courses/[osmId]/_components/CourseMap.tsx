@@ -4,7 +4,8 @@
 //
 // Basemap: NAIP via the Microsoft Planetary Computer mosaic tiler (src/lib/imagery/naipTiles.ts — the one
 // NAIP definition; the USGS ImageServer is no longer used from the browser). NAIP is the ONLY imagery
-// source (single-source rule, 2026-10-04). Repeated NAIP tile errors at zoom >= minzoom auto-switch to the
+// source (single-source rule, 2026-10-04). The raster source is the naip:// protocol (naipProtocol.ts), which shifts the
+// null-datum PC tiles onto true WGS84 (D24). Repeated NAIP tile errors at zoom >= minzoom auto-switch to the
 // OSM street map (not imagery) + a banner. OSM is also reachable through the manual basemap toggle. Per-class fill/line styling from
 // colors.ts (dimmed over aerial basemaps so fills stay readable over imagery); primary + per-tee
 // centerlines distinguishable; view-only boundary outline.
@@ -25,7 +26,8 @@ import { CLASS_STYLES, CENTERLINE_PRIMARY, CENTERLINE_PER_TEE } from "@/lib/cour
 import { ringToCoords, type Bbox, type LngLat } from "@/lib/coursedata/geo";
 import type { Coordinate, FeatureClass } from "@/lib/coursedata/types";
 import { ALL_CLASSES } from "@/lib/coursedata/featureTags";
-import { NAIP_ATTRIBUTION, NAIP_MAXZOOM, NAIP_MINZOOM, NAIP_TILES } from "@/lib/imagery/naipTiles";
+import { NAIP_ATTRIBUTION, NAIP_MAXZOOM, NAIP_MINZOOM, NAIP_PROTOCOL_TILES } from "@/lib/imagery/naipTiles";
+import { registerNaipProtocol } from "@/lib/imagery/naipProtocol";
 
 // Consecutive NAIP failures (at usable zoom) before auto-falling back to OSM streets — avoids flapping on
 // a single missing tile (e.g. no NAIP coverage at that spot).
@@ -89,6 +91,7 @@ export default function CourseMap(props: CourseMapProps) {
     (async () => {
       const maplibregl = (await import("maplibre-gl")).default;
       if (cancelled || !containerRef.current) return;
+      registerNaipProtocol(maplibregl); // naip:// = datum-corrected PC NAIP (D24)
 
       const map = new maplibregl.Map({
         container: containerRef.current,
@@ -97,7 +100,7 @@ export default function CourseMap(props: CourseMapProps) {
           sources: {
             naip: {
               type: "raster",
-              tiles: [NAIP_TILES],
+              tiles: [NAIP_PROTOCOL_TILES],
               tileSize: 256,
               // Without a minzoom, the default center/zoom=3 view before fitBounds fires a burst of
               // whole-US mosaic requests that can stall maplibre's "load" event (and therefore

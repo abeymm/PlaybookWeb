@@ -8,6 +8,11 @@
 // searchid = the id PC returns from POST PC_MOSAIC_REGISTER with PC_NAIP_MOSAIC_BODY. It is a content
 // hash of that body, so registering the same body always yields the same id; re-register and re-pin it
 // here (and in cloud_sources.py) if PC ever drops it. The tiler has no "is USGS newer" check.
+//
+// DATUM (D24): the PC mosaic is georeferenced in null-datum NAD83(2011), 0.8-1.3 m off true WGS84 across CONUS,
+// while our polygons are true WGS84. Maps therefore do NOT use NAIP_TILES directly: they use NAIP_PROTOCOL_TILES,
+// a MapLibre custom protocol (naipProtocol.ts) that fetches the same PC tiles and shifts them per the shared table
+// naipDatumShift.json (see naipDatumShift.ts). NAIP_TILES stays the one definition of the raw PC URL.
 
 export const PC_MOSAIC_REGISTER = "https://planetarycomputer.microsoft.com/api/data/v1/mosaic/register";
 
@@ -36,6 +41,10 @@ export function naipTileUrl(searchId: string = PC_NAIP_MOSAIC_ID): string {
 
 /** The default tile template (pinned searchid). */
 export const NAIP_TILES = naipTileUrl();
+
+/** MapLibre custom-protocol tile template for the datum-corrected NAIP layer; the scheme is registered by
+ *  registerNaipProtocol() (naipProtocol.ts) and every NAIP raster source in Web must use this, not NAIP_TILES. */
+export const NAIP_PROTOCOL_TILES = "naip://{z}/{x}/{y}";
 
 /** The tiler answers 204 (no content) below z11 (measured 2026-10-04 at Harding and Scottsdale: z10 -> 204,
  *  z11 -> 200); a raster source must not request below this or maplibre reports tile errors. */

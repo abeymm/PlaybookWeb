@@ -2,7 +2,8 @@
 
 // SeedMap — MapLibre NAIP canvas for hand-clicking a course seed.
 //
-// Basemap: same NAIP tiles as the course editor (PC mosaic tiler, src/lib/imagery/naipTiles.ts; polygons are NAIP-true) with an
+// Basemap: same NAIP tiles as the course editor (PC mosaic tiler via the datum-correcting naip:// protocol, src/lib/imagery/;
+// polygons are true WGS84) with an
 // OSM raster fallback that auto-engages on a NAIP tile error (+ a banner).
 //
 // CAPTURE: a single map click places the next point of the ACTIVE hole (first click = tee). A fast
@@ -23,7 +24,8 @@ import { CLASS_STYLES, CENTERLINE_PRIMARY } from "@/lib/coursedata/colors";
 import { coordsToRing, bboxOfLngLats, type Bbox, type LngLat } from "@/lib/coursedata/geo";
 import type { Coordinate } from "@/lib/coursedata/types";
 import type { SeedHole } from "@/lib/coursedata/seed";
-import { NAIP_ATTRIBUTION, NAIP_MAXZOOM, NAIP_MINZOOM, NAIP_TILES } from "@/lib/imagery/naipTiles";
+import { NAIP_ATTRIBUTION, NAIP_MAXZOOM, NAIP_MINZOOM, NAIP_PROTOCOL_TILES } from "@/lib/imagery/naipTiles";
+import { registerNaipProtocol } from "@/lib/imagery/naipProtocol";
 
 const OSM_TILES = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 
@@ -78,6 +80,7 @@ export default function SeedMap(props: SeedMapProps) {
       const maplibregl = (await import("maplibre-gl")).default;
       mod = maplibregl;
       if (cancelled || !containerRef.current) return;
+      registerNaipProtocol(maplibregl); // naip:// = datum-corrected PC NAIP (D24)
 
       const map = new maplibregl.Map({
         container: containerRef.current,
@@ -86,7 +89,7 @@ export default function SeedMap(props: SeedMapProps) {
           sources: {
             naip: {
               type: "raster",
-              tiles: [NAIP_TILES],
+              tiles: [NAIP_PROTOCOL_TILES],
               tileSize: 256,
               minzoom: NAIP_MINZOOM,
               maxzoom: NAIP_MAXZOOM,
