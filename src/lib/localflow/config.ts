@@ -29,10 +29,12 @@ export const LOCAL_PATHS = {
 } as const;
 
 /** OSM cache keys: `way-123`, `relation-123`, and split sub-courses like `relation-1-hole1-2`. */
-const COURSE_KEY_RE = /^[a-z]+-[0-9]+[A-Za-z0-9-]*$/;
+const OSM_KEY_RE = /^[a-z]+-[0-9]+[A-Za-z0-9-]*$/;
+/** Plan-D9 course keys: lowercase RFC 4122 UUIDs (mirrors `_UUID_RE` in golfapi_pipeline/core/course_id.py). */
+const UUID_KEY_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
 export function isValidCourseKey(key: string): boolean {
-  return COURSE_KEY_RE.test(key) && !key.includes("..");
+  return (OSM_KEY_RE.test(key) || UUID_KEY_RE.test(key)) && !key.includes("..");
 }
 
 export function runDir(key: string): string {
