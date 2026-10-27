@@ -215,11 +215,11 @@ src/app/local/
   api/generate/[key]    POST, GET          generate_course.py (router: US→GolfAPI, else make_coursedata.py --backend local) → $LOCAL_FLOW_OUT_ROOT/coursedata_<key>/ (runbook layout)
   api/export/[key]      POST, GET          iOS PlaybookArchiveExportTool → $LOCAL_FLOW_OUT_ROOT/coursedata_<key>/playbook/
   api/export/[key]/file GET ?name=         download the .playbook
-  api/book/[key]        POST, GET          Print book: core/print_book.py --course-json <generated JSON> --out <runDir>/print/<runId>/ (id secret from env PLAYBOOK_ID_SECRET, else Keychain `playbook-id-secret`; env-only, never argv/log/response; optional `playbook` as an absolute archive path and `inputsDir` → `--inputs-dir`, both must resolve inside the course's print dir); GET = job + log tail + runs list with summaries
-  api/book/[key]/runs/[runId]/file     GET ?name=   allowlisted run files only (book.pdf, contact-sheet.png, report.json, review.csv, greens-contact.png, review-final.md, tee-check.md, run.json, book.log, release/*)
+  api/book/[key]        POST, GET          Print book: core/print_book.py --course-json <generated JSON> --out <runDir>/print/<runId>/ (id secret from env PLAYBOOK_ID_SECRET, else Keychain `playbook-id-secret`; env-only, never argv/log/response; optional `playbook` as an absolute archive path and `inputsDir` → `--inputs-dir`, both must resolve inside the course's print dir); GET = job + log tail (id secret scrubbed) + runs list with summaries
+  api/book/[key]/runs/[runId]/file     GET ?name=   allowlisted run files only (book.pdf, contact-sheet.png, report.json, review.csv, greens-contact.png, review-final.md, tee-check.md, run.json, book.log (id secret scrubbed), release/*)
   api/book/[key]/runs/[runId]/review   GET, PUT     parsed review/review.csv; PUT {marks:{hole:yes|no|''}} rewrites owner_ok (other columns kept)
   api/book/[key]/runs/[runId]/strategy GET, PUT    GET = newest strategy/edited archive else strategy/final + review, changes, edit log, tees; PUT {baseArchiveId, notes} writes strategy/edited/edited-notes.json and runs core/strategy_edit.py synchronously (120 s; 422 = script rejected the notes, 504 = timeout, 409 = stale base id or build running); secret env-only
-  api/book/[key]/runs/[runId]/release  POST         print_book.py --release --out <runDir> (the CLI is the review gate; 409 with its message when blocked)
+  api/book/[key]/runs/[runId]/release  POST         print_book.py --release --out <runDir> (the CLI is the review gate; 409 with its message when blocked; the child's env has no PLAYBOOK_ID_SECRET and its output is scrubbed)
   api/scorecard/search  GET ?q=&lat=&lng=  OpenGolfAPI course search (proximity-ranked near the course centre)
   api/scorecard/course/[id] GET            normalized scorecard preview (par/handicap/yards per hole, tees, rating/slope)
   api/scorecard/apply/[key] POST {id}      merge into runDir/input/<key>.json (Generate prefers it) AND the generated JSON
