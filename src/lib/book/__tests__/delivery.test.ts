@@ -30,9 +30,9 @@ describe("resolveProvider", () => {
 });
 
 const sub: Submission = {
-  kind: "sample",
+  kind: "course-request",
   email: "golfer@example.com",
-  updates: true,
+  course: "Bandon Dunes",
   receivedAt: "2026-10-27T00:00:00.000Z",
 };
 

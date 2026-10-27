@@ -23,9 +23,6 @@ export const HERO = {
   subhead:
     "A printed strategy book for one course, made for your tee and your game: where to hit it, what it really plays like, and where to miss. Read it the night before. Carry it the next day.",
   selectLabel: "Choose your course",
-  launchNote: "Launch collection: the top US golf destinations. Not listed?",
-  launchLink: "Tell us the course",
-  launchNoteTail: "and we will let you know when it ships.",
   buy: "Get your course book",
   priceTail: `${BOOK_FACTS.pages} pages · back-pocket size`,
   sampleLink: "See a sample hole",
@@ -63,6 +60,22 @@ export const RESULTS = {
       title: "Your misses finish on the side of the green you can get up and down from.",
       body: "Every green says where to miss and where never to. A miss becomes a chip, not a double.",
     },
+  ],
+};
+
+/** Owner's update promise, 2026-10-27: shown in the play-later band and as the FAQ answer. */
+export const UPDATE_PROMISE =
+  "If a hole changes during the season, you get a free PDF update of that hole through the QR code in the book.";
+
+export const PLAY_LATER = {
+  headline: "Buy it now, play it later.",
+  items: [
+    {
+      title: "Future trip",
+      body: `Playing it next spring? The ${BOOK_FACTS.editionYear} edition is good for the season. Buy it when you book the trip.`,
+    },
+    { title: "Gift", body: "The gift for the golfer who has everything. Add a gift note at checkout." },
+    { title: "Promise", body: UPDATE_PROMISE },
   ],
 };
 
@@ -198,12 +211,10 @@ export const PLAN = {
 
 export const SAMPLE = {
   headline: "See a sample hole.",
-  body: "Get the how-to page and one full hole spread from a real book, free.",
-  emailLabel: "Your email",
-  updatesLabel: "Also tell me when new course books ship.",
-  button: "Send me the sample hole",
-  note: "One email with the PDF. No list, unless you ask for one.",
-  sent: "Sent. The PDF is on its way to your inbox.",
+  body: "The how-to page and one full hole spread from a real book, free.",
+  button: "Open the sample hole (PDF)",
+  pdfHref: "/book/sample-tpc-stadium.pdf",
+  note: "Opens in a new tab. Print it, keep it.",
   howtoAlt:
     "The how-to page of the book: the orange number, the numbered shots, the start lines, the ruler with carries, where to miss",
 };
@@ -214,17 +225,19 @@ export type FaqItem = {
   answer: string;
   /** Owner placeholder inside the answer: kept out of the FAQ structured data. */
   placeholder?: boolean;
+  /** Rendered under the answer; not part of the structured data. */
+  link?: { label: string; href: string };
 };
 
 export const FAQ = {
   headline: "Questions",
   items: [
     {
-      id: "request",
+      id: "which-courses",
       question: "Which courses are available?",
       answer:
-        "At launch, the top US golf destinations. [Owner: the launch list.] Not yours yet? Tell us the course and we will let you know when its book ships.",
-      placeholder: true,
+        "The books in the selector at the top of this page, with more top US golf destinations on the way. Don't see yours? Tell us the course at the bottom of this page and we will email you when its book ships.",
+      link: { label: "Tell us the course", href: "#request" },
     },
     {
       id: "tee",
@@ -245,8 +258,7 @@ export const FAQ = {
     {
       id: "changes",
       question: "What if the course changes?",
-      answer: "The edition year is on the cover. [Owner: exchange or update policy.]",
-      placeholder: true,
+      answer: `The edition year is on the cover. ${UPDATE_PROMISE}`,
     },
     {
       id: "shipping",
@@ -258,8 +270,9 @@ export const FAQ = {
 };
 
 export const REQUEST_FORM = {
-  groupsNote:
-    "Tournaments and groups: tell us the course and the group size and we will come back to you by email.",
+  headline: "Don't see your course?",
+  intro:
+    "Tell us the course and we will email you when its book ships. Tournaments and groups: add the group size and we will come back to you by email.",
   emailLabel: "Your email",
   courseLabel: "The course",
   coursePlaceholder: "Course name, city",

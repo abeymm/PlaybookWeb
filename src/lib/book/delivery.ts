@@ -1,17 +1,15 @@
 /**
- * Delivery seam for the /book forms. The route handlers call `deliver` and know nothing about
- * where a submission ends up.
+ * Delivery seam for the /book course-request form. The route handler calls `deliver` and knows nothing
+ * about where a submission ends up.
  */
 
-export type Submission =
-  | { kind: "sample"; email: string; updates: boolean; receivedAt: string }
-  | {
-      kind: "course-request";
-      email: string;
-      course: string;
-      groupSize?: number;
-      receivedAt: string;
-    };
+export type Submission = {
+  kind: "course-request";
+  email: string;
+  course: string;
+  groupSize?: number;
+  receivedAt: string;
+};
 
 export type DeliveryResult = { ok: true; provider: string } | { ok: false; reason: "unconfigured" };
 
@@ -38,10 +36,7 @@ export async function deliver(
   // TODO(owner): choose the delivery provider.
   //
   // Two realistic options:
-  //   1. An email service that (a) sends the sample PDF to the address on a "sample" submission
-  //      (the file is at Marketing/Samples/2026-10-27/tpc-stadium-sample.pdf, outside this repo
-  //      and deliberately NOT a public static file) and (b) forwards "course-request"
-  //      submissions to the owner.
+  //   1. An email service that forwards course-request submissions to the owner.
   //   2. Storage the owner reads, such as DynamoDB or S3 through Amplify.
   //
   // A new provider is one more case in this switch plus a documented value for

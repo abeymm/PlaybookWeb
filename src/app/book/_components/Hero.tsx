@@ -16,7 +16,10 @@ function PackTiers({ singlePrice }: { singlePrice: string }) {
         {tiers.map((tier) => (
           <div key={tier.label} className="contents">
             <dt className="text-book-mint">{tier.label}</dt>
-            <dd className="font-semibold">{tier.price ?? singlePrice}</dd>
+            <dd className="font-semibold">
+              {tier.price ?? singlePrice}
+              {tier.note ? <span className="font-normal text-book-mint"> · {tier.note}</span> : null}
+            </dd>
           </div>
         ))}
       </dl>
@@ -59,18 +62,11 @@ export function Hero() {
               className="h-12 w-full rounded-md border border-book-green-border bg-book-green-deep px-3.5 text-[17px] text-book-cream focus:border-book-yellow focus:outline-none focus:ring-4 focus:ring-book-yellow/30"
             >
               {courses.map((option) => (
-                <option key={option.id} value={option.id} disabled={option.placeholder}>
-                  {option.placeholder ? option.name : `${option.name} (${option.tee} tee)`}
+                <option key={option.id} value={option.id}>
+                  {`${option.name} (${option.tee} tee)`}
                 </option>
               ))}
             </select>
-            <p className="text-[14px] leading-[1.4] text-book-mint">
-              {HERO.launchNote}{" "}
-              <a href="#request" className="font-semibold text-book-yellow underline underline-offset-4">
-                {HERO.launchLink}
-              </a>{" "}
-              {HERO.launchNoteTail}
-            </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-x-5 gap-y-3.5">

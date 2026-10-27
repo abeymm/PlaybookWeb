@@ -1,13 +1,13 @@
 import type { Parsed } from "@/lib/book/forms";
 import { deliver, type Submission } from "@/lib/book/delivery";
 
-/** Largest JSON body, in bytes, either form may send. */
+/** Largest JSON body, in bytes, the form may send. */
 export const MAX_BODY_BYTES = 4096;
 
 const MSG_BAD_JSON = "Send a JSON object.";
 const MSG_TOO_LARGE = "Request too large.";
 const MSG_UNCONFIGURED =
-  "Sending is not set up yet. Email support@playbook.golf and we will send it by hand.";
+  "Sending is not set up yet. Email support@playbook.golf with the course name.";
 
 type Deps = { deliver?: typeof deliver; now?: () => Date };
 
@@ -40,7 +40,7 @@ async function readJson(req: Request): Promise<Body> {
 }
 
 /**
- * Shared POST flow for both forms: read and size-check the JSON, validate, drop honeypot hits
+ * Shared POST flow for the form: read and size-check the JSON, validate, drop honeypot hits
  * silently, deliver, and map the outcome to a response.
  */
 export async function handleFormPost<T extends { spam: boolean }>(

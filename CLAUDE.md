@@ -110,29 +110,30 @@ Condensed via `next/font`, `book-*` tokens in `globals.css`), no shared site hea
 src/lib/book/
   catalog.ts   OWNER-EDITED: launch courses (tee, level, optional per-course buyUrl/price); the buy
                URL from NEXT_PUBLIC_BOOK_BUY_URL (a .example placeholder until set); BOOK_PRICING
-               (single "$50" per Master Plan §1.4, env override NEXT_PUBLIC_BOOK_PRICE; pack tiers
-               and the free-shipping line behind packs.enabled, off until prices are decided; no
+               (single "$49", env override NEXT_PUBLIC_BOOK_PRICE; packs enabled: "$89" for two and
+               "$39 each" from three; free shipping from "$100"; no
                public group price, no discount-code field); book facts (edition year, pages, size)
-  forms.ts     pure validation for both forms (unit-tested)
+  forms.ts     pure validation for the course-request form (unit-tested)
   delivery.ts  the provider seam behind BOOK_FORMS_DELIVERY: "log" (dev default; writes the
                submission to the server log) or unconfigured (503 in production until the owner
                picks an email service or storage — see the TODO(owner) block)
 src/app/book/
   layout.tsx          fonts, metadata, OG image, JSON-LD (FAQ entries with owner placeholders excluded)
   page.tsx            section order: Header · Hero (course selector, buy, chips, hole-13 spread) ·
-                      Stakes · Results · WhyABook · WhyThisBook · Design · Plan · SampleSection ·
-                      Faq (holds the "tell us the course" form) · FinalCta · Footer · StickyBuyBar (phones)
+                      Stakes · Results · PlayLater · WhyABook · WhyThisBook · Design · Plan · SampleSection (public PDF link) ·
+                      Faq · FinalCta · RequestBand (the "Don't see your course?" form) · Footer · StickyBuyBar (phones)
   _components/copy.ts ALL page copy, in page order (source: Marketing/Shopify/book-how-it-works-2026-10-27.md)
   _images.ts          generated manifest of public/book/*.webp (hole 13 = book pages 28–29, how-to = page 2)
 src/app/api/book/
-  sample/route.ts     POST {email, updates?, website?}  → 200 | 400 fields | 413 | 503 unconfigured
-  request/route.ts    POST {email, course, groupSize?, website?} → same shape; `website` is the honeypot;
+  request/route.ts    POST {email, course, groupSize?, website?} → 200 | 400 fields | 413 | 503 unconfigured;
+                      `website` is the honeypot;
                       `groupSize` (1–999) serves the "Tournaments and groups: ask us" link
 ```
 
 Rules the page keeps: never name a data source or method, no competitor names, no score promises,
-no course counts; the app appears once, as the companion. The sample PDF is NOT a public static
-file; delivery sends it. Images are regenerated from the book PDF and
+no course counts; the app appears once, as the companion. The sample PDF is the public file
+public/book/sample-tpc-stadium.pdf (owner approved 2026-10-27); no email capture at the top of the
+page. Images are regenerated from the book PDF and
 `Marketing/Shopify/crops-2026-10-27` (cwebp, q82), never edited by hand.
 
 ## Components

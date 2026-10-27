@@ -45,8 +45,11 @@ describe("BOOK_PRICING", () => {
     expect(resolveShop(undefined, undefined).price).toBe(BOOK_PRICING.single);
     expect(resolveShop("", "  ").price).toBe(BOOK_PRICING.single);
   });
-  it("has packs disabled by default", () => {
-    expect(BOOK_PRICING.packs.enabled).toBe(false);
+  it("has packs enabled", () => {
+    expect(BOOK_PRICING.packs.enabled).toBe(true);
+  });
+  it("notes the two-book pack as both Scottsdale books", () => {
+    expect(BOOK_PRICING.packs.tiers[1].note).toBe("Both Scottsdale books");
   });
   it("has three tiers; only the first has no price", () => {
     const tiers = BOOK_PRICING.packs.tiers;
@@ -72,13 +75,14 @@ describe("courseById", () => {
 });
 
 describe("purchasableCourses", () => {
-  it("excludes placeholders and includes both TPC Scottsdale entries", () => {
-    const list = purchasableCourses();
-    expect(list.every((c) => !c.placeholder)).toBe(true);
-    const ids = list.map((c) => c.id);
-    expect(ids).toContain("tpc-scottsdale-stadium");
-    expect(ids).toContain("tpc-scottsdale-champions");
-    expect(ids).not.toContain("placeholder-more");
+  it("returns exactly the two TPC Scottsdale books", () => {
+    expect(purchasableCourses().map((c) => c.id)).toEqual([
+      "tpc-scottsdale-stadium",
+      "tpc-scottsdale-champions",
+    ]);
+  });
+  it("has no placeholder entry in the launch list", () => {
+    expect(LAUNCH_COURSES.some((c) => c.placeholder)).toBe(false);
   });
 });
 

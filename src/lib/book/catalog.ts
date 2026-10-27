@@ -31,10 +31,11 @@ export type LaunchCourse = {
   buyUrl?: string;
   /** Per-course price; falls back to the single-book price. */
   price?: string;
-  /** Owner to fill: shown in the selector but not purchasable yet. */
+  /** Not yet purchasable: kept out of the selector and the buy buttons. */
   placeholder?: boolean;
 };
 
+// Owner: add one entry per book as it ships. The selector lists only purchasable books.
 export const LAUNCH_COURSES: readonly LaunchCourse[] = [
   {
     id: "tpc-scottsdale-stadium",
@@ -50,14 +51,6 @@ export const LAUNCH_COURSES: readonly LaunchCourse[] = [
     tee: "Blue/White",
     level: "low handicap",
   },
-  {
-    // Owner: replace with the rest of the launch list (one entry per book).
-    id: "placeholder-more",
-    name: "[More top US golf destinations]",
-    short: "[Course]",
-    tee: "[Tee]",
-    placeholder: true,
-  },
 ];
 
 export const DEFAULT_COURSE_ID = LAUNCH_COURSES[0].id;
@@ -66,6 +59,8 @@ export type PackTier = {
   label: string;
   /** Omitted = the single-book price (so an env override keeps the first row in step). */
   price?: string;
+  /** Shown after the price, e.g. which books the pack is. */
+  note?: string;
 };
 
 /**
@@ -80,11 +75,11 @@ export const BOOK_PRICING = {
   /** Shown wherever a price appears. Env override: NEXT_PUBLIC_BOOK_PRICE. */
   single: "$49",
   packs: {
-    /** Flip to true to show the tiers and the free-shipping line (owner decision pending). */
-    enabled: false,
+    /** When true, the tiers and the free-shipping line are shown. */
+    enabled: true,
     tiers: [
       { label: "1 book" },
-      { label: "2 books", price: "$89" },
+      { label: "2 books", price: "$89", note: "Both Scottsdale books" },
       { label: "3 or more", price: "$39 each" },
     ] as readonly PackTier[],
     freeShippingFrom: "$100",

@@ -3,7 +3,6 @@ import {
   normalizeEmail,
   normalizeCourseName,
   normalizeGroupSize,
-  parseSampleRequest,
   parseCourseRequest,
 } from "@/lib/book/forms";
 
@@ -48,54 +47,6 @@ describe("normalizeCourseName", () => {
   });
   it("rejects non-strings", () => {
     expect(normalizeCourseName(5)).toBeNull();
-  });
-});
-
-describe("parseSampleRequest", () => {
-  it("accepts a valid body and defaults updates to false", () => {
-    expect(parseSampleRequest({ email: " A@B.com " })).toEqual({
-      ok: true,
-      value: { email: "a@b.com", updates: false, spam: false },
-    });
-  });
-  it("keeps updates: true", () => {
-    const r = parseSampleRequest({ email: "a@b.com", updates: true });
-    expect(r.ok && r.value.updates).toBe(true);
-  });
-  it("rejects non-boolean updates", () => {
-    expect(parseSampleRequest({ email: "a@b.com", updates: "yes" })).toEqual({
-      ok: false,
-      error: "updates must be true or false.",
-      fields: {},
-    });
-  });
-  it.each([null, "text", ["a@b.com"], 5, undefined])("rejects non-object body %j", (body) => {
-    expect(parseSampleRequest(body)).toEqual({
-      ok: false,
-      error: "Send a JSON object.",
-      fields: {},
-    });
-  });
-  it("reports a bad email as a field error", () => {
-    expect(parseSampleRequest({ email: "nope" })).toEqual({
-      ok: false,
-      error: "Check the highlighted fields.",
-      fields: { email: "Enter a valid email address." },
-    });
-  });
-  it("flags a missing email", () => {
-    const r = parseSampleRequest({});
-    expect(!r.ok && r.fields.email).toBe("Enter a valid email address.");
-  });
-  it("treats a filled honeypot as spam without validating anything else", () => {
-    expect(parseSampleRequest({ website: "http://spam", email: "bad", updates: 3 })).toEqual({
-      ok: true,
-      value: { email: "", updates: false, spam: true },
-    });
-  });
-  it("ignores an empty honeypot and unknown keys", () => {
-    const r = parseSampleRequest({ website: "", email: "a@b.com", extra: 1 });
-    expect(r).toEqual({ ok: true, value: { email: "a@b.com", updates: false, spam: false } });
   });
 });
 

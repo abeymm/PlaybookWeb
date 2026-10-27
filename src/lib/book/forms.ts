@@ -1,5 +1,5 @@
 /**
- * Pure validation for the two /book forms. No Next.js imports, so it is easy to unit test.
+ * Pure validation for the /book course-request form. No Next.js imports, so it is easy to unit test.
  *
  * The optional `groupSize` on the course-request form backs the "Tournaments and groups: ask us"
  * link. There is no public group price; the owner replies by email.
@@ -11,7 +11,6 @@ export type Parsed<T> =
   | { ok: true; value: T }
   | { ok: false; error: string; fields: FieldErrors };
 
-export type SampleRequest = { email: string; updates: boolean; spam: boolean };
 export type CourseRequest = { email: string; course: string; groupSize?: number; spam: boolean };
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -24,7 +23,6 @@ const GROUP_SIZE_DIGITS = /^[0-9]{1,3}$/;
 
 const MSG_NOT_OBJECT = "Send a JSON object.";
 const MSG_FIELDS = "Check the highlighted fields.";
-const MSG_UPDATES = "updates must be true or false.";
 const MSG_EMAIL = "Enter a valid email address.";
 const MSG_COURSE = "Tell us the course name (2 to 120 characters).";
 const MSG_GROUP_SIZE = "Enter the number of players (1 to 999).";
@@ -89,18 +87,6 @@ function isHoneypotHit(body: Record<string, unknown>): boolean {
 
 function fieldFailure(fields: FieldErrors): Parsed<never> {
   return { ok: false, error: MSG_FIELDS, fields };
-}
-
-/** Validates the "Send me the sample hole" body. */
-export function parseSampleRequest(body: unknown): Parsed<SampleRequest> {
-  if (!isPlainObject(body)) return { ok: false, error: MSG_NOT_OBJECT, fields: {} };
-  if (isHoneypotHit(body)) return { ok: true, value: { email: "", updates: false, spam: true } };
-  if (body.updates !== undefined && typeof body.updates !== "boolean") {
-    return { ok: false, error: MSG_UPDATES, fields: {} };
-  }
-  const email = normalizeEmail(body.email);
-  if (email === null) return fieldFailure({ email: MSG_EMAIL });
-  return { ok: true, value: { email, updates: body.updates === true, spam: false } };
 }
 
 /** Validates the "Not listed? Tell us the course" body. */

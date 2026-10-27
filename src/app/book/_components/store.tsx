@@ -8,10 +8,10 @@ import { createContext, useContext, useMemo, useState, type ReactNode } from "re
 import {
   BOOK_SHOP,
   DEFAULT_COURSE_ID,
-  LAUNCH_COURSES,
   buyUrlFor,
   courseById,
   priceFor,
+  purchasableCourses,
   type LaunchCourse,
   type ShopSettings,
 } from "@/lib/book/catalog";
@@ -32,7 +32,7 @@ export function BookStoreProvider({ children }: { children: ReactNode }) {
   const value = useMemo<BookStore>(() => {
     const course = courseById(courseId);
     return {
-      courses: LAUNCH_COURSES,
+      courses: purchasableCourses(),
       course,
       selectCourse: setCourseId,
       buyUrl: buyUrlFor(course),
