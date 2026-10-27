@@ -27,25 +27,28 @@ function SubTitle({ children }: { children: ReactNode }) {
   return <h4 className="mt-2 text-[22px] font-bold leading-tight">{children}</h4>;
 }
 
-/** One column: the cone crop is the proof; the full map (hero spread again) was dropped. The text keeps the measure of the other rows' text columns. */
+/**
+ * The cone crop is the proof; the full map (hero spread again) was dropped. Phones read the text
+ * first, then the cone; at lg the cone sits left and the text right, so the three rows alternate.
+ */
 function PlanRow() {
   const copy = WHY_THIS_BOOK.plan;
   return (
-    <div className="max-w-[560px]">
+    <div className="grid gap-8 lg:grid-cols-[460px_minmax(0,1fr)] lg:items-start lg:gap-14">
       <RowText eyebrow={copy.eyebrow} title={copy.title}>
         <Body>{copy.body}</Body>
         <SubTitle>{copy.ovalTitle}</SubTitle>
         <Body>{copy.ovalBody}</Body>
-        <figure className="mt-2 flex max-w-[460px] flex-col gap-2">
-          <Image
-            {...BOOK_IMAGES.coneStartLines}
-            alt={copy.coneAlt}
-            sizes="(min-width: 640px) 460px, 100vw"
-            className={cn(IMG_FRAME, "h-auto w-full")}
-          />
-          <figcaption className="text-[14px] text-book-muted">{copy.coneCaption}</figcaption>
-        </figure>
       </RowText>
+      <figure className="flex max-w-[460px] flex-col gap-2 lg:order-first">
+        <Image
+          {...BOOK_IMAGES.coneStartLines}
+          alt={copy.coneAlt}
+          sizes="(min-width: 640px) 460px, 100vw"
+          className={cn(IMG_FRAME, "h-auto w-full")}
+        />
+        <figcaption className="text-[14px] text-book-muted">{copy.coneCaption}</figcaption>
+      </figure>
     </div>
   );
 }
