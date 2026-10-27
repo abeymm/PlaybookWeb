@@ -65,3 +65,7 @@ export function generateLogPath(key: string): string {
 export function exportLogPath(key: string): string {
   return path.join(runDir(key), "export.log");
 }
+/** Print-book runs: `<runDir>/print/<runId>/` (one dir per `print_book.py --out`). */
+export function printDir(key: string): string {
+  return path.join(runDir(key), "print");
+}
