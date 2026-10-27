@@ -7,6 +7,7 @@
  * (public/book/sample-tpc-stadium.pdf).
  */
 import { FinalCta, Footer, StickyBuyBar } from "./_components/Closing";
+import { CompanionApp } from "./_components/CompanionApp";
 import { Design, Plan } from "./_components/DesignAndPlan";
 import { Faq } from "./_components/Faq";
 import { Header } from "./_components/Header";
@@ -31,6 +32,7 @@ export default function BookPage() {
           <PlayLater />
           <WhyABook />
           <WhyThisBook />
+          <CompanionApp />
           <Design />
           <Plan />
           <SampleSection />

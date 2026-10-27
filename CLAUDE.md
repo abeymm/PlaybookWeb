@@ -120,10 +120,11 @@ src/lib/book/
 src/app/book/
   layout.tsx          fonts, metadata, OG image, JSON-LD (FAQ entries with owner placeholders excluded)
   page.tsx            section order: Header · Hero (course selector, buy, chips, hole-13 spread) ·
-                      Stakes · Results · PlayLater · WhyABook · WhyThisBook · Design · Plan · SampleSection (public PDF link) ·
+                      Stakes · Results · PlayLater · WhyABook · WhyThisBook · CompanionApp · Design · Plan · SampleSection (public PDF link) ·
                       Faq · FinalCta · RequestBand (the "Don't see your course?" form) · Footer · StickyBuyBar (phones)
   _components/copy.ts ALL page copy, in page order (source: Marketing/Shopify/book-how-it-works-2026-10-27.md)
-  _images.ts          generated manifest of public/book/*.webp (hole 13 = book pages 28–29, how-to = page 2)
+  _images.ts          generated manifest of public/book/*.webp (hole 13 = book pages 28–29, how-to = page 2);
+                      app-hole-map.webp is cropped from iOS/Docs/Plans/Book-Look-In-App-2026-10-27/app/app-hole-map.png
 src/app/api/book/
   request/route.ts    POST {email, course, groupSize?, website?} → 200 | 400 fields | 413 | 503 unconfigured;
                       `website` is the honeypot;
@@ -131,7 +132,7 @@ src/app/api/book/
 ```
 
 Rules the page keeps: never name a data source or method, no competitor names, no score promises,
-no course counts; the app appears once, as the companion. The sample PDF is the public file
+no course counts; the app has one section (the companion-app band after the why-this-book grid; "the only" appears there once, in the eyebrow, owner-confirmed 2026-10-27). The sample PDF is the public file
 public/book/sample-tpc-stadium.pdf (owner approved 2026-10-27); no email capture at the top of the
 page. Images are regenerated from the book PDF and
 `Marketing/Shopify/crops-2026-10-27` (cwebp, q82), never edited by hand.

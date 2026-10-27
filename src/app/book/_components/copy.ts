@@ -6,7 +6,7 @@
  * placeholder and stays visible until it is filled in.
  *
  * Rules the copy keeps: no data-source or method names, no competitor names, no score promises,
- * no course counts, and the app appears once, as the companion (WHY_THIS_BOOK.cards, last card).
+ * no course counts, and the app has one section (APP, the companion-app band after WHY_THIS_BOOK).
  */
 import { BOOK_FACTS } from "@/lib/book/catalog";
 
@@ -158,13 +158,26 @@ export const WHY_THIS_BOOK = {
       body: "One table for low, mid and high ball flights, into and helping at 10 and 20 mph, as yards to add or take off. A second table gives how far to aim off in a crosswind. Judge the wind by feel; the book has done the rest.",
       alt: "The wind page: yards to add or take off by ball flight and wind strength, and how far to aim off in a crosswind",
     },
-    {
-      key: "edition",
-      title: "This year's edition",
-      body: "The edition year is on the cover. The same plan is on your phone too, tuned to your own clubs, through the QR code in the book.",
-      alt: `The cover of the TPC Scottsdale PGA Stadium book naming the ${BOOK_FACTS.editionYear} edition`,
-    },
   ],
+};
+
+/** The companion app: the one place the app appears. "The only" is the owner's claim, confirmed 2026-10-27; every item below is backed by iOS/Docs/Features. */
+export const APP = {
+  eyebrow: "The only playbook with a companion app",
+  headline: "Paper for the round. The app for the day.",
+  body: "Scan the QR code on the back cover and the same plan opens in the Golf Playbook app. On the day it adds what paper cannot: the wind and temperature as you play, and your own club distances. The book stays in your pocket; the app does the live maths when you want it.",
+  items: [
+    { title: "Fly-through preview", body: "Fly over your plan, hole by hole, before you travel." },
+    { title: "A cone that moves with the day", body: "Wind, temperature and altitude re-shape each shot's dispersion live, built on your own club distances." },
+    { title: "Play-it-like distance", body: "The compensated number for the shot in front of you, conditions worked in." },
+    { title: "Shots recorded as you walk", body: "Then a round review with every shot on the map and your stats." },
+    { title: "A bag that learns", body: "Real rounds refine each club's distance and dispersion." },
+    { title: "On your wrist", body: "Front, centre and back distances and a live scorecard on Apple Watch." },
+  ],
+  link: "See the app",
+  href: "/get",
+  imageAlt:
+    "The app's hole map: the planned shot with its yardage and landing oval, the club arcs, and the plays-like numbers beside each club",
 };
 
 export const DESIGN = {

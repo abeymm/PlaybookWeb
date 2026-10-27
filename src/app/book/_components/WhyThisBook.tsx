@@ -135,17 +135,6 @@ function CardImage({ cardKey, alt }: { cardKey: string; alt: string }) {
           <Image {...BOOK_IMAGES.windPage} alt={alt} sizes="140px" className={tall} />
         </div>
       );
-    default:
-      return (
-        <div className={box}>
-          <Image
-            {...BOOK_IMAGES.cover}
-            alt={alt}
-            sizes="(min-width: 640px) 360px, 100vw"
-            className="h-full w-full object-cover object-[center_58%]"
-          />
-        </div>
-      );
   }
 }
 

@@ -19,8 +19,22 @@ describe("book copy rules", () => {
   it("never says serious amateur", () => {
     expect(all.filter((s) => /serious amateur/i.test(s))).toEqual([]);
   });
+  it("says the only once, in the owner-confirmed app eyebrow", () => {
+    expect(all.filter((s) => /\bthe only\b/i.test(s))).toEqual([copy.APP.eyebrow]);
+  });
   it("never names a data source or method", () => {
     expect(all.filter((s) => /\b(NAIP|3DEP|GolfAPI|OpenStreetMap|OSM|lidar)\b/i.test(s))).toEqual([]);
+  });
+});
+
+describe("companion app", () => {
+  it("has five why-this-book cards and no edition card", () => {
+    expect(copy.WHY_THIS_BOOK.cards.length).toBe(5);
+    expect(copy.WHY_THIS_BOOK.cards.some((c) => c.key === "edition")).toBe(false);
+  });
+  it("links to /get with six items", () => {
+    expect(copy.APP.href).toBe("/get");
+    expect(copy.APP.items.length).toBe(6);
   });
 });
 
