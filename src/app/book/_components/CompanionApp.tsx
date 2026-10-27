@@ -6,7 +6,10 @@ import { BOOK_IMAGES } from "../_images";
 import { APP } from "./copy";
 import { Container, Eyebrow } from "./ui";
 
-/** The one section about the app. The book stays the product; the yellow filled button stays the buy button. */
+/**
+ * The one section about the app. The book stays the product; the yellow filled button stays the buy button.
+ * "See the app" opens in a new tab so the buyer stays on this page.
+ */
 export function CompanionApp() {
   return (
     <section className="bg-book-green-deep py-16 text-book-cream md:py-20">
@@ -28,6 +31,8 @@ export function CompanionApp() {
           </ul>
           <Link
             href={APP.href}
+            target="_blank"
+            rel="noopener"
             className="inline-flex h-12 w-fit items-center justify-center rounded-md border-2 border-book-yellow px-5 font-book-display text-[20px] font-extrabold tracking-[0.04em] text-book-yellow transition hover:bg-book-yellow hover:text-book-green focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-book-yellow/40"
           >
             {APP.link}

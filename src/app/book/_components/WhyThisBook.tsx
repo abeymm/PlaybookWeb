@@ -141,7 +141,6 @@ export function WhyThisBook() {
           <h2 className="text-[38px] font-extrabold leading-none text-book-green sm:text-[46px] lg:text-[52px]">
             {WHY_THIS_BOOK.headline}
           </h2>
-          <p className="font-book-display text-[26px] font-bold leading-[1.15] sm:text-[30px]">{WHY_THIS_BOOK.tieLine}</p>
         </div>
         <PlanRow />
         <MissRow />

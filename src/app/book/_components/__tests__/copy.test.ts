@@ -13,6 +13,25 @@ function collectStrings(value: unknown, out: string[] = []): string[] {
 
 const all = collectStrings(Object.values(copy));
 
+describe("storybrand pass", () => {
+  it("drops the tie line and sharpens the headline", () => {
+    expect("tieLine" in copy.WHY_THIS_BOOK).toBe(false);
+    expect(copy.WHY_THIS_BOOK.headline).toBe("A yardage book that has done the thinking.");
+  });
+  it("leads the results with the first-time promise", () => {
+    expect(copy.RESULTS.lead).toBe("Your first time there, played like your tenth.");
+  });
+  it("uses the guessed-a-line empathy", () => {
+    expect(copy.WHY_A_BOOK.empathy).toContain("guessed a line");
+  });
+  it("never calls a yardage label a chip", () => {
+    expect(all.filter((s) => /\bchips?\b/i.test(s))).toEqual([]);
+  });
+  it("does not lean on the orange number in the results", () => {
+    expect(copy.RESULTS.items[1]).not.toContain("orange");
+  });
+});
+
 describe("book copy rules", () => {
   it("collects strings from every export", () => {
     expect(all.length).toBeGreaterThan(50);

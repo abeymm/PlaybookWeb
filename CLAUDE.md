@@ -125,7 +125,8 @@ src/app/book/
                       Faq · FinalCta (price, packs line, buy) · RequestBand (the "Don't see your course?" form) · Footer ·
                       StickyBuyBar (phones)
   _components/copy.ts ALL page copy, in page order (source: Marketing/Shopify/book-how-it-works-2026-10-27.md;
-                      structure per Marketing/Shopify/book-page-review-2026-10-27.md)
+                      structure per Marketing/Shopify/book-page-review-2026-10-27.md;
+                      wording per Marketing/Shopify/book-page-storybrand-2026-10-27.md)
   _images.ts          generated manifest of public/book/*.webp (hole 13 = book pages 28–29, how-to = page 2);
                       app-hole-map.webp is cropped from iOS/Docs/Plans/Book-Look-In-App-2026-10-27/app/app-hole-map.png
 src/app/api/book/

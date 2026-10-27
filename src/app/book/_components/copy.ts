@@ -3,6 +3,7 @@
  *
  * Source of truth: Marketing/Shopify/book-how-it-works-2026-10-27.md (paste-ready copy), with the
  * structure per Marketing/Shopify/book-page-review-2026-10-27.md (ten sections, two card grids).
+ * Wording per Marketing/Shopify/book-page-storybrand-2026-10-27.md (StoryBrand pass).
  * Bracketed text such as "[YOUR PRICE]" is an owner placeholder and stays visible until it is
  * filled in.
  *
@@ -35,7 +36,7 @@ export const HERO = {
   greenPageAlt:
     "Green page of hole 13: slope arrows, height bands, miss dots and the where-to-miss table",
   mapPageAlt:
-    "Map page of hole 13: three planned shots, the 188-yard water carry chip, the orange plays-like numbers, the elevation strip and the from-tee ruler",
+    "Map page of hole 13: three planned shots, the 188-yard water carry label, the orange plays-like numbers, the elevation strip and the from-tee ruler",
 };
 
 // Owner-approved 2026-10-27 ("version A"); replaces the earlier "A course you travelled for" line.
@@ -45,10 +46,10 @@ export const STAKES = {
 };
 
 export const RESULTS = {
-  lead: "What the book does on the course.",
+  lead: "Your first time there, played like your tenth.",
   items: [
     "You stand on every tee already knowing where to hit it, and where not to.",
-    "You pick the club in seconds: the orange number has done the maths.",
+    "You pick the club in seconds: the number on the page already allows for slope and altitude.",
     "Your misses finish on the side of the green you can get up and down from.",
   ],
 };
@@ -66,7 +67,7 @@ export const PLAY_LATER = {
 };
 
 export const WHY_A_BOOK = {
-  empathy: "You have stood on a tee you had never seen, picked a line, and made the double that cost the day. So have we.",
+  empathy: "You have stood on a tee you had never seen, guessed a line, and made the double that cost the day. So have we.",
   heading: "Why a book",
   points: [
     "A yardage book is a habit good golfers already have.",
@@ -79,12 +80,11 @@ export const WHY_A_BOOK = {
 };
 
 export const WHY_THIS_BOOK = {
-  headline: "A yardage book tells you how far.",
-  tieLine: "This book tells you where to hit it, what it really plays like, and where to miss.",
+  headline: "A yardage book that has done the thinking.",
   plan: {
     eyebrow: "A plan for every shot",
     title: "Stand on the tee knowing the target, not just the yardage.",
-    body: "Every hole is planned shot by shot: each shot starts at a chip with its yardage, printed where you will be standing, and ends at a numbered spot where the next one begins.",
+    body: "Every hole is planned shot by shot: each shot starts at a yardage label, printed where you will be standing, and ends at a numbered spot where the next one begins.",
     ovalTitle: "The landing oval and your start lines",
     ovalBody:
       "See how wide a good swing finishes and where to start it. Each landing spot sits in an oval sized for the book's level of play, green when the patch is clear and amber to red as trouble comes in. Two lines run from the ball to the oval's edges: start a fade down one, a draw down the other, and let it curve back in.",
@@ -104,12 +104,12 @@ export const WHY_THIS_BOOK = {
   orange: {
     eyebrow: "The orange number",
     title: "Laser the flag, add the orange number, pick the club.",
-    body: "Every chip carries it: the slope and the course's altitude are already worked in, so there is no maths on the tee.",
-    carryTitle: "Carry chips from where you hit",
+    body: "Every yardage label carries it: the slope and the course's altitude are already worked in, so there is no maths on the tee.",
+    carryTitle: "Carry numbers from where you hit",
     carryBody:
       "“Can I carry that?” is answered before you pull a club. Every carry over water is counted from the shot that has to clear it, not from the tee, so a second shot over a creek gets its own number.",
     chipsAlt:
-      "Chips on hole 13: 250 minus 5, 200 minus 3 and 150 minus 3 along the fairway, 171 minus 4 to the lay-up, and the carry chip, 188 to clear the water",
+      "Yardage labels on hole 13: 250 minus 5, 200 minus 3 and 150 minus 3 along the fairway, 171 minus 4 to the lay-up, and the carry label, 188 to clear the water",
   },
   cards: [
     {
@@ -218,7 +218,7 @@ export const FAQ = {
     {
       id: "shipping",
       question: "Shipping and returns",
-      answer: "[Owner: ships from, days to arrive, return terms.]",
+      answer: "[Owner: Ships from PLACE in N days. Not what you expected? Send it back within N days.]",
       placeholder: true,
     },
   ] satisfies FaqItem[],
