@@ -255,3 +255,32 @@
 .legal-prose code {
   @apply rounded bg-muted px-1 py-0.5 text-sm;
 }
+/* ===== Course book sales page (/book) =====
+   The palette and type come from the printed book: Barlow Condensed for display, Barlow for
+   body (loaded in src/app/book/layout.tsx as --font-barlow-condensed / --font-barlow).
+   Tokens are prefixed `book-` so they never collide with the site theme above. */
+@theme inline {
+  --font-book: var(--font-barlow), ui-sans-serif, system-ui, sans-serif;
+  --font-book-display: var(--font-barlow-condensed), ui-sans-serif, system-ui, sans-serif;
+  --color-book-green: #0e3a20;
+  --color-book-green-deep: #0a2b17;
+  --color-book-green-line: #3f6a4c;
+  --color-book-green-border: #5c7e66;
+  --color-book-yellow: #f2c230;
+  --color-book-cream: #f5f0e4;
+  --color-book-paper: #fffdf8;
+  --color-book-line: #e3dccb;
+  --color-book-ink: #141c17;
+  --color-book-muted: #4a5750;
+  --color-book-orange: #b5581e;
+  --color-book-mint: #bfd2c4;
+  --color-book-pale: #dce6dd;
+  --color-book-field: #b9b2a2;
+  --color-book-error: #9a2e12;
+}
+.book-page {
+  font-family: var(--font-book);
+}
+.book-page :is(h1, h2, h3, h4) {
+  font-family: var(--font-book-display);
+}

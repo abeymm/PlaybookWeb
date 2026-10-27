@@ -564,6 +564,9 @@ export default function Home() {
               <span className="text-lg font-bold tracking-tight">Golf Playbook</span>
             </div>
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
+              <Link href="/book" className="transition-colors hover:text-foreground">
+                Course books
+              </Link>
               <Link href="/print" className="transition-colors hover:text-foreground">
                 Print
               </Link>
