@@ -3,9 +3,10 @@
 /**
  * Small primitives shared by the /book sections: the page container, the eyebrow label, the buy
  * button (reads the picked course from the store), form fields, the honeypot and the fetch hook
- * both forms use.
+ * the form uses.
  */
-import { useState, type ReactNode } from "react";
+import { Fragment, useState, type ReactNode } from "react";
+import { BOOK_PRICING } from "@/lib/book/catalog";
 import { cn } from "@/lib/utils";
 import { HERO } from "./copy";
 import { useBookStore } from "./store";
@@ -37,6 +38,23 @@ export function BuyButton({ className, size = "lg" }: { className?: string; size
     >
       {HERO.buy}
     </a>
+  );
+}
+
+/** The packs line, shown only once BOOK_PRICING.packs.enabled is on; each segment stays on one line. */
+export function PacksLine({ className }: { className?: string }) {
+  if (!BOOK_PRICING.packs.enabled) return null;
+  const { tiers, freeShippingFrom } = BOOK_PRICING.packs;
+  const segments = HERO.packs(tiers, freeShippingFrom);
+  return (
+    <p className={cn("text-[16px] text-book-mint", className)}>
+      {segments.map((segment, index) => (
+        <Fragment key={segment}>
+          {index > 0 ? " · " : null}
+          <span className="whitespace-nowrap">{segment}</span>
+        </Fragment>
+      ))}
+    </p>
   );
 }
 

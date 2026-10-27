@@ -1,14 +1,13 @@
 "use client";
 
-import { RESULTS, STAKES } from "./copy";
-import { Container, Eyebrow } from "./ui";
+import { PLAY_LATER, RESULTS, STAKES } from "./copy";
+import { Container } from "./ui";
 
 export function Stakes() {
   return (
     <section className="bg-book-yellow py-5 text-book-green">
-      <Container className="flex flex-col items-center gap-1.5 text-center lg:flex-row lg:items-baseline lg:justify-center lg:gap-7">
+      <Container className="flex flex-col items-center text-center">
         <h2 className="text-[24px] font-extrabold leading-tight sm:text-[26px]">{STAKES.headline}</h2>
-        <p className="max-w-[640px] text-[16px] font-medium leading-[1.4] sm:text-[17px]">{STAKES.body}</p>
       </Container>
     </section>
   );
@@ -16,23 +15,20 @@ export function Stakes() {
 
 export function Results() {
   return (
-    <section className="pb-6 pt-14">
-      <Container className="flex flex-col gap-6">
-        <Eyebrow className="text-book-orange">{RESULTS.eyebrow}</Eyebrow>
-        <ol className="grid gap-6 md:grid-cols-3">
-          {RESULTS.items.map((item, index) => (
-            <li
-              key={item.title}
-              className="flex flex-col gap-2.5 rounded-lg border border-book-line bg-book-paper p-6"
-            >
-              <span aria-hidden="true" className="font-book-display text-[40px] font-extrabold leading-none text-book-green">
-                {index + 1}
-              </span>
-              <h3 className="text-[25px] font-bold leading-[1.1] sm:text-[26px]">{item.title}</h3>
-              <p className="text-[17px] leading-[1.5] text-book-muted">{item.body}</p>
-            </li>
-          ))}
-        </ol>
+    <section className="py-14 md:py-16">
+      <Container className="flex flex-col gap-10">
+        <div className="flex max-w-[860px] flex-col gap-5">
+          <h2 className="text-[34px] font-extrabold leading-none text-book-green sm:text-[40px]">{RESULTS.lead}</h2>
+          <ul className="flex flex-col gap-3 text-[21px] font-semibold leading-[1.3] sm:text-[23px]">
+            {RESULTS.items.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+        <div className="flex max-w-[860px] flex-col gap-2.5">
+          <h3 className="text-[26px] font-extrabold leading-none text-book-green">{PLAY_LATER.headline}</h3>
+          <p className="text-[18px] leading-[1.5]">{PLAY_LATER.body}</p>
+        </div>
       </Container>
     </section>
   );

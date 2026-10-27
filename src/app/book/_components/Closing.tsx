@@ -3,17 +3,21 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { FINAL, FOOTER } from "./copy";
+import { FINAL, FOOTER, HERO } from "./copy";
 import { useBookStore } from "./store";
-import { BuyButton, Container } from "./ui";
+import { BuyButton, Container, PacksLine } from "./ui";
 
 export function FinalCta() {
+  const { price } = useBookStore();
   return (
     <section className="bg-book-green py-16 text-book-cream md:py-20">
       <Container className="flex flex-col items-start gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
-        <div className="flex min-w-0 flex-col gap-2">
+        <div className="flex min-w-0 flex-col gap-3">
           <h2 className="text-[38px] font-extrabold leading-none sm:text-[46px] lg:text-[52px]">{FINAL.headline}</h2>
-          <p className="text-[18px] text-book-pale">{FINAL.body}</p>
+          <p className="text-[18px] font-semibold">
+            {price} <span className="font-normal text-book-mint">· {HERO.priceTail}</span>
+          </p>
+          <PacksLine />
         </div>
         <BuyButton />
       </Container>

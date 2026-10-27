@@ -1,24 +1,24 @@
 /**
  * All copy for /book, in page order.
  *
- * Source of truth: Marketing/Shopify/book-how-it-works-2026-10-27.md (paste-ready copy), laid out
- * in the structure of the approved design mock. Bracketed text such as "[YOUR PRICE]" is an owner
- * placeholder and stays visible until it is filled in.
+ * Source of truth: Marketing/Shopify/book-how-it-works-2026-10-27.md (paste-ready copy), with the
+ * structure per Marketing/Shopify/book-page-review-2026-10-27.md (ten sections, two card grids).
+ * Bracketed text such as "[YOUR PRICE]" is an owner placeholder and stays visible until it is
+ * filled in.
  *
  * Rules the copy keeps: no data-source or method names, no competitor names, no score promises,
  * no course counts, and the app has one section (APP, the companion-app band after WHY_THIS_BOOK).
  */
-import { BOOK_FACTS } from "@/lib/book/catalog";
+import { BOOK_FACTS, type PackTier } from "@/lib/book/catalog";
 
 export const PAGE = {
   title: "The course book: play your bucket-list course like a local",
-  description:
-    "A printed strategy book for one course, made for your tee and your game: where to hit it, what it really plays like, and where to miss. Top US golf destinations.",
+  description: `A printed strategy book for one course: the plan, the plays-like numbers and where to miss. Top US golf destinations, ${BOOK_FACTS.editionYear} edition.`,
   ogAlt: "The green page and the hole map of hole 13, TPC Scottsdale PGA Stadium, from the course book",
 };
 
 export const HERO = {
-  eyebrow: `Strategy & green playbooks · Top US golf destinations · ${BOOK_FACTS.editionYear} edition`,
+  eyebrow: `Top US golf destinations · ${BOOK_FACTS.editionYear} edition`,
   headline: "Play your bucket-list course like a local.",
   subhead:
     "A printed strategy book for one course, made for your tee and your game: where to hit it, what it really plays like, and where to miss. Read it the night before. Carry it the next day.",
@@ -26,12 +26,12 @@ export const HERO = {
   buy: "Get your course book",
   priceTail: `${BOOK_FACTS.pages} pages · back-pocket size`,
   sampleLink: "See a sample hole",
-  groupsLink: "Tournaments and groups: ask us",
-  packsHeading: "Packs",
-  freeShipping: (from: string) => `Free shipping from ${from}.`,
-  chipSpread: "One spread per hole",
-  figcaption:
-    "Hole 13, TPC Scottsdale PGA Stadium. The green on the top page, the hole below it. One spread per hole, eighteen spreads.",
+  /** The one packs line, as segments so the hero wraps only at the separators: "2 books $89 · 3 or more $39 each · free shipping from $100". */
+  packs: (tiers: readonly PackTier[], freeShippingFrom: string): string[] => [
+    ...tiers.filter((tier) => tier.price).map((tier) => `${tier.label} ${tier.price}`),
+    `free shipping from ${freeShippingFrom}`,
+  ],
+  figcaption: "Hole 13, TPC Scottsdale PGA Stadium. The green on the top page, the hole below it. One spread per hole.",
   greenPageAlt:
     "Green page of hole 13: slope arrows, height bands, miss dots and the where-to-miss table",
   mapPageAlt:
@@ -42,24 +42,14 @@ export const HERO = {
 export const STAKES = {
   headline:
     "Serious about your scores? Then a course you've never seen shouldn't cost you three holes to learn.",
-  body: "Another round lost to a hole you didn't know. The double that decided the flight.",
 };
 
 export const RESULTS = {
-  eyebrow: "With the book in your pocket",
+  lead: "What the book does on the course.",
   items: [
-    {
-      title: "You stand on every tee already knowing where to hit it, and where not to.",
-      body: "The target, the carry and the safe side are on the page before you pull a club.",
-    },
-    {
-      title: "You pick the club in seconds: the orange number has done the maths.",
-      body: "Laser the flag, add the orange number. Slope and altitude are already in it.",
-    },
-    {
-      title: "Your misses finish on the side of the green you can get up and down from.",
-      body: "Every green says where to miss and where never to. A miss becomes a chip, not a double.",
-    },
+    "You stand on every tee already knowing where to hit it, and where not to.",
+    "You pick the club in seconds: the orange number has done the maths.",
+    "Your misses finish on the side of the green you can get up and down from.",
   ],
 };
 
@@ -67,27 +57,23 @@ export const RESULTS = {
 export const UPDATE_PROMISE =
   "If a hole changes during the season, you get a free PDF update of that hole through the QR code in the book.";
 
+/** Lower-cases the first letter so a sentence can follow "And". */
+const lowerFirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
+
 export const PLAY_LATER = {
   headline: "Buy it now, play it later.",
-  items: [
-    {
-      title: "Future trip",
-      body: `Playing it next spring? The ${BOOK_FACTS.editionYear} edition is good for the season. Buy it when you book the trip.`,
-    },
-    { title: "Gift", body: "The gift for the golfer who has everything. Add a gift note at checkout." },
-    { title: "Promise", body: UPDATE_PROMISE },
-  ],
+  body: `Playing it next spring? The ${BOOK_FACTS.editionYear} edition is good for the season, so buy it when you book the trip. It is also the gift for the golfer who has everything (gift note at checkout). And ${lowerFirst(UPDATE_PROMISE)}`,
 };
 
 export const WHY_A_BOOK = {
-  empathy:
-    "You have stood on a tee you had never seen, picked a line, and made the double that cost the day. So have we. That is why we built this book.",
+  empathy: "You have stood on a tee you had never seen, picked a line, and made the double that cost the day. So have we.",
   heading: "Why a book",
   points: [
     "A yardage book is a habit good golfers already have.",
     "A glance at a page in the back pocket: no screen, no battery, nothing to unlock, at home in any event.",
     "A printed book for one course is worth keeping after the round.",
   ],
+  specs: `${BOOK_FACTS.size}, ${BOOK_FACTS.pages} pages, one spread per hole, nothing on a page smaller than ${BOOK_FACTS.minType}. [Paper and cover.]`,
   coverAlt: `The book's cover: Aim for your miss, not a miracle. TPC Scottsdale PGA Stadium, ${BOOK_FACTS.editionYear} edition, Blue/White tee`,
   photoPlaceholder: "[Product photo: the book in a back pocket]",
 };
@@ -165,7 +151,7 @@ export const WHY_THIS_BOOK = {
 export const APP = {
   eyebrow: "The only playbook with a companion app",
   headline: "Paper for the round. The app for the day.",
-  body: "Scan the QR code on the back cover and the same plan opens in the Golf Playbook app. On the day it adds what paper cannot: the wind and temperature as you play, and your own club distances. The book stays in your pocket; the app does the live maths when you want it.",
+  body: "Scan the QR code on the back cover and the same plan opens in the Golf Playbook app. On the day it adds what paper cannot: the wind and temperature as you play, and your own club distances. The book stays in your pocket.",
   items: [
     { title: "Fly-through preview", body: "Fly over your plan, hole by hole, before you travel." },
     { title: "A cone that moves with the day", body: "Wind, temperature and altitude re-shape each shot's dispersion live, built on your own club distances." },
@@ -178,48 +164,6 @@ export const APP = {
   href: "/get",
   imageAlt:
     "The app's hole map: the planned shot with its yardage and landing oval, the club arcs, and the plays-like numbers beside each club",
-};
-
-export const DESIGN = {
-  headline: "Designed to be read at a glance.",
-  stats: [
-    {
-      stat: "8 pt",
-      body: "Legible in sunlight. Nothing on any page is smaller than 8 pt. One glance per shot.",
-    },
-    {
-      stat: "1 spread",
-      body: "One spread per hole. The green on the top page, the hole map below it: the whole hole in one hand.",
-    },
-    {
-      stat: BOOK_FACTS.size,
-      body: `Back-pocket size, ${BOOK_FACTS.pages} pages. Built to last the trip. [Paper and cover spec]`,
-    },
-    {
-      stat: "One look",
-      body: "One clean look. A full-colour photo of every hole and one type family throughout.",
-    },
-  ],
-};
-
-export const PLAN = {
-  eyebrow: "Know before you go",
-  headline: "Three steps. The third one is the round.",
-  steps: [
-    {
-      title: "Pick your course and your tee.",
-      body: "The cover names the tee the book is made for. Choose the one you play.",
-    },
-    {
-      title: "The night before, eighteen spreads in your hands.",
-      body: "Ten minutes.",
-    },
-    {
-      title: "On the course, book in the back pocket, phone in the bag.",
-      body: "Glance, add the orange number, hit the target, miss on the safe side.",
-    },
-  ],
-  closing: "Phone in the bag. Book in the pocket.",
 };
 
 export const SAMPLE = {
@@ -295,10 +239,7 @@ export const REQUEST_FORM = {
   sent: "Thanks. We will email you about that course.",
 };
 
-export const FINAL = {
-  headline: "Play your bucket-list course like a local.",
-  body: "Pick the course. Read it tonight. Carry it tomorrow.",
-};
+export const FINAL = { headline: "Play your bucket-list course like a local." };
 
 export const FOOTER = {
   disclaimer: "An independent playbook. Not affiliated with, sponsored or endorsed by the course.",

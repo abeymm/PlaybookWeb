@@ -48,9 +48,6 @@ describe("BOOK_PRICING", () => {
   it("has packs enabled", () => {
     expect(BOOK_PRICING.packs.enabled).toBe(true);
   });
-  it("notes the two-book pack as both Scottsdale books", () => {
-    expect(BOOK_PRICING.packs.tiers[1].note).toBe("Both Scottsdale books");
-  });
   it("has three tiers; only the first has no price", () => {
     const tiers = BOOK_PRICING.packs.tiers;
     expect(tiers.map((t) => t.label)).toEqual(["1 book", "2 books", "3 or more"]);

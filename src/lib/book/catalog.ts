@@ -59,8 +59,6 @@ export type PackTier = {
   label: string;
   /** Omitted = the single-book price (so an env override keeps the first row in step). */
   price?: string;
-  /** Shown after the price, e.g. which books the pack is. */
-  note?: string;
 };
 
 /**
@@ -79,7 +77,7 @@ export const BOOK_PRICING = {
     enabled: true,
     tiers: [
       { label: "1 book" },
-      { label: "2 books", price: "$89", note: "Both Scottsdale books" },
+      { label: "2 books", price: "$89" },
       { label: "3 or more", price: "$39 each" },
     ] as readonly PackTier[],
     freeShippingFrom: "$100",
@@ -123,6 +121,8 @@ export const BOOK_FACTS = {
   size: "4¼ × 7 in",
   /** Sea-level-equivalent yards the planning tee is chosen for. */
   planningYards: "6,250",
+  /** Smallest type on any page. */
+  minType: "8 pt",
 } as const;
 
 export function courseById(id: string | null | undefined): LaunchCourse {

@@ -8,11 +8,9 @@
  */
 import { FinalCta, Footer, StickyBuyBar } from "./_components/Closing";
 import { CompanionApp } from "./_components/CompanionApp";
-import { Design, Plan } from "./_components/DesignAndPlan";
 import { Faq } from "./_components/Faq";
 import { Header } from "./_components/Header";
 import { Hero } from "./_components/Hero";
-import { PlayLater } from "./_components/PlayLater";
 import { RequestBand } from "./_components/RequestBand";
 import { SampleSection } from "./_components/SampleSection";
 import { Results, Stakes } from "./_components/StakesAndResults";
@@ -29,12 +27,9 @@ export default function BookPage() {
           <Hero />
           <Stakes />
           <Results />
-          <PlayLater />
           <WhyABook />
           <WhyThisBook />
           <CompanionApp />
-          <Design />
-          <Plan />
           <SampleSection />
           <Faq />
           <FinalCta />

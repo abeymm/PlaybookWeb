@@ -33,6 +33,7 @@ export function WhyABook() {
               </li>
             ))}
           </ul>
+          <p className="text-[16px] leading-[1.5] text-book-muted">{WHY_A_BOOK.specs}</p>
         </div>
       </Container>
     </section>
