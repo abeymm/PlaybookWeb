@@ -16,6 +16,8 @@ export const BOOK_IMAGES = {
   elevationStrip: { src: "/book/elevation-strip.webp", width: 128, height: 1218 },
   terrainRelief: { src: "/book/terrain-relief.webp", width: 845, height: 1834 },
   windPage: { src: "/book/wind-page.webp", width: 900, height: 1482 },
+  // Cropped from Marketing/Shopify/crops-2026-10-27/green-contours.png (x 56, y 1136, 1164×334, 980 px wide): the green page's legend and scale line.
+  competition: { src: "/book/competition.webp", width: 980, height: 282 },
   // Cropped from iOS/Docs/Plans/Book-Look-In-App-2026-10-27/app/app-hole-map.png (rows 150-2090, 600 px wide).
   appHoleMap: { src: "/book/app-hole-map.webp", width: 600, height: 966 },
 } as const satisfies Record<string, BookImage>;

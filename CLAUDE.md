@@ -128,7 +128,8 @@ src/app/book/
                       structure per Marketing/Shopify/book-page-review-2026-10-27.md;
                       wording per Marketing/Shopify/book-page-storybrand-2026-10-27.md)
   _images.ts          generated manifest of public/book/*.webp (hole 13 = book pages 28–29, how-to = page 2);
-                      app-hole-map.webp is cropped from iOS/Docs/Plans/Book-Look-In-App-2026-10-27/app/app-hole-map.png
+                      app-hole-map.webp is cropped from iOS/Docs/Plans/Book-Look-In-App-2026-10-27/app/app-hole-map.png;
+                      competition.webp is the green page's legend strip from crops-2026-10-27/green-contours.png
 src/app/api/book/
   request/route.ts    POST {email, course, groupSize?, website?} → 200 | 400 fields | 413 | 503 unconfigured;
                       `website` is the honeypot;

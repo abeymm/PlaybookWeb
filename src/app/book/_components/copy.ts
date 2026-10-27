@@ -142,6 +142,12 @@ export const WHY_THIS_BOOK = {
       body: "One table for low, mid and high ball flights, into and helping at 10 and 20 mph, as yards to add or take off. A second table gives how far to aim off in a crosswind. Judge the wind by feel; the book has done the rest.",
       alt: "The wind page: yards to add or take off by ball flight and wind strength, and how far to aim off in a crosswind",
     },
+    {
+      key: "competition",
+      title: "Built for competition",
+      body: "Everything is worked out before the round. Where a rangefinder may give distance only, the slope and altitude come from paper, and the green maps print within the 1:480 scale limit. Our reading of Rule 4.3, not a ruling: check the event's Local Rules.",
+      alt: "The legend of the hole 13 green page: height bands, slope arrows, the no-go hatch, the miss marks and the scale line, 1:501",
+    },
   ],
 };
 

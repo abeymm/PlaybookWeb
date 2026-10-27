@@ -48,9 +48,15 @@ describe("book copy rules", () => {
 });
 
 describe("companion app", () => {
-  it("has five why-this-book cards and no edition card", () => {
-    expect(copy.WHY_THIS_BOOK.cards.length).toBe(5);
+  it("has six why-this-book cards and no edition card", () => {
+    expect(copy.WHY_THIS_BOOK.cards.length).toBe(6);
     expect(copy.WHY_THIS_BOOK.cards.some((c) => c.key === "edition")).toBe(false);
+  });
+  it("carries the competition caveat on the card and in the FAQ", () => {
+    const card = copy.WHY_THIS_BOOK.cards.find((c) => c.key === "competition");
+    expect(card?.body).toContain("not a ruling");
+    const faq = copy.FAQ.items.find((i) => i.id === "competition");
+    expect(faq?.answer).toContain("not a ruling");
   });
   it("links to /get with six items", () => {
     expect(copy.APP.href).toBe("/get");

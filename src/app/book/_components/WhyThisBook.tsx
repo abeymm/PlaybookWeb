@@ -97,7 +97,7 @@ function OrangeRow() {
   );
 }
 
-/** The six remaining features, image on top. Tall crops stand in the box; wide ones fill it. */
+/** The six feature cards, image on top. Tall crops stand in the box; wide ones fill it. */
 function CardImage({ cardKey, alt }: { cardKey: string; alt: string }) {
   const box = "flex h-[220px] items-center justify-center gap-3 overflow-hidden rounded bg-book-paper";
   const tall = "h-full w-auto";
@@ -131,6 +131,12 @@ function CardImage({ cardKey, alt }: { cardKey: string; alt: string }) {
       return (
         <div className={box}>
           <Image {...BOOK_IMAGES.windPage} alt={alt} sizes="140px" className={tall} />
+        </div>
+      );
+    case "competition":
+      return (
+        <div className={cn(box, "px-3")}>
+          <Image {...BOOK_IMAGES.competition} alt={alt} sizes="(min-width: 640px) 360px, 100vw" className="h-auto w-full" />
         </div>
       );
   }
