@@ -30,7 +30,7 @@ function SubTitle({ children }: { children: ReactNode }) {
 function PlanRow() {
   const copy = WHY_THIS_BOOK.plan;
   return (
-    <div className="grid items-center gap-8 lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-14">
+    <div className="grid items-center gap-8 lg:grid-cols-[300px_minmax(0,1fr)] lg:items-start lg:gap-14">
       <Image
         {...BOOK_IMAGES.planShotChain}
         alt={copy.mapAlt}
