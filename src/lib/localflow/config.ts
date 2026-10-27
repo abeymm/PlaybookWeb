@@ -10,9 +10,9 @@
 
 import path from "node:path";
 
-/** The flow is only reachable under `next dev` (or LOCAL_FLOW=1); hosted builds 404. */
+/** The flow is only reachable under `next dev` (NODE_ENV=development); every other build 404s. */
 export function isLocalFlowEnabled(): boolean {
-  return process.env.NODE_ENV === "development" || process.env.LOCAL_FLOW === "1";
+  return process.env.NODE_ENV === "development";
 }
 
 export const PLAYBOOK_ROOT = process.env.PLAYBOOK_ROOT ?? path.resolve(process.cwd(), "..");

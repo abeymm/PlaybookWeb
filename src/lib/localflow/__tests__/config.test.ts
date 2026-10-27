@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { isValidCourseKey } from "../config";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { isLocalFlowEnabled, isValidCourseKey } from "../config";
 
 describe("isValidCourseKey", () => {
   it("accepts OSM cache keys", () => {
@@ -30,5 +30,33 @@ describe("isValidCourseKey", () => {
     expect(isValidCourseKey("a/b")).toBe(false);
     expect(isValidCourseKey("a\\b")).toBe(false);
     expect(isValidCourseKey("")).toBe(false);
+  });
+});
+
+describe("isLocalFlowEnabled", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("is true under next dev", () => {
+    vi.stubEnv("NODE_ENV", "development");
+    expect(isLocalFlowEnabled()).toBe(true);
+  });
+
+  it("is false in production even with LOCAL_FLOW=1", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("LOCAL_FLOW", "1");
+    expect(isLocalFlowEnabled()).toBe(false);
+  });
+
+  it("is false under test", () => {
+    vi.stubEnv("NODE_ENV", "test");
+    expect(isLocalFlowEnabled()).toBe(false);
+  });
+
+  it("is true under next dev without LOCAL_FLOW", () => {
+    vi.stubEnv("NODE_ENV", "development");
+    vi.stubEnv("LOCAL_FLOW", undefined);
+    expect(isLocalFlowEnabled()).toBe(true);
   });
 });

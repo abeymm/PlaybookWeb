@@ -196,7 +196,7 @@ differs, the generated GraphQL field names are centralized in `src/lib/coursedat
 A separate route from `/admin` (which is bound to the sandbox). Nothing under `/local` touches
 Amplify, S3, or a Lambda: the page talks only to its own route handlers under `/local/api`, which
 run on the dev server and read/spawn against the sibling repos. Hosted builds return 404 for every
-handler (`isLocalFlowEnabled()`: `next dev` or `LOCAL_FLOW=1`).
+handler (`isLocalFlowEnabled()` is true only under `next dev` (`NODE_ENV=development`); no runtime switch).
 
 ```
 src/lib/localflow/
