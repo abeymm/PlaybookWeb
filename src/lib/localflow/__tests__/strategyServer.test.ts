@@ -118,6 +118,13 @@ describe("saveStrategyEdit", () => {
     const exec: ExecFn = async () => { throw Object.assign(new Error("x"), { code: 2, stdout: '{"error":"bad notes","holes":[3]}\n', stderr: "" }); };
     expect(await saveStrategyEdit(deps(exec), RUN, body)).toEqual({ status: 422, body: { error: "bad notes", holes: [3] } });
   });
+  it("scrubs the secret from an exit-2 JSON body", async () => {
+    const exec: ExecFn = async () => { throw Object.assign(new Error("x"), { code: 2, stdout: '{"error":"token ' + SECRET + ' rejected"}\n', stderr: "" }); };
+    const r = await saveStrategyEdit(deps(exec), RUN, body);
+    expect(r.status).toBe(422);
+    expect(JSON.stringify(r.body)).not.toContain(SECRET);
+    expect(r.body).toEqual({ error: "token *** rejected" });
+  });
   it("maps a timeout to 504", async () => {
     const exec: ExecFn = async () => { throw Object.assign(new Error("t"), { killed: true, signal: "SIGTERM", code: null }); };
     expect((await saveStrategyEdit(deps(exec), RUN, body)).status).toBe(504);

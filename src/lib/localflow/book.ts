@@ -113,6 +113,18 @@ export function resolveIdSecret(
   }
 }
 
+/** `text` with every occurrence of `secret` replaced by `***` (literal split/join, no RegExp); unchanged for a null/empty secret. */
+export function scrubSecret(text: string, secret: string | null | undefined): string {
+  return secret ? text.split(secret).join("***") : text;
+}
+
+/** A copy of `env` without PLAYBOOK_ID_SECRET (for children that never need it); the input is not mutated. */
+export function releaseChildEnv(env: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
+  const copy = { ...env };
+  delete copy.PLAYBOOK_ID_SECRET;
+  return copy;
+}
+
 export function golfapiIdFromCourse(data: unknown): string | null {
   const c = (Array.isArray(data) ? data[0] : data) as { apiCourseId?: unknown } | null | undefined;
   const id = c && typeof c === "object" ? c.apiCourseId : null;

@@ -5,7 +5,7 @@ import path from "node:path";
 import {
   buildBookCommand, parseBookOptions, makeRunId, isValidRunId, parseRunSummary, listRuns,
   parseReviewCsv, serializeReviewCsv, applyOwnerOk, allOwnerOk, resolveRunFile, resolveIdSecret,
-  golfapiIdFromCourse, normalizeOwnerOk, normalizeReviewTable, claimRunDir,
+  golfapiIdFromCourse, normalizeOwnerOk, normalizeReviewTable, claimRunDir, scrubSecret, releaseChildEnv,
 } from "../book";
 
 const OPTS = {
@@ -142,6 +142,30 @@ describe("resolveIdSecret", () => {
     expect(resolveIdSecret({}, () => "k\n")).toBe("k");
     expect(resolveIdSecret({}, () => null)).toBeNull();
     expect(resolveIdSecret({ PLAYBOOK_ID_SECRET: "" }, () => { throw new Error("x"); })).toBeNull();
+  });
+});
+
+describe("scrubSecret", () => {
+  it("replaces every occurrence with ***", () => {
+    expect(scrubSecret("a SEC b SEC c", "SEC")).toBe("a *** b *** c");
+  });
+  it("treats regex metacharacters literally", () => {
+    expect(scrubSecret("x a+b(c) y aab(c)", "a+b(c)")).toBe("x *** y aab(c)");
+  });
+  it("returns the text unchanged for a null or empty secret", () => {
+    expect(scrubSecret("keep me", null)).toBe("keep me");
+    expect(scrubSecret("keep me", undefined)).toBe("keep me");
+    expect(scrubSecret("keep me", "")).toBe("keep me");
+  });
+});
+
+describe("releaseChildEnv", () => {
+  it("drops PLAYBOOK_ID_SECRET without mutating the input", () => {
+    const input = { PATH: "/x", PLAYBOOK_ID_SECRET: "s" } as unknown as NodeJS.ProcessEnv;
+    const out = releaseChildEnv(input);
+    expect(out.PATH).toBe("/x");
+    expect(Object.prototype.hasOwnProperty.call(out, "PLAYBOOK_ID_SECRET")).toBe(false);
+    expect(input).toEqual({ PATH: "/x", PLAYBOOK_ID_SECRET: "s" });
   });
 });
 

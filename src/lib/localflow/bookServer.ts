@@ -7,7 +7,7 @@ import fs from "node:fs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { courseJsonPath, inputJsonPath, runDir } from "./config";
 import path from "node:path";
-import { golfapiIdFromCourse, resolveIdSecret } from "./book";
+import { golfapiIdFromCourse, resolveIdSecret, scrubSecret } from "./book";
 
 const KEYCHAIN_SERVICE = "playbook-id-secret";
 
@@ -37,6 +37,21 @@ export function idSecretAvailable(): boolean {
   const r = spawnSync("security", ["find-generic-password", "-s", KEYCHAIN_SERVICE], { stdio: "ignore", timeout: 20_000 });
   availableCache = { at: now, value: r.status === 0 };
   return availableCache.value;
+}
+
+let scrubSecretCache: string | null = null;
+/** The value to scrub from child output: env, else the Keychain item read once and memoised; null when none. */
+function secretForScrub(): string | null {
+  if (process.env.PLAYBOOK_ID_SECRET) return process.env.PLAYBOOK_ID_SECRET;
+  if (scrubSecretCache) return scrubSecretCache;
+  if (!idSecretAvailable()) return null;   // status is polled every 2 s: no Keychain spawn when there is nothing to scrub
+  scrubSecretCache = loadIdSecret();
+  return scrubSecretCache;
+}
+
+/** Child output (log tails, served book.log, release output) with the id secret replaced by `***`. */
+export function scrubChildOutput(text: string): string {
+  return scrubSecret(text, secretForScrub());
 }
 
 /** `apiCourseId` of the generated JSON, else the scorecard-merged input, else the seeded input_cache copy. */

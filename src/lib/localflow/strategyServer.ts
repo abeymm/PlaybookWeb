@@ -186,7 +186,7 @@ async function saveLocked(d: SaveDeps, runId: string, rawBody: unknown): Promise
     if (err.killed || err.signal) return { status: 504, body: { error: "strategy_edit.py timed out after 120 s" } };
     const out = `${err.stdout ?? ""}`;
     if (err.code === 2) {
-      const j = lastJsonLine(out);
+      const j = lastJsonLine(scrub(out));
       return { status: 422, body: j ?? { error: scrub(lastLines(`${out}\n${err.stderr ?? ""}`)) } };
     }
     return { status: 500, body: { error: `strategy_edit.py failed (exit ${err.code})`, log: scrub(lastLines(`${out}\n${err.stderr ?? ""}`)) } };

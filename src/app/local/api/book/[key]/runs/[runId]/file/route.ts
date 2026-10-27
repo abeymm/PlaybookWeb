@@ -2,6 +2,7 @@ import fs from "node:fs";
 import { NextResponse } from "next/server";
 import { printDir } from "@/lib/localflow/config";
 import { resolveRunFile } from "@/lib/localflow/book";
+import { scrubChildOutput } from "@/lib/localflow/bookServer";
 import { gate, badKey } from "../../../../../_shared";
 
 export const runtime = "nodejs";
@@ -19,7 +20,7 @@ export async function GET(req: Request, ctx: Ctx) {
   const name = new URL(req.url).searchParams.get("name") ?? "";
   const r = resolveRunFile(printDir(key), runId, name);
   if (!r.ok) return NextResponse.json({ error: r.error }, { status: r.status });
-  const data = fs.readFileSync(r.file);
+  const data = name === "book.log" ? Buffer.from(scrubChildOutput(fs.readFileSync(r.file, "utf8"))) : fs.readFileSync(r.file);
   return new NextResponse(new Uint8Array(data), {
     headers: {
       "content-type": r.contentType,

@@ -3,7 +3,7 @@ import path from "node:path";
 import { NextResponse } from "next/server";
 import { LOCAL_PATHS, courseJsonPath, playbookDir, printDir } from "@/lib/localflow/config";
 import { jobRegistry, tailFile } from "@/lib/localflow/server";
-import { findGolfapiId, idSecretAvailable, loadIdSecret } from "@/lib/localflow/bookServer";
+import { findGolfapiId, idSecretAvailable, loadIdSecret, scrubChildOutput } from "@/lib/localflow/bookServer";
 import { buildBookCommand, claimRunDir, listRuns, makeRunId, parseBookOptions } from "@/lib/localflow/book";
 import { isInsideDir } from "@/lib/localflow/strategy";
 import { strategyEditRunning } from "@/lib/localflow/strategyServer";
@@ -27,7 +27,7 @@ export async function GET(req: Request, ctx: KeyParams) {
     golfapiCourseId: findGolfapiId(key),
     secretAvailable: idSecretAvailable(),
     job,
-    logTail: job ? tailFile(job.logFile) : "",
+    logTail: job ? scrubChildOutput(tailFile(job.logFile)) : "",
     runs: listRuns(printDir(key)),
     printDir: printDir(key),
   };
