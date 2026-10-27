@@ -16,8 +16,8 @@ function jobView(kind: JobKind, key: string, logPath: string) {
 }
 
 /** GET /local/api/status/<key> — everything the page needs to render one course's state. */
-export async function GET(_req: Request, ctx: KeyParams) {
-  const blocked = gate();
+export async function GET(req: Request, ctx: KeyParams) {
+  const blocked = gate(req);
   if (blocked) return blocked;
   const { key } = await ctx.params;
   const bad = badKey(key);

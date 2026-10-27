@@ -20,7 +20,7 @@ export const dynamic = "force-dynamic";
  * renders per section; `total` is just `items.length`, kept for API-shape stability.
  */
 export async function GET(req: Request) {
-  const blocked = gate();
+  const blocked = gate(req);
   if (blocked) return blocked;
   const q = (new URL(req.url).searchParams.get("q") ?? "").trim().toLowerCase();
   const items: GeneratedEntry[] = [];

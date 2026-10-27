@@ -11,7 +11,7 @@ type Ctx = { params: Promise<{ key: string; runId: string }> };
 
 /** GET /local/api/book/<key>/runs/<runId>/file?name=render-book-vivid/book.pdf → an allowlisted run file. */
 export async function GET(req: Request, ctx: Ctx) {
-  const blocked = gate();
+  const blocked = gate(req);
   if (blocked) return blocked;
   const { key, runId } = await ctx.params;
   const bad = badKey(key);

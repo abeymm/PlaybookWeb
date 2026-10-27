@@ -17,8 +17,8 @@ function view(table: ReturnType<typeof parseReviewCsv>) {
 }
 
 /** GET → the parsed review/review.csv. */
-export async function GET(_req: Request, ctx: Ctx) {
-  const blocked = gate();
+export async function GET(req: Request, ctx: Ctx) {
+  const blocked = gate(req);
   if (blocked) return blocked;
   const { key, runId } = await ctx.params;
   const bad = badKey(key);
@@ -30,7 +30,7 @@ export async function GET(_req: Request, ctx: Ctx) {
 
 /** PUT { marks: { "<hole>": "yes" | "no" | "" } } → rewrite review.csv with owner_ok set (other columns untouched). */
 export async function PUT(req: Request, ctx: Ctx) {
-  const blocked = gate();
+  const blocked = gate(req);
   if (blocked) return blocked;
   const { key, runId } = await ctx.params;
   const bad = badKey(key);

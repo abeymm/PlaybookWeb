@@ -14,8 +14,8 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /** GET /local/api/book/<key> → job state, log tail of the latest run, runs list (newest first) with summaries. */
-export async function GET(_req: Request, ctx: KeyParams) {
-  const blocked = gate();
+export async function GET(req: Request, ctx: KeyParams) {
+  const blocked = gate(req);
   if (blocked) return blocked;
   const { key } = await ctx.params;
   const bad = badKey(key);
@@ -42,7 +42,7 @@ export async function GET(_req: Request, ctx: KeyParams) {
  * Both absolute forms must resolve (symlinks included) inside this course's print dir.
  */
 export async function POST(req: Request, ctx: KeyParams) {
-  const blocked = gate();
+  const blocked = gate(req);
   if (blocked) return blocked;
   const { key } = await ctx.params;
   const bad = badKey(key);

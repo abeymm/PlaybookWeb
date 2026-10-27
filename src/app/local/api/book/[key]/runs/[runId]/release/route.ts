@@ -18,8 +18,8 @@ type Ctx = { params: Promise<{ key: string; runId: string }> };
  * POST → `print_book.py --release --out <runDir>`. The CLI is the review gate (build id + owner_ok=yes on
  * every row); a blocked release comes back as 409 with its message. No secret is needed or passed.
  */
-export async function POST(_req: Request, ctx: Ctx) {
-  const blocked = gate();
+export async function POST(req: Request, ctx: Ctx) {
+  const blocked = gate(req);
   if (blocked) return blocked;
   const { key, runId } = await ctx.params;
   const bad = badKey(key);

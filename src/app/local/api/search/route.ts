@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 /** GET /local/api/search?q=<name or key>&limit=20 → { items: CohortEntry[] } */
 export async function GET(req: Request) {
-  const blocked = gate();
+  const blocked = gate(req);
   if (blocked) return blocked;
   const url = new URL(req.url);
   const q = url.searchParams.get("q") ?? "";

@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 /** GET /local/api/export/<key>/file?name=<Course>.playbook → the archive as a download. */
 export async function GET(req: Request, ctx: KeyParams) {
-  const blocked = gate();
+  const blocked = gate(req);
   if (blocked) return blocked;
   const { key } = await ctx.params;
   const bad = badKey(key);

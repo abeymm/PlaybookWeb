@@ -11,8 +11,8 @@ export const dynamic = "force-dynamic";
 type Ctx = { params: Promise<{ key: string; runId: string }> };
 
 /** GET → the run's current plan: newest strategy/edited archive, else strategy/final, with review, changes, edit log, tees. */
-export async function GET(_req: Request, ctx: Ctx) {
-  const blocked = gate();
+export async function GET(req: Request, ctx: Ctx) {
+  const blocked = gate(req);
   if (blocked) return blocked;
   const { key, runId } = await ctx.params;
   const bad = badKey(key);
@@ -28,7 +28,7 @@ export async function GET(_req: Request, ctx: Ctx) {
  * 504 = timeout. The id secret goes only into the child's environment.
  */
 export async function PUT(req: Request, ctx: Ctx) {
-  const blocked = gate();
+  const blocked = gate(req);
   if (blocked) return blocked;
   const { key, runId } = await ctx.params;
   const bad = badKey(key);
