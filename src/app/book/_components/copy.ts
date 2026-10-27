@@ -276,8 +276,8 @@ export const REQUEST_FORM = {
   emailLabel: "Your email",
   courseLabel: "The course",
   coursePlaceholder: "Course name, city",
-  groupSizeLabel: "Group size (optional)",
-  groupSizePlaceholder: "Players",
+  groupSizeLabel: "Group size",
+  groupSizePlaceholder: "Optional",
   button: "Tell us the course",
   sent: "Thanks. We will email you about that course.",
 };

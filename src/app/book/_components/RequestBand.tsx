@@ -62,7 +62,7 @@ function CourseRequestForm() {
           pattern="[0-9]*"
           maxLength={3}
           error={state.fields?.groupSize}
-          className="sm:w-[150px] sm:shrink-0"
+          className="sm:w-[160px] sm:shrink-0"
         />
       </div>
       <div>
