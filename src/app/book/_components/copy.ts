@@ -11,7 +11,7 @@
 import { BOOK_FACTS } from "@/lib/book/catalog";
 
 export const PAGE = {
-  title: "The course book: play any course like a local",
+  title: "The course book: play your bucket-list course like a local",
   description:
     "A printed strategy book for one course, made for your tee and your game: where to hit it, what it really plays like, and where to miss. Top US golf destinations.",
   ogAlt: "The green page and the hole map of hole 13, TPC Scottsdale PGA Stadium, from the course book",
@@ -19,7 +19,7 @@ export const PAGE = {
 
 export const HERO = {
   eyebrow: `Strategy & green playbooks · Top US golf destinations · ${BOOK_FACTS.editionYear} edition`,
-  headline: "Play any course like a local.",
+  headline: "Play your bucket-list course like a local.",
   subhead:
     "A printed strategy book for one course, made for your tee and your game: where to hit it, what it really plays like, and where to miss. Read it the night before. Carry it the next day.",
   selectLabel: "Choose your course",
@@ -283,7 +283,7 @@ export const REQUEST_FORM = {
 };
 
 export const FINAL = {
-  headline: "Play any course like a local.",
+  headline: "Play your bucket-list course like a local.",
   body: "Pick the course. Read it tonight. Carry it tomorrow.",
 };
 
