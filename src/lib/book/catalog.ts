@@ -70,21 +70,22 @@ export type PackTier = {
 
 /**
  * Prices. All placeholders until the owner marks them final
- * (iOS/Docs/Plans/Playbook-Master-Plan.md §1.4: a destination book is "about $50"; shipping is
- * free at $100 and over; no pack prices are recorded). Discount codes are entered at Shopify
+ * (iOS/Docs/Plans/Playbook-Master-Plan.md §1.4, owner 2026-10-27: a destination book is $49;
+ * packs $89 for two and $39 each from three, shown once `packs.enabled` is on; shipping is
+ * free at $100 and over). Discount codes are entered at Shopify
  * checkout, never on the page, and there is no public group price: groups go through the
  * request form.
  */
 export const BOOK_PRICING = {
   /** Shown wherever a price appears. Env override: NEXT_PUBLIC_BOOK_PRICE. */
-  single: "$50",
+  single: "$49",
   packs: {
-    /** Flip to true once the tier prices are decided. Also shows the free-shipping line. */
+    /** Flip to true to show the tiers and the free-shipping line (owner decision pending). */
     enabled: false,
     tiers: [
       { label: "1 book" },
-      { label: "2 books", price: "[PACK PRICE]" },
-      { label: "3 or more", price: "[PACK PRICE] each" },
+      { label: "2 books", price: "$89" },
+      { label: "3 or more", price: "$39 each" },
     ] as readonly PackTier[],
     freeShippingFrom: "$100",
   },
