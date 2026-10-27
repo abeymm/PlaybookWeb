@@ -5,7 +5,7 @@ import path from "node:path";
 import {
   buildBookCommand, parseBookOptions, makeRunId, isValidRunId, parseRunSummary, listRuns,
   parseReviewCsv, serializeReviewCsv, applyOwnerOk, allOwnerOk, resolveRunFile, resolveIdSecret,
-  golfapiIdFromCourse, normalizeOwnerOk, normalizeReviewTable, claimRunDir, scrubSecret, releaseChildEnv,
+  golfapiIdFromCourse, normalizeOwnerOk, normalizeReviewTable, claimRunDir, scrubSecret, releaseChildEnv, resolvePlaybookFile,
 } from "../book";
 
 const OPTS = {
@@ -234,6 +234,35 @@ describe("filesystem helpers", () => {
     fs.rmSync(path.join(d, "run.json"), { force: true });
     fs.symlinkSync(secret, path.join(d, "run.json"));
     expect(resolveRunFile(root, "20261026-101503", "run.json")).toMatchObject({ ok: false, status: 400 });
+  });
+});
+
+describe("resolvePlaybookFile", () => {
+  let root: string;
+  beforeEach(() => { root = fs.mkdtempSync(path.join(os.tmpdir(), "pbf-")); });
+  afterEach(() => { fs.rmSync(root, { recursive: true, force: true }); });
+
+  it("resolves a real .playbook inside the dir", () => {
+    const dir = path.join(root, "playbook");
+    fs.mkdirSync(dir);
+    fs.writeFileSync(path.join(dir, "TPC.playbook"), "PK");
+    const r = resolvePlaybookFile(dir, "TPC.playbook");
+    expect(r).toMatchObject({ ok: true, contentType: "application/zip" });
+    expect(r.ok && r.file).toBe(fs.realpathSync(path.join(dir, "TPC.playbook")));
+  });
+  it("rejects a .playbook symlink pointing outside the dir", () => {
+    const dir = path.join(root, "playbook");
+    fs.mkdirSync(dir);
+    const outside = path.join(root, "outside.txt");
+    fs.writeFileSync(outside, "secret");
+    fs.symlinkSync(outside, path.join(dir, "Evil.playbook"));
+    expect(resolvePlaybookFile(dir, "Evil.playbook")).toMatchObject({ ok: false, status: 400 });
+  });
+  it("404s a missing archive and a missing dir", () => {
+    const dir = path.join(root, "playbook");
+    fs.mkdirSync(dir);
+    expect(resolvePlaybookFile(dir, "Nope.playbook")).toMatchObject({ ok: false, status: 404 });
+    expect(resolvePlaybookFile(path.join(root, "absent"), "TPC.playbook")).toMatchObject({ ok: false, status: 404 });
   });
 });
 

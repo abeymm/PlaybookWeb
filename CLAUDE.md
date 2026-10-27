@@ -213,7 +213,7 @@ src/app/local/
   api/status/[key]      GET                cache/generated/report/playbook facts + both jobs + log tails
   api/course/[key]      GET ?source=…, PUT read the generated (or cache) JSON; save corrections (strict-validated)
   api/generate/[key]    POST, GET          generate_course.py (router: US→GolfAPI, else make_coursedata.py --backend local) → $LOCAL_FLOW_OUT_ROOT/coursedata_<key>/ (runbook layout)
-  api/export/[key]      POST, GET          iOS PlaybookArchiveExportTool → /tmp/coursedata_<key>/playbook/
+  api/export/[key]      POST, GET          iOS PlaybookArchiveExportTool → $LOCAL_FLOW_OUT_ROOT/coursedata_<key>/playbook/
   api/export/[key]/file GET ?name=         download the .playbook
   api/book/[key]        POST, GET          Print book: core/print_book.py --course-json <generated JSON> --out <runDir>/print/<runId>/ (id secret from env PLAYBOOK_ID_SECRET, else Keychain `playbook-id-secret`; env-only, never argv/log/response; optional `playbook` as an absolute archive path and `inputsDir` → `--inputs-dir`, both must resolve inside the course's print dir); GET = job + log tail + runs list with summaries
   api/book/[key]/runs/[runId]/file     GET ?name=   allowlisted run files only (book.pdf, contact-sheet.png, report.json, review.csv, greens-contact.png, review-final.md, tee-check.md, run.json, book.log, release/*)
@@ -264,7 +264,7 @@ Flow: search by name → pick → attach the OpenGolfAPI scorecard → Generate 
 the map shows the result; edits use the same reducers as `/admin` and "Save to disk" writes back
 (previous file kept as `<key>.prev.json`) → Export builds the `.playbook` with the app's own
 import + export code (`iOS/PlaybookTests/Helpers/PlaybookArchiveExportTool.swift`; needs a booted
-simulator) → download → AirDrop to a phone. The **Print book** panel (below Export) builds the 40-page book from the generated JSON (GolfAPI id prefilled from the JSON's `apiCourseId`), shows the contact sheet, lets you mark `owner_ok` per review row and release the PDF. Env overrides: `PLAYBOOK_ROOT`, `LOCAL_FLOW_OUT_ROOT`.
+simulator) → download → AirDrop to a phone. The **Print book** panel (below Export) builds the 40-page book from the generated JSON (GolfAPI id prefilled from the JSON's `apiCourseId`), shows the contact sheet, lets you mark `owner_ok` per review row and release the PDF. Env overrides: `PLAYBOOK_ROOT`, `LOCAL_FLOW_OUT_ROOT` (`LOCAL_FLOW_OUT_ROOT` defaults to `~/playbook-local`).
 
 ## Components
 

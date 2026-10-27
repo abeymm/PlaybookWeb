@@ -282,6 +282,26 @@ export function resolveRunFile(printRoot: string, runId: string, name: string): 
   return { ok: true, file: real, contentType: SERVED[name] };
 }
 
+/** A `.playbook` in the course's playbook dir; the real path must stay inside the real dir. `name` is validated by the caller. */
+export function resolvePlaybookFile(playbookDirPath: string, name: string): ResolvedFile {
+  let realDir: string;
+  try {
+    realDir = fs.realpathSync(playbookDirPath);
+  } catch {
+    return { ok: false, status: 404, error: "no playbook dir" };
+  }
+  let real: string;
+  try {
+    real = fs.realpathSync(path.join(playbookDirPath, name));
+  } catch {
+    return { ok: false, status: 404, error: `no archive ${name}` };
+  }
+  if (!real.startsWith(realDir + path.sep) || !fs.statSync(real).isFile()) {
+    return { ok: false, status: 400, error: "file resolves outside the playbook dir" };
+  }
+  return { ok: true, file: real, contentType: "application/zip" };
+}
+
 // ---- review.csv -------------------------------------------------------------------------
 
 export interface ReviewTable {

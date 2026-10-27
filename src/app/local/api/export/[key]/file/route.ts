@@ -1,8 +1,8 @@
 import fs from "node:fs";
-import path from "node:path";
 import { NextResponse } from "next/server";
 import { playbookDir } from "@/lib/localflow/config";
 import { isSafePlaybookName } from "@/lib/localflow/server";
+import { resolvePlaybookFile } from "@/lib/localflow/book";
 import { gate, badKey, type KeyParams } from "../../../_shared";
 
 export const runtime = "nodejs";
@@ -19,11 +19,9 @@ export async function GET(req: Request, ctx: KeyParams) {
   if (!isSafePlaybookName(name)) {
     return NextResponse.json({ error: "invalid archive name" }, { status: 400 });
   }
-  const file = path.join(playbookDir(key), name);
-  if (!fs.existsSync(file)) {
-    return NextResponse.json({ error: `no archive at ${file}` }, { status: 404 });
-  }
-  const data = fs.readFileSync(file);
+  const r = resolvePlaybookFile(playbookDir(key), name);
+  if (!r.ok) return NextResponse.json({ error: r.error }, { status: r.status });
+  const data = fs.readFileSync(r.file);
   return new NextResponse(new Uint8Array(data), {
     headers: {
       "content-type": "application/zip",
