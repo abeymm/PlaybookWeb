@@ -88,8 +88,6 @@ export const WHY_THIS_BOOK = {
     ovalTitle: "The landing oval and your start lines",
     ovalBody:
       "See how wide a good swing finishes and where to start it. Each landing spot sits in an oval sized for the book's level of play, green when the patch is clear and amber to red as trouble comes in. Two lines run from the ball to the oval's edges: start a fade down one, a draw down the other, and let it curve back in.",
-    mapAlt:
-      "Hole 13 map: three planned shots with their targets, each starting at a chip with its yardage and ending at a numbered spot",
     coneAlt:
       "The tee shot of hole 13: the landing oval at spot 2 with two start lines running from the tee to its edges, beside the 188-yard water carry",
     coneCaption: "Two lines to the oval's edges: a fade down one, a draw down the other.",

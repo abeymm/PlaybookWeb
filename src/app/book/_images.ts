@@ -6,7 +6,6 @@ export const BOOK_IMAGES = {
   heroMapPage: { src: "/book/hero-map-page.webp", width: 918, height: 1512 },
   howtoPage: { src: "/book/howto-page.webp", width: 918, height: 1512 },
   cover: { src: "/book/cover.webp", width: 800, height: 1318 },
-  planShotChain: { src: "/book/plan-shot-chain.webp", width: 845, height: 1834 },
   coneStartLines: { src: "/book/cone-start-lines.webp", width: 638, height: 882 },
   greenMap: { src: "/book/green-map.webp", width: 1100, height: 1268 },
   missTable: { src: "/book/miss-table.webp", width: 980, height: 303 },
