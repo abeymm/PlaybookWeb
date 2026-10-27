@@ -6,6 +6,7 @@ import {
   NAIP_TILES,
   PC_NAIP_MOSAIC_BODY,
   naipTileUrl,
+  parseNaipTileCoords,
 } from "../naipTiles";
 
 describe("naipTiles — the one PC NAIP tile definition", () => {
@@ -36,5 +37,22 @@ describe("naipTiles — the one PC NAIP tile definition", () => {
 
   it("carries the required attribution", () => {
     expect(NAIP_ATTRIBUTION).toBe("Imagery: USDA NAIP via Microsoft Planetary Computer");
+  });
+
+  it("parses tile coordinates inside the NAIP zoom range and the z grid", () => {
+    expect(parseNaipTileCoords("11", "0", "0")).toEqual({ z: 11, x: 0, y: 0 });
+    expect(parseNaipTileCoords("19", "524287", "524287")).toEqual({ z: 19, x: 524287, y: 524287 });
+  });
+
+  it("rejects out-of-range or non-integer tile coordinates", () => {
+    expect(parseNaipTileCoords("10", "0", "0")).toBeNull();
+    expect(parseNaipTileCoords("20", "0", "0")).toBeNull();
+    expect(parseNaipTileCoords("16", String(2 ** 16), "0")).toBeNull();
+    expect(parseNaipTileCoords("16", "0", String(2 ** 16))).toBeNull();
+    for (const bad of ["-1", "1.5", "1e3", "abc", "", " 1"]) {
+      expect(parseNaipTileCoords("16", bad, "0")).toBeNull();
+      expect(parseNaipTileCoords("16", "0", bad)).toBeNull();
+      expect(parseNaipTileCoords(bad, "0", "0")).toBeNull();
+    }
   });
 });

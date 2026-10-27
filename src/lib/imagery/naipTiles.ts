@@ -42,3 +42,16 @@ export const NAIP_TILES = "/api/naip/tile/{z}/{x}/{y}";
 export const NAIP_MINZOOM = 11;
 /** NAIP is ~0.6 m (native ~z18-19); maplibre overzooms beyond this. */
 export const NAIP_MAXZOOM = 19;
+
+const TILE_INT = /^\d{1,7}$/;
+
+/** Parse proxy route params into tile coords: plain decimal digits only, NAIP_MINZOOM <= z <= NAIP_MAXZOOM,
+ *  0 <= x, y < 2^z. Null for anything else. */
+export function parseNaipTileCoords(z: string, x: string, y: string): { z: number; x: number; y: number } | null {
+  if (![z, x, y].every((v) => TILE_INT.test(v))) return null;
+  const [zn, xn, yn] = [Number(z), Number(x), Number(y)];
+  if (zn < NAIP_MINZOOM || zn > NAIP_MAXZOOM) return null;
+  const n = 2 ** zn;
+  if (xn >= n || yn >= n) return null;
+  return { z: zn, x: xn, y: yn };
+}
