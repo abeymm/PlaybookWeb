@@ -68,6 +68,12 @@ export type PackTier = {
  * free at $100 and over). Discount codes are entered at Shopify
  * checkout, never on the page, and there is no public group price: groups go through the
  * request form.
+ *
+ * TODO (owner 2026-10-28; do soon after the paid tier ships, master plan W8): add a member
+ * price for destination books, $39 (the 3-or-more tier, so no new price point), delivered by
+ * the per-member Shopify code the plan already picked for the $25 custom-book price, with one
+ * config-driven line on the page. Parked, undecided: a next-edition discount for past buyers
+ * (owner floated 50%); if it comes, it goes out through the book's QR page, not this page.
  */
 export const BOOK_PRICING = {
   /** Shown wherever a price appears. Env override: NEXT_PUBLIC_BOOK_PRICE. */
