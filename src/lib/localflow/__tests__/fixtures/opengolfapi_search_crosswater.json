@@ -1,0 +1,20 @@
+{
+ "courses": [
+  {
+   "id": "c48d3cf2-481d-4dde-9207-484122088ea9",
+   "name": "Crosswater At Sunriver Resort",
+   "course_name": "Crosswater At Sunriver Resort",
+   "latitude": 43.8528309828,
+   "longitude": -121.4475059509,
+   "state": "OR",
+   "city": "Sunriver",
+   "type": "Resort",
+   "par": 72,
+   "phone": "15415934402",
+   "website": "http://www.sunriverresort.com/central-oregon-bend-golf/crosswater-course"
+  }
+ ],
+ "total": 1,
+ "_license": "ODbL-1.0",
+ "_attribution": "\u00a9 OpenStreetMap contributors (ODbL 1.0) via OpenGolfAPI \u2014 https://opengolfapi.org/attribution"
+}

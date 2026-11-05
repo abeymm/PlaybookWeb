@@ -1,0 +1,76 @@
+// config.ts — SERVER-ONLY paths and gates for the /local flow (never import from a client
+// component). Everything runs on this Mac against the sibling repos:
+//
+//   <root>/Scripts/regions/us/{osm_cohort.json,cache/}   course picker + pipeline input
+//   <root>/Training/segformer_green/golfapi_pipeline     generate_course.py (the router; + ../../.venv)
+//   <root>/iOS                                           the archive export tool (test target)
+//   <OUT_ROOT>/coursedata_<key>/                         run dir (OUT_ROOT defaults to ~/playbook-local)
+//
+// `<root>` defaults to the parent of the Web checkout; override with PLAYBOOK_ROOT.
+
+import os from "node:os";
+import path from "node:path";
+
+/** The flow is only reachable under `next dev` (NODE_ENV=development); every other build 404s. */
+export function isLocalFlowEnabled(): boolean {
+  return process.env.NODE_ENV === "development";
+}
+
+export const PLAYBOOK_ROOT = process.env.PLAYBOOK_ROOT ?? path.resolve(process.cwd(), "..");
+/** Run dirs default to `~/playbook-local` (not the shared /tmp); override with LOCAL_FLOW_OUT_ROOT. */
+export function defaultOutRoot(env: NodeJS.ProcessEnv = process.env, home: string = os.homedir()): string {
+  return env.LOCAL_FLOW_OUT_ROOT ?? path.join(home, "playbook-local");
+}
+export const OUT_ROOT = defaultOutRoot();
+
+export const LOCAL_PATHS = {
+  cohortFile: path.join(PLAYBOOK_ROOT, "Scripts/regions/us/osm_cohort.json"),
+  cacheDir: path.join(PLAYBOOK_ROOT, "Scripts/regions/us/cache"),
+  pipelineDir: path.join(PLAYBOOK_ROOT, "Training/segformer_green/golfapi_pipeline"),
+  /** The ONE generation entry point (relative to pipelineDir): US -> GolfAPI, elsewhere -> OSM. */
+  generateScript: "generate_course.py",
+  python: path.join(PLAYBOOK_ROOT, "Training/.venv/bin/python"),
+  iosDir: path.join(PLAYBOOK_ROOT, "iOS"),
+} as const;
+
+/** OSM cache keys: `way-123`, `relation-123`, and split sub-courses like `relation-1-hole1-2`. */
+const OSM_KEY_RE = /^[a-z]+-[0-9]+[A-Za-z0-9-]*$/;
+/** Plan-D9 course keys: lowercase RFC 4122 UUIDs (mirrors `_UUID_RE` in golfapi_pipeline/core/course_id.py). */
+const UUID_KEY_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+
+export function isValidCourseKey(key: string): boolean {
+  return (OSM_KEY_RE.test(key) || UUID_KEY_RE.test(key)) && !key.includes("..");
+}
+
+export function runDir(key: string): string {
+  return path.join(OUT_ROOT, `coursedata_${key}`);
+}
+export function cacheJsonPath(key: string): string {
+  return path.join(LOCAL_PATHS.cacheDir, `${key}.json`);
+}
+export function courseJsonPath(key: string): string {
+  return path.join(runDir(key), "cache", `${key}.json`);
+}
+/** The scorecard-merged copy of the OSM cache course; Generate prefers it when present. */
+export function inputDir(key: string): string {
+  return path.join(runDir(key), "input");
+}
+export function inputJsonPath(key: string): string {
+  return path.join(inputDir(key), `${key}.json`);
+}
+export function reportJsonPath(key: string): string {
+  return path.join(runDir(key), "cache", `${key}.report.json`);
+}
+export function playbookDir(key: string): string {
+  return path.join(runDir(key), "playbook");
+}
+export function generateLogPath(key: string): string {
+  return path.join(runDir(key), "generate.log");
+}
+export function exportLogPath(key: string): string {
+  return path.join(runDir(key), "export.log");
+}
+/** Print-book runs: `<runDir>/print/<runId>/` (one dir per `print_book.py --out`). */
+export function printDir(key: string): string {
+  return path.join(runDir(key), "print");
+}
