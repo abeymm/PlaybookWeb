@@ -10,8 +10,8 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /** GET /local/api/export/<key> → { job } */
-export async function GET(_req: Request, ctx: KeyParams) {
-  const blocked = gate();
+export async function GET(req: Request, ctx: KeyParams) {
+  const blocked = gate(req);
   if (blocked) return blocked;
   const { key } = await ctx.params;
   const bad = badKey(key);
@@ -24,8 +24,8 @@ export async function GET(_req: Request, ctx: KeyParams) {
  * iOS test-target tool (PlaybookArchiveExportTool), which reuses the app's own import + export
  * code. Runs `Scripts/run-tests.sh` in the iOS checkout; needs a booted simulator.
  */
-export async function POST(_req: Request, ctx: KeyParams) {
-  const blocked = gate();
+export async function POST(req: Request, ctx: KeyParams) {
+  const blocked = gate(req);
   if (blocked) return blocked;
   const { key } = await ctx.params;
   const bad = badKey(key);

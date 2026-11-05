@@ -10,8 +10,8 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /** GET /local/api/generate/<key> → { job } (null when never started in this server process). */
-export async function GET(_req: Request, ctx: KeyParams) {
-  const blocked = gate();
+export async function GET(req: Request, ctx: KeyParams) {
+  const blocked = gate(req);
   if (blocked) return blocked;
   const { key } = await ctx.params;
   const bad = badKey(key);
@@ -25,8 +25,8 @@ export async function GET(_req: Request, ctx: KeyParams) {
  * an ambiguous match fails the job with the candidates in generate.log), other countries to make_coursedata.py.
  * Output lands in the runbook's run-dir convention for both routes: <out>/cache/<key>.json.
  */
-export async function POST(_req: Request, ctx: KeyParams) {
-  const blocked = gate();
+export async function POST(req: Request, ctx: KeyParams) {
+  const blocked = gate(req);
   if (blocked) return blocked;
   const { key } = await ctx.params;
   const bad = badKey(key);

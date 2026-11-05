@@ -63,11 +63,17 @@ export const nodeSpawner: Spawner = {
     fs.mkdirSync(path.dirname(spec.logFile), { recursive: true });
     const log = fs.openSync(spec.logFile, "a");
     fs.writeSync(log, `\n=== ${new Date().toISOString()} ${spec.command} ${spec.args.join(" ")}\n`);
-    const child = spawn(spec.command, spec.args, {
-      cwd: spec.cwd,
-      env: { ...process.env, ...spec.env },
-      stdio: ["ignore", log, log],
-    });
+    let child: ReturnType<typeof spawn>;
+    try {
+      child = spawn(spec.command, spec.args, {
+        cwd: spec.cwd,
+        env: { ...process.env, ...spec.env },
+        stdio: ["ignore", log, log],
+      });
+    } catch (err) {
+      fs.closeSync(log);   // a synchronous spawn throw must not leak the log fd
+      throw err;
+    }
     let exitCb: ((code: number | null) => void) | null = null;
     let done = false;
     const finish = (code: number | null) => {

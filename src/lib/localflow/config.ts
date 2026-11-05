@@ -4,19 +4,24 @@
 //   <root>/Scripts/regions/us/{osm_cohort.json,cache/}   course picker + pipeline input
 //   <root>/Training/segformer_green/golfapi_pipeline     generate_course.py (the router; + ../../.venv)
 //   <root>/iOS                                           the archive export tool (test target)
-//   <OUT_ROOT>/coursedata_<key>/                         run dir — the runbook's convention
+//   <OUT_ROOT>/coursedata_<key>/                         run dir (OUT_ROOT defaults to ~/playbook-local)
 //
 // `<root>` defaults to the parent of the Web checkout; override with PLAYBOOK_ROOT.
 
+import os from "node:os";
 import path from "node:path";
 
-/** The flow is only reachable under `next dev` (or LOCAL_FLOW=1); hosted builds 404. */
+/** The flow is only reachable under `next dev` (NODE_ENV=development); every other build 404s. */
 export function isLocalFlowEnabled(): boolean {
-  return process.env.NODE_ENV === "development" || process.env.LOCAL_FLOW === "1";
+  return process.env.NODE_ENV === "development";
 }
 
 export const PLAYBOOK_ROOT = process.env.PLAYBOOK_ROOT ?? path.resolve(process.cwd(), "..");
-export const OUT_ROOT = process.env.LOCAL_FLOW_OUT_ROOT ?? "/tmp";
+/** Run dirs default to `~/playbook-local` (not the shared /tmp); override with LOCAL_FLOW_OUT_ROOT. */
+export function defaultOutRoot(env: NodeJS.ProcessEnv = process.env, home: string = os.homedir()): string {
+  return env.LOCAL_FLOW_OUT_ROOT ?? path.join(home, "playbook-local");
+}
+export const OUT_ROOT = defaultOutRoot();
 
 export const LOCAL_PATHS = {
   cohortFile: path.join(PLAYBOOK_ROOT, "Scripts/regions/us/osm_cohort.json"),
@@ -64,4 +69,8 @@ export function generateLogPath(key: string): string {
 }
 export function exportLogPath(key: string): string {
   return path.join(runDir(key), "export.log");
+}
+/** Print-book runs: `<runDir>/print/<runId>/` (one dir per `print_book.py --out`). */
+export function printDir(key: string): string {
+  return path.join(runDir(key), "print");
 }

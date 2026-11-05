@@ -9,7 +9,7 @@ import {
   type ComposeTile,
   type NaipLoaderDeps,
 } from "../naipProtocol";
-import { naipTileUrl } from "../naipTiles";
+import { NAIP_TILES } from "../naipTiles";
 import * as shiftModule from "../naipDatumShift";
 
 // Harding Park tile at z18 (shift ~ +2.5 px east, -1.2 px north).
@@ -66,7 +66,7 @@ describe("createNaipTileLoader", () => {
     const out = await run(loader, `naip://${t.z}/${t.x}/${t.y}`);
     expect(deps.fetchBytes).toHaveBeenCalledTimes(1);
     expect(deps.fetchBytes.mock.calls[0][0]).toBe(
-      naipTileUrl().replace("{z}", `${t.z}`).replace("{x}", `${t.x}`).replace("{y}", `${t.y}`),
+      NAIP_TILES.replace("{z}", `${t.z}`).replace("{x}", `${t.x}`).replace("{y}", `${t.y}`),
     );
     expect(deps.loadShiftModule).not.toHaveBeenCalled();
     expect(deps.compose).not.toHaveBeenCalled();
@@ -87,7 +87,7 @@ describe("createNaipTileLoader", () => {
   });
 
   it("rejects when the main tile fails, so maplibre raises its normal tile error", async () => {
-    const mainUrl = naipTileUrl().replace("{z}", `${H.z}`).replace("{x}", `${H.x}`).replace("{y}", `${H.y}`);
+    const mainUrl = NAIP_TILES.replace("{z}", `${H.z}`).replace("{x}", `${H.x}`).replace("{y}", `${H.y}`);
     const deps = makeDeps({
       fetchBytes: vi.fn(async (url: string) => {
         if (url === mainUrl) throw new Error("NAIP tile 404");
@@ -104,7 +104,7 @@ describe("createNaipTileLoader", () => {
   });
 
   it("a failing neighbour is NOT an error: it is drawn as missing (null bytes)", async () => {
-    const mainUrl = naipTileUrl().replace("{z}", `${H.z}`).replace("{x}", `${H.x}`).replace("{y}", `${H.y}`);
+    const mainUrl = NAIP_TILES.replace("{z}", `${H.z}`).replace("{x}", `${H.x}`).replace("{y}", `${H.y}`);
     const deps = makeDeps({
       fetchBytes: vi.fn(async (url: string) => {
         if (url !== mainUrl) throw new Error("404");
@@ -133,7 +133,7 @@ describe("createNaipTileLoader", () => {
 
   it("an abort during neighbour fetches rejects instead of drawing a partial tile", async () => {
     const ac = new AbortController();
-    const mainUrl = naipTileUrl().replace("{z}", `${H.z}`).replace("{x}", `${H.x}`).replace("{y}", `${H.y}`);
+    const mainUrl = NAIP_TILES.replace("{z}", `${H.z}`).replace("{x}", `${H.x}`).replace("{y}", `${H.y}`);
     const deps = makeDeps({
       fetchBytes: vi.fn(async (url: string) => {
         if (url === mainUrl) return bytes(1);

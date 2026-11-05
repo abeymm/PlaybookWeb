@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 /** GET /local/api/course/<key>?source=generated|cache → the `[OSMCourse]` JSON file as-is. */
 export async function GET(req: Request, ctx: KeyParams) {
-  const blocked = gate();
+  const blocked = gate(req);
   if (blocked) return blocked;
   const { key } = await ctx.params;
   const bad = badKey(key);
@@ -31,7 +31,7 @@ export async function GET(req: Request, ctx: KeyParams) {
  * findings on any error. The previous file is kept beside it as `<key>.prev.json`.
  */
 export async function PUT(req: Request, ctx: KeyParams) {
-  const blocked = gate();
+  const blocked = gate(req);
   if (blocked) return blocked;
   const { key } = await ctx.params;
   const bad = badKey(key);

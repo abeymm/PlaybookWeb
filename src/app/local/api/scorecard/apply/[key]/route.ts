@@ -28,7 +28,7 @@ function readCourses(file: string): OSMCourse[] | null {
  *   - the generated JSON, when present — validated strict before writing, previous kept as .prev.
  */
 export async function POST(req: Request, ctx: KeyParams) {
-  const blocked = gate();
+  const blocked = gate(req);
   if (blocked) return blocked;
   const { key } = await ctx.params;
   const bad = badKey(key);

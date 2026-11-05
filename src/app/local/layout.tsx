@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { isLocalFlowEnabled } from "@/lib/localflow/config";
 
 export const metadata: Metadata = {
   title: "Local courseData",
@@ -6,8 +8,9 @@ export const metadata: Metadata = {
 };
 
 // /local — the all-on-this-Mac courseData flow. No auth shell, no Amplify: the page talks only
-// to its own route handlers under /local/api, which run on the dev server and are 404 elsewhere.
+// to its own route handlers under /local/api; pages and handlers alike 404 outside `next dev`.
 export default function LocalLayout({ children }: { children: React.ReactNode }) {
+  if (!isLocalFlowEnabled()) notFound();
   return (
     <div className="flex min-h-screen min-w-[1280px] flex-col bg-background text-foreground">
       <header className="flex items-center gap-3 border-b border-border bg-card px-6 py-2">

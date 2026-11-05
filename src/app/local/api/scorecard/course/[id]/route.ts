@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 /** GET /local/api/scorecard/course/<opengolfapi id>?holes=18 → { scorecard, quality } (preview). */
 export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }) {
-  const blocked = gate();
+  const blocked = gate(req);
   if (blocked) return blocked;
   const { id } = await ctx.params;
   const holes = Number(new URL(req.url).searchParams.get("holes")) || 18;

@@ -10,6 +10,7 @@ import Link from "next/link";
 import RunPanel from "./RunPanel";
 import LocalCourseView from "./LocalCourseView";
 import ScorecardPanel from "./ScorecardPanel";
+import BookPanel from "./BookPanel";
 import { ErrorState, LoadingState } from "@/app/admin/_components/states";
 import type { CohortEntry, StatusResponse } from "@/lib/localflow/types";
 import type { OSMCourse, ValidationFinding } from "@/lib/coursedata/types";
@@ -272,6 +273,8 @@ export default function CourseApp({ courseKey }: CourseAppProps) {
               </ul>
             )}
           </RunPanel>
+
+          <BookPanel courseKey={courseKey} generatedExists={!!gen?.exists && !dirty} onError={setFatal} />
         </>
       )}
     </div>

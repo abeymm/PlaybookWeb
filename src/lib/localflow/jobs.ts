@@ -3,7 +3,7 @@
 // stdout/stderr go to a log file the status endpoint tails. The process spawner is injected so
 // the state machine is unit-tested without spawning anything.
 
-export type JobKind = "generate" | "export";
+export type JobKind = "generate" | "export" | "book";
 export type JobStatus = "running" | "succeeded" | "failed";
 
 export interface JobSpec {

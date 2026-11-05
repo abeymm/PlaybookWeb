@@ -11,7 +11,7 @@
 // successful empty body exactly as before. Missing/undecodable NEIGHBOUR tiles are never errors: that part of
 // the edge keeps whatever the main tile provides.
 
-import { naipTileUrl } from "./naipTiles";
+import { NAIP_TILES } from "./naipTiles";
 import { NAIP_SHIFT_MINZOOM, type ShiftedTilePart } from "./naipDatumShift";
 
 export const NAIP_PROTOCOL = "naip";
@@ -48,7 +48,7 @@ export function parseNaipProtocolUrl(url: string): { z: number; x: number; y: nu
 }
 
 function pcTileUrl(z: number, x: number, y: number): string {
-  return naipTileUrl().replace("{z}", `${z}`).replace("{x}", `${x}`).replace("{y}", `${y}`);
+  return NAIP_TILES.replace("{z}", `${z}`).replace("{x}", `${x}`).replace("{y}", `${y}`);
 }
 
 /** fetch → bytes; non-2xx rejects (like a failing raster tile did). */
