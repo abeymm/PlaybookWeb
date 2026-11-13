@@ -5,7 +5,7 @@
  * link. There is no public group price; the owner replies by email.
  */
 
-export type FieldErrors = { email?: string; course?: string; groupSize?: string };
+export type FieldErrors = { name?: string; email?: string; course?: string; groupSize?: string };
 
 export type Parsed<T> =
   | { ok: true; value: T }
@@ -31,7 +31,7 @@ function isPlainObject(body: unknown): body is Record<string, unknown> {
   return typeof body === "object" && body !== null && !Array.isArray(body);
 }
 
-function hasControlChar(text: string): boolean {
+export function hasControlChar(text: string): boolean {
   for (let i = 0; i < text.length; i += 1) {
     const code = text.charCodeAt(i);
     if (code <= 0x1f || code === 0x7f) return true;

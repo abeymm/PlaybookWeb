@@ -111,7 +111,7 @@ export function SubmitButton({ children, busy }: { children: ReactNode; busy: bo
   );
 }
 
-export type FormFields = { email?: string; course?: string; groupSize?: string };
+export type FormFields = { name?: string; email?: string; course?: string; groupSize?: string };
 export type FormState = {
   status: "idle" | "sending" | "sent" | "error";
   message?: string;

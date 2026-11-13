@@ -9,7 +9,7 @@ const MSG_TOO_LARGE = "Request too large.";
 const MSG_UNCONFIGURED =
   "Sending is not set up yet. Email support@playbook.golf with the course name.";
 
-type Deps = { deliver?: typeof deliver; now?: () => Date };
+type Deps = { deliver?: typeof deliver; now?: () => Date; unavailableMessage?: string };
 
 function fail(status: number, error: string, extra: object = {}): Response {
   return Response.json({ ok: false, error, ...extra }, { status });
@@ -56,6 +56,6 @@ export async function handleFormPost<T extends { spam: boolean }>(
   if (parsed.value.spam) return Response.json({ ok: true });
   const receivedAt = (deps.now ?? (() => new Date()))().toISOString();
   const result = await (deps.deliver ?? deliver)(toSubmission(parsed.value, receivedAt));
-  if (!result.ok) return fail(503, MSG_UNCONFIGURED);
+  if (!result.ok) return fail(503, deps.unavailableMessage ?? MSG_UNCONFIGURED);
   return Response.json({ ok: true });
 }
