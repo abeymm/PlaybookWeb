@@ -306,8 +306,13 @@ src/lib/book/
                public group price, no discount-code field); book facts (edition year, pages, size, smallest type)
   forms.ts     pure validation for the course-request form (unit-tested)
   delivery.ts  the provider seam behind BOOK_FORMS_DELIVERY: "log" (dev default; writes the
-               submission to the server log) or unconfigured (503 in production until the owner
-               picks an email service or storage — see the TODO(owner) block)
+               submission to the server log), "appsync" (production: one email per submission to
+               support@playbook.golf through the Backend `submitForm` mutation as a guest, see
+               submitForm.ts) or unconfigured (503 in production). Set BOOK_FORMS_DELIVERY=appsync
+               in the Amplify Hosting environment for the forms to work live.
+  submitForm.ts  maps a submission to the mutation's arguments and calls it (aws-amplify, guest/identity pool)
+  preorder.ts, scottsdale.ts  the /scottsdale pre-order validation (name + email only) and the event
+               facts (prices, pickup day, the two app Playbook links, sign-in links only)
 src/app/book/
   layout.tsx          fonts, metadata, OG image, JSON-LD (FAQ entries with owner placeholders excluded)
   page.tsx            section order: Header · Hero (course selector, buy, price, packs line, hole-13 spread) ·
@@ -321,7 +326,11 @@ src/app/book/
   _images.ts          generated manifest of public/book/*.webp (hole 13 = book pages 28–29, how-to = page 2);
                       app-hole-map.webp is cropped from iOS/Docs/Plans/Book-Look-In-App-2026-10-27/app/app-hole-map.png;
                       competition.webp is the green page's legend strip from crops-2026-10-27/green-contours.png
+src/app/scottsdale/   the TPC Scottsdale event page for US Am Tour players (noindex, not in the sitemap):
+                      sample PDF (public/scottsdale/), prices, pickup, pre-order form, two app Playbook link
+                      slots (placeholders until the owner pastes the /protected links in src/lib/book/scottsdale.ts)
 src/app/api/book/
+  preorder/route.ts   POST {name, email, website?} → 200 | 400 fields | 413 | 503 (no other data is accepted)
   request/route.ts    POST {email, course, groupSize?, website?} → 200 | 400 fields | 413 | 503 unconfigured;
                       `website` is the honeypot;
                       `groupSize` (1–999) serves tournaments and groups (the FAQ and the request band point there)
