@@ -60,7 +60,6 @@ export function PreorderForm() {
     <section id="preorder" className="scroll-mt-4 border-t border-book-line bg-book-paper py-12 md:py-14">
       <Container className="flex max-w-[860px] flex-col gap-2">
         <h2 className="text-[34px] font-extrabold leading-none text-book-green sm:text-[40px]">{PREORDER.headline}</h2>
-        <p className="text-[17px] leading-[1.5] text-book-muted">{PREORDER.intro}</p>
         <Form />
       </Container>
     </section>

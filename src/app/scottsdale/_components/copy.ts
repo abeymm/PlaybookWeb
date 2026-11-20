@@ -4,7 +4,7 @@
  * Facts come from src/lib/book/scottsdale.ts. Rules the copy keeps: no data-source or method names,
  * no competitor names, no course counts, no score promises, no handicap level, no dashes as
  * punctuation, short plain words. Text in [square brackets] is an owner placeholder and stays
- * visible until it is filled in.
+ * kept here until it is filled in; the page never shows it (see isPlaceholder).
  */
 import { EVENT_FACTS } from "@/lib/book/scottsdale";
 
@@ -18,71 +18,107 @@ export const PAGE = {
 export const HERO = {
   eyebrow: "US Am Tour · TPC Scottsdale · December 2026",
   headline: "Aim for your miss, not a miracle.",
-  subhead:
-    "One pocket book for both courses, Champions and Stadium. A shot plan for every hole and where to miss on every green. Pre-order now and pick it up at registration.",
+  problem: {
+    label: "The problem:",
+    text: "You do not know these two courses. A good shot to the wrong side is in trouble.",
+  },
+  solution: {
+    label: "The solution:",
+    text: "Both courses in one book. Each hole shows where to aim and where to miss.",
+  },
   cta: `Pre-order for ${preorderPrice}`,
   sampleLink: "See the sample",
-  priceLine: `${preorderPrice} plus tax if you pre-order. ${tablePrice} plus tax at the table. Store price ${storePrice}.`,
-};
-
-export const WHAT = {
-  headline: "What is in the book",
-  items: [
-    "Both courses in one book: Champions and Stadium.",
-    "A shot plan for every hole, drawn on a photo map of the hole.",
-    "Where to miss on every green, with slope arrows and height bands.",
-    "A view from the tee that shows where to aim.",
-    "Distances along each hole, with the height change marked.",
-    "Pocket size, made to be read in a glance.",
-  ],
 };
 
 export const SAMPLE = {
-  headline: "See it before you pre-order",
-  body: "The sample is five pages: the cover, then holes 1 and 10 of the Champions course.",
-  button: "Open the sample (PDF)",
-  note: "A PDF of about 2 MB. Share it with your group.",
+  headline: "Shot by shot",
+  line: "Champions hole 1, from the book.",
+  tee: {
+    subhead: "Tee shot",
+    pictures: [
+      {
+        src: "/scottsdale/sample-hole1-map.webp",
+        width: 938,
+        height: 1527,
+        alt: "The hole map for Champions hole 1: the planned shots on a photo of the hole, with distances from the tee.",
+      },
+      {
+        src: "/scottsdale/sample-hole1-teeview.webp",
+        width: 1001,
+        height: 608,
+        alt: "The view from the tee on Champions hole 1: two aim posts, with sand and water marked in yards.",
+      },
+    ],
+    lines: [
+      { label: "Hole map:", text: "The plan for each shot. The shaded shape shows where shots stop." },
+      { label: "From the tee:", text: "Aim between the posts." },
+    ],
+  },
+  green: {
+    subhead: "Approach and putts",
+    picture: {
+      src: "/scottsdale/sample-champions1-greenmap.webp",
+      width: 1002,
+      height: 1084,
+      alt: "The green map for Champions hole 1: slope arrows, height bands and a yard scale. A green edge marks a safe side. An amber dashed edge and amber dots mark the sides to take care.",
+    },
+    uses: [
+      { label: "Approach:", text: "Aim where your shot spread fits, as on the tee shot." },
+      { label: "Green map:", text: "Use it for small changes only." },
+      { label: "Miss:", text: "Green edge is safe. Amber edge or dot means take care." },
+      { label: "Putt:", text: "Read the roll from the arrows. Bold arrows mean steep slope." },
+    ],
+  },
+  wind: { label: "Wind chart:", text: "Yards to add or take off for 10 and 20 mph wind." },
+  button: "Open the 5-page sample (PDF)",
   pdfHref: "/scottsdale/Playbook_TPC_Scottsdale_sample.pdf",
-  coverAlt: "The cover of the book: Aim for your miss, not a miracle. TPC Scottsdale PGA Champions.",
-  greenAlt: "The green page for hole 1: slope arrows, height bands and the spots to miss.",
-  mapAlt: "The map page for hole 1: the planned shots on a photo of the hole, with distances from the tee.",
 };
 
 export const PRICING = {
   headline: "Price and pickup",
   rows: [
-    { label: "Pre-order", price: preorderPrice, note: "plus tax. Pick up at registration." },
-    { label: "At the table", price: tablePrice, note: "plus tax. No pre-order needed." },
-    { label: "Store price", price: storePrice, note: "after the event." },
+    { label: "Pre-order:", text: `${preorderPrice} plus tax.` },
+    { label: "At the table:", text: `${tablePrice} plus tax.` },
+    { label: "Pickup:", text: `registration, ${pickupDay}.` },
+    { label: "Pay:", text: "at pickup, by card or cash. Not online." },
+    { label: "Money back:", text: "on the spot, if you do not like the book." },
   ],
-  pickup: `Pick up your book at registration on ${pickupDay}.`,
-  pay: "Pay when you pick it up, by card or cash. You do not pay online.",
+  // Quiet line under the rows: the store price, struck through. srNote keeps a screen reader from reading it as the price to pay.
+  storeLine: { label: "Store price for the two-course book:", price: storePrice, struck: true, srNote: "Not your price." },
   // TODO(owner): fill in once the tour confirms registration hours and place.
   hoursPlaceholder: "[Registration hours and place: to confirm with the tour]",
-  moneyBack: "If you do not like the book, you get your money back on the spot.",
 };
 
 export const PREORDER = {
   headline: "Pre-order your book",
-  intro: `Name and email, nothing else. You pay at pickup, so no card is needed now.`,
   nameLabel: "Name",
   emailLabel: "Email",
-  button: `Pre-order for ${preorderPrice}`,
-  emailUse: "We use your name and email only to hold your book and to contact you about it. Nothing else.",
-  sent: `You are on the list. Your book will be waiting at registration on ${pickupDay}.`,
+  button: "Pre-order",
+  emailUse: "We use your name and email only to hold your book and to contact you about it.",
+  sent: `You are on the list. Your book will be at registration on ${pickupDay}.`,
 };
 
 export const APPS = {
-  headline: "Try it free in the app first",
-  body: "The Playbooks for both courses are free in the Golf Playbook app. They open in the app and need a free sign-in.",
+  headline: "Same strategy in the Golf Playbook app.",
+  body: [
+    "Use it in your practice rounds.",
+    "The app adjusts each distance for slope, temperature, wind and altitude.",
+    "Preview the strategy with 3D flyovers.",
+    "The app is free. A free sign-in is necessary.",
+  ],
   steps: [
-    "Install the free Golf Playbook app.",
-    "Sign in or make a free account.",
-    "Tap the link for your course again.",
+    "Install the free app.",
+    "Sign in or make an account.",
+    "Tap your course link again.",
   ],
   getApp: "Get the app",
-  linkLabel: (course: string): string => `${course} Playbook`,
-  placeholder: (course: string): string => `[Link to come: ${course} Playbook]`,
+  getAppHref: "/get",
+  scanLine: "Scan a code, or open a link on your phone.",
+  linkLabel: (course: string): string => `Open the ${course} Playbook`,
+  qrAlt: (course: string): string => `QR code for the ${course} Playbook`,
+  copyLink: "Copy link",
+  copied: "Copied",
+  copyFailed: "Copy the link by hand.",
 };
 
 export const FOOTER = {

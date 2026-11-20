@@ -4,7 +4,7 @@
  * The pre-order form posts to /api/book/preorder (name and email only).
  */
 import { PreorderForm } from "./_components/PreorderForm";
-import { AppPlaybooks, Footer, Header, Hero, PriceAndPickup, Sample, WhatIsInIt } from "./_components/Sections";
+import { AppPlaybooks, Footer, Header, Hero, PriceAndPickup, Sample } from "./_components/Sections";
 
 export default function ScottsdalePage() {
   return (
@@ -12,7 +12,6 @@ export default function ScottsdalePage() {
       <Header />
       <main>
         <Hero />
-        <WhatIsInIt />
         <Sample />
         <PriceAndPickup />
         <PreorderForm />

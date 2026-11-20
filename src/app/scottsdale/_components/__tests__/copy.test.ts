@@ -1,6 +1,8 @@
+import { existsSync, readFileSync, statSync } from "node:fs";
+import path from "node:path";
 import { describe, it, expect } from "vitest";
 import * as copy from "../copy";
-import { APP_PLAYBOOKS, EVENT_FACTS, isProtectedPlaybookLink } from "@/lib/book/scottsdale";
+import { APP_PLAYBOOKS, EVENT_FACTS, isPlaceholder, isProtectedPlaybookLink } from "@/lib/book/scottsdale";
 
 function collectStrings(value: unknown, out: string[] = []): string[] {
   if (typeof value === "string") out.push(value);
@@ -39,10 +41,17 @@ describe("copy rules for players", () => {
 describe("event facts on the page", () => {
   it("states the three prices, once each, from the event facts", () => {
     expect(EVENT_FACTS.preorderPrice).toBe("$40");
-    expect(EVENT_FACTS.tablePrice).toBe("$45");
+    expect(EVENT_FACTS.tablePrice).toBe("$50");
     expect(EVENT_FACTS.storePrice).toBe("$79");
-    for (const price of ["$40", "$45", "$79"]) expect(text).toContain(price);
-    expect(new Set(text.match(/\$\d+/g))).toEqual(new Set(["$40", "$45", "$79"]));
+    for (const price of ["$40", "$50", "$79"]) expect(text).toContain(price);
+    expect(new Set(text.match(/\$\d+/g))).toEqual(new Set(["$40", "$50", "$79"]));
+  });
+  it("never shows the old table price", () => {
+    expect(text).not.toContain("$45");
+  });
+  it("keeps the Get the app link on the app block", () => {
+    expect(copy.APPS.getApp).toBe("Get the app");
+    expect(copy.APPS.getAppHref).toBe("/get");
   });
   it("says tax is extra", () => {
     expect(text).toMatch(/plus tax/i);
@@ -82,16 +91,227 @@ describe("app Playbook links", () => {
     expect(isProtectedPlaybookLink("https://playbook.golf/protected/")).toBe(false);
     expect(isProtectedPlaybookLink("https://playbook.golf/protected/a/../../public/x")).toBe(false);
   });
-  it("any link that is set is a protected link", () => {
-    for (const app of APP_PLAYBOOKS) {
-      if (app.href !== null) expect(isProtectedPlaybookLink(app.href)).toBe(true);
-    }
+  const PRINTED = {
+    Champions: "https://playbook.golf/protected/2C24F87D-1A90-416B-9918-69450C670E25?src=book",
+    Stadium: "https://playbook.golf/protected/41699184-D8F6-4460-BDD1-05B57ECC9F68?src=book",
+  } as const;
+  it("holds the exact links printed on the back cover of the book", () => {
+    for (const app of APP_PLAYBOOKS) expect(app.href).toBe(PRINTED[app.course]);
   });
-  it("a link that is not set shows a marked placeholder", () => {
-    expect(copy.APPS.placeholder("Champions")).toMatch(/^\[.*Champions.*\]$/);
+  it("every link is a protected link", () => {
+    for (const app of APP_PLAYBOOKS) expect(isProtectedPlaybookLink(app.href)).toBe(true);
+  });
+  it("keeps no bracket placeholder for the two course links", () => {
+    expect(all.filter((s) => /^\[.*(Champions|Stadium).*\]$/.test(s))).toEqual([]);
+    expect(copy.APPS).not.toHaveProperty("placeholder");
+  });
+  it("gives each course a png QR picture under /scottsdale/ that exists", () => {
+    for (const app of APP_PLAYBOOKS) {
+      expect(app.qr).toMatch(/^\/scottsdale\/qr-[a-z]+\.png$/);
+      expect(existsSync(path.join(process.cwd(), "public", app.qr))).toBe(true);
+    }
+    expect(new Set(APP_PLAYBOOKS.map((a) => a.qr)).size).toBe(2);
+  });
+  it("has copy strings for the copy button and the QR line", () => {
+    expect(copy.APPS.copyLink).toBe("Copy link");
+    expect(copy.APPS.copied).toBe("Copied");
+    expect(copy.APPS.scanLine).toBe("Scan a code, or open a link on your phone.");
+    expect(copy.APPS.linkLabel("Champions")).toBe("Open the Champions Playbook");
+    expect(copy.APPS.qrAlt("Stadium")).toBe("QR code for the Stadium Playbook");
   });
   it("says the Playbooks need a free sign-in", () => {
-    expect(copy.APPS.body).toMatch(/free/i);
-    expect(copy.APPS.body).toMatch(/sign[- ]in/i);
+    const body = copy.APPS.body.join(" ");
+    expect(body).toMatch(/free/i);
+    expect(body).toMatch(/sign[- ]in/i);
+  });
+});
+
+/** Strings a reader sees on the page: no meta tags, alt text, links, picture paths, screen-reader-only text (srNote, copyFailed) or [placeholders]. */
+function visibleStrings(value: unknown, key = "", out: string[] = []): string[] {
+  if (typeof value === "string") {
+    if (!/^(alt|src|srNote|copyFailed)$|href$/i.test(key) && !value.startsWith("[")) out.push(value);
+  } else if (Array.isArray(value)) value.forEach((v) => visibleStrings(v, key, out));
+  else if (typeof value === "object" && value !== null) {
+    for (const [k, v] of Object.entries(value)) visibleStrings(v, k, out);
+  }
+  return out;
+}
+const onPage = Object.fromEntries(Object.entries(copy).filter(([key]) => key !== "PAGE"));
+const visible = [
+  ...visibleStrings(Object.values(onPage)),
+  ...APP_PLAYBOOKS.map((a) => copy.APPS.linkLabel(a.course)),
+  ...APP_PLAYBOOKS.map((a) => a.course),
+];
+const visibleText = visible.join("\n");
+const wordCount = (s: string): number => s.split(/\s+/).filter((w) => /[A-Za-z0-9$]/.test(w)).length;
+const WORD_LIMIT = 320;
+const count = (re: RegExp): number => (visibleText.match(re) ?? []).length;
+
+describe("short page: word budget and repeats", () => {
+  it("keeps reader-visible copy, without the footer disclaimer, at the word limit", () => {
+    expect(wordCount(visibleText.replace(copy.FOOTER.disclaimer, ""))).toBeLessThanOrEqual(WORD_LIMIT);
+  });
+  it("says each fact once or twice, no more", () => {
+    expect(count(/\$40/g)).toBeLessThanOrEqual(2);
+    expect(count(/\$50/g)).toBe(1);
+    expect(count(/\$79/g)).toBe(1);
+    expect(count(/registration/gi)).toBeLessThanOrEqual(3);
+    expect(count(/plus tax/gi)).toBe(2);
+    expect(count(/card or cash/gi)).toBe(1);
+    expect(count(/both courses/gi)).toBeLessThanOrEqual(2);
+  });
+  it("has no copy sentence longer than 25 words", () => {
+    const long = visible.flatMap((s) => s.split(/(?<=[.!?])\s+/)).filter((sentence) => wordCount(sentence) > 25);
+    expect(long).toEqual([]);
+  });
+});
+
+describe("problem and solution", () => {
+  it("has a problem and a solution of 30 words or fewer each", () => {
+    for (const part of [copy.HERO.problem, copy.HERO.solution]) {
+      expect(part.label.length).toBeGreaterThan(0);
+      expect(part.text.length).toBeGreaterThan(0);
+      expect(wordCount(`${part.label} ${part.text}`)).toBeLessThanOrEqual(30);
+    }
+  });
+});
+
+describe("the one example", () => {
+  const { tee, green } = copy.SAMPLE;
+  const pictures = [...tee.pictures, green.picture];
+  it("shows exactly three pictures, all Champions hole 1, and the sub-line says so", () => {
+    expect(pictures).toHaveLength(3);
+    for (const p of tee.pictures) expect(p.src).toMatch(/^\/scottsdale\/sample-hole1-[\w-]+\.webp$/);
+    expect(green.picture.src).toBe("/scottsdale/sample-champions1-greenmap.webp");
+    expect(copy.SAMPLE.line).toBe("Champions hole 1, from the book.");
+  });
+  it("does not use the old green maps, and the green picture has no caption", () => {
+    const json = JSON.stringify(copy);
+    expect(json).not.toContain("sample-hole1-greenmap");
+    expect(json).not.toContain("sample-champions9-greenmap");
+    expect(json).not.toMatch(/hole 9/i);
+    expect(green.picture).not.toHaveProperty("caption");
+  });
+  it("gives the Miss line, and the alt text names the alert areas", () => {
+    const miss = green.uses.find((u) => u.label === "Miss:");
+    expect(miss).toEqual({ label: "Miss:", text: "Green edge is safe. Amber edge or dot means take care." });
+    expect(green.picture.alt).toBe(
+      "The green map for Champions hole 1: slope arrows, height bands and a yard scale. A green edge marks a safe side. An amber dashed edge and amber dots mark the sides to take care.",
+    );
+  });
+  it("gives each an alt and whole-number size", () => {
+    for (const p of pictures) {
+      expect(p.alt.length).toBeGreaterThan(0);
+      expect(Number.isInteger(p.width) && p.width > 0).toBe(true);
+      expect(Number.isInteger(p.height) && p.height > 0).toBe(true);
+    }
+  });
+  it("uses no picture path twice and no feature picture", () => {
+    const srcs = (JSON.stringify(copy).match(/"\/scottsdale\/[^"]+\.webp"/g) ?? []).map((s) => s.replace(/"/g, ""));
+    expect(new Set(srcs).size).toBe(srcs.length);
+    expect(srcs.filter((s) => s.includes("feature-"))).toEqual([]);
+  });
+  it("points at files that exist under public", () => {
+    for (const p of pictures) expect(existsSync(path.join(process.cwd(), "public", p.src))).toBe(true);
+  });
+  it("has the owner's heading and the two subheads", () => {
+    expect(copy.SAMPLE.headline).toBe("Shot by shot");
+    expect(tee.subhead).toBe("Tee shot");
+    expect(green.subhead).toBe("Approach and putts");
+  });
+  it("keeps the two tee pictures together, with 1 to 3 label lines", () => {
+    expect(tee.pictures).toHaveLength(2);
+    expect(tee.lines.length).toBeGreaterThanOrEqual(1);
+    expect(tee.lines.length).toBeLessThanOrEqual(3);
+  });
+  it("aims the approach at the shot spread and keeps the green map for small changes", () => {
+    const text = green.uses.map((u) => `${u.label} ${u.text}`).join(" ");
+    expect(text).toMatch(/Approach: Aim where your shot spread fits/);
+    expect(text).toMatch(/Green map: Use it for small changes only/);
+    expect(text).not.toMatch(/low part/i);
+  });
+
+  it("lists 3 to 5 uses of the green map, each as a label line of 15 words or fewer", () => {
+    expect(green.uses.length).toBeGreaterThanOrEqual(3);
+    expect(green.uses.length).toBeLessThanOrEqual(5);
+    for (const u of [...green.uses, ...tee.lines]) {
+      expect(u.label).toMatch(/:$/);
+      expect(wordCount(u.text)).toBeLessThanOrEqual(15);
+    }
+  });
+});
+
+describe("the app block", () => {
+  it("has the owner's heading", () => {
+    expect(copy.APPS.headline).toBe("Same strategy in the Golf Playbook app.");
+  });
+  it("names the adjustments and the 3D flyovers", () => {
+    for (const word of ["slope", "temperature", "wind", "altitude", "3D flyovers"]) expect(copy.APPS.body.join(" ")).toContain(word);
+  });
+});
+
+describe("the sample PDF", () => {
+  const file = path.join(process.cwd(), "public", copy.SAMPLE.pdfHref);
+  it("exists, is non-empty and starts with the PDF header", () => {
+    expect(existsSync(file)).toBe(true);
+    expect(statSync(file).size).toBeGreaterThan(0);
+    expect(readFileSync(file).subarray(0, 5).toString("latin1")).toBe("%PDF-");
+  });
+});
+
+describe("struck-through store price", () => {
+  const line = copy.PRICING.storeLine;
+  it("is a struck entry holding the store price, once", () => {
+    expect(line.struck).toBe(true);
+    expect(line.price).toBe(EVENT_FACTS.storePrice);
+    expect(count(/\$79/g)).toBe(1);
+  });
+  it("names the two-course book and is a quiet label line", () => {
+    expect(line.label).toMatch(/two-course book/i);
+    expect(line.label).toMatch(/:$/);
+    expect(wordCount(`${line.label} ${line.price} ${line.srNote}`)).toBeLessThanOrEqual(15);
+  });
+  it("tells a screen reader this is not the price to pay", () => {
+    expect(line.srNote).toMatch(/not (the|your) price/i);
+  });
+  it("has no old store-price row", () => {
+    expect(copy.PRICING.rows.some((r) => /store price/i.test(r.label))).toBe(false);
+    expect(copy.PRICING.rows.map((r) => r.label)).toEqual(["Pre-order:", "At the table:", "Pickup:", "Pay:", "Money back:"]);
+  });
+  it("renders the strike with an s element", () => {
+    const src = readFileSync(path.join(process.cwd(), "src/app/scottsdale/_components/Sections.tsx"), "utf8");
+    expect(src).toMatch(/<s>/);
+    expect(src).toContain("storeLine");
+  });
+});
+
+describe("no placeholder shown to buyers", () => {
+  it("isPlaceholder is true only for a whole [bracketed] string", () => {
+    expect(isPlaceholder("[Registration hours]")).toBe(true);
+    expect(isPlaceholder("  [x]  ")).toBe(true);
+    expect(isPlaceholder("Pre-order [soon]")).toBe(false);
+    expect(isPlaceholder("[open")).toBe(false);
+    expect(isPlaceholder("open]")).toBe(false);
+    expect(isPlaceholder("")).toBe(false);
+  });
+  it("keeps the hours placeholder in copy so the missing fact stays visible to developers", () => {
+    expect(isPlaceholder(copy.PRICING.hoursPlaceholder)).toBe(true);
+  });
+  it("lists every placeholder in copy, and Sections guards the hours line with isPlaceholder", () => {
+    const placeholders = all.filter(isPlaceholder);
+    expect(placeholders).toEqual([copy.PRICING.hoursPlaceholder]);
+    const src = readFileSync(path.join(process.cwd(), "src/app/scottsdale/_components/Sections.tsx"), "utf8");
+    expect(src).toContain("isPlaceholder(PRICING.hoursPlaceholder)");
+    expect(src).not.toMatch(/data-placeholder/);
+  });
+});
+
+describe("copy button strings and picture sizes", () => {
+  it("has the failure string", () => {
+    expect(copy.APPS.copyFailed).toBe("Copy the link by hand.");
+  });
+  it("sizes the tee pictures to their real max widths, not 100vw", () => {
+    const src = readFileSync(path.join(process.cwd(), "src/app/scottsdale/_components/Sections.tsx"), "utf8");
+    expect(src).not.toContain("100vw");
   });
 });
