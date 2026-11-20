@@ -10,14 +10,19 @@ describe("resolveProvider", () => {
     expect(resolveProvider({ NODE_ENV: "development" })).toBe("log");
     expect(resolveProvider({})).toBe("log");
   });
-  it("unset in production is unconfigured", () => {
-    expect(resolveProvider({ NODE_ENV: "production" })).toBe("unconfigured");
+  it("unset in production is appsync", () => {
+    expect(resolveProvider({ NODE_ENV: "production" })).toBe("appsync");
+  });
+  it("unset in test is log", () => {
+    expect(resolveProvider({ NODE_ENV: "test" })).toBe("log");
   });
   it("blank is treated as unset", () => {
-    expect(resolveProvider({ BOOK_FORMS_DELIVERY: "  ", NODE_ENV: "production" })).toBe(
-      "unconfigured",
-    );
+    expect(resolveProvider({ BOOK_FORMS_DELIVERY: "  ", NODE_ENV: "production" })).toBe("appsync");
+    expect(resolveProvider({ BOOK_FORMS_DELIVERY: "", NODE_ENV: "production" })).toBe("appsync");
     expect(resolveProvider({ BOOK_FORMS_DELIVERY: "", NODE_ENV: "development" })).toBe("log");
+  });
+  it("explicit appsync wins outside production", () => {
+    expect(resolveProvider({ BOOK_FORMS_DELIVERY: "appsync", NODE_ENV: "test" })).toBe("appsync");
   });
   it("unknown values are unconfigured in both environments", () => {
     expect(resolveProvider({ BOOK_FORMS_DELIVERY: "ses", NODE_ENV: "production" })).toBe(
@@ -46,7 +51,7 @@ describe("deliver", () => {
   });
   it("unconfigured warns without the email and reports the reason", async () => {
     const logger = { info: vi.fn(), warn: vi.fn() };
-    const result = await deliver(sub, { NODE_ENV: "production" }, logger);
+    const result = await deliver(sub, { BOOK_FORMS_DELIVERY: "ses", NODE_ENV: "production" }, logger);
     expect(result).toEqual({ ok: false, reason: "unconfigured" });
     expect(logger.warn).toHaveBeenCalledWith(
       "[book-forms] BOOK_FORMS_DELIVERY is not set; submission dropped",

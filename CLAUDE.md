@@ -305,11 +305,11 @@ src/lib/book/
                "$39 each" from three; free shipping from "$100"; no
                public group price, no discount-code field); book facts (edition year, pages, size, smallest type)
   forms.ts     pure validation for the course-request form (unit-tested)
-  delivery.ts  the provider seam behind BOOK_FORMS_DELIVERY: "log" (dev default; writes the
-               submission to the server log), "appsync" (production: one email per submission to
-               support@playbook.golf through the Backend `submitForm` mutation as a guest, see
-               submitForm.ts) or unconfigured (503 in production). Set BOOK_FORMS_DELIVERY=appsync
-               in the Amplify Hosting environment for the forms to work live.
+  delivery.ts  the provider seam behind BOOK_FORMS_DELIVERY: "log" (default outside production;
+               writes the submission to the server log), "appsync" (default in production: one email
+               per submission to support@playbook.golf through the Backend `submitForm` mutation as
+               a guest, see submitForm.ts) or unconfigured (an unknown value; 503). The variable is
+               only an override: the live site needs no hosting setting.
   submitForm.ts  maps a submission to the mutation's arguments and calls it (aws-amplify, guest/identity pool)
   preorder.ts, scottsdale.ts  the /scottsdale pre-order validation (name + email only) and the event
                facts (prices, pickup day, the two app Playbook links, sign-in links only)

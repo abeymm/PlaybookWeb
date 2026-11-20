@@ -9,13 +9,13 @@ const sub: Submission = {
 };
 
 describe("resolveProvider with appsync", () => {
-  it("appsync is chosen only when asked for, in any environment", () => {
+  it("appsync can be asked for explicitly in any environment", () => {
     expect(resolveProvider({ BOOK_FORMS_DELIVERY: "appsync", NODE_ENV: "production" })).toBe("appsync");
     expect(resolveProvider({ BOOK_FORMS_DELIVERY: " appsync ", NODE_ENV: "development" })).toBe("appsync");
   });
-  it("still falls back to log in development and unconfigured in production", () => {
+  it("defaults to log in development and appsync in production", () => {
     expect(resolveProvider({ NODE_ENV: "development" })).toBe("log");
-    expect(resolveProvider({ NODE_ENV: "production" })).toBe("unconfigured");
+    expect(resolveProvider({ NODE_ENV: "production" })).toBe("appsync");
   });
 });
 
@@ -51,7 +51,7 @@ describe("deliver with the appsync provider", () => {
   it("unconfigured never calls the sender", async () => {
     const logger = { info: vi.fn(), warn: vi.fn() };
     const send = vi.fn();
-    const result = await deliver(sub, { NODE_ENV: "production" }, logger, send);
+    const result = await deliver(sub, { BOOK_FORMS_DELIVERY: "ses", NODE_ENV: "production" }, logger, send);
     expect(result).toEqual({ ok: false, reason: "unconfigured" });
     expect(send).not.toHaveBeenCalled();
   });

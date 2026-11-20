@@ -31,13 +31,14 @@ export type DeliveryEnv = { BOOK_FORMS_DELIVERY?: string; NODE_ENV?: string };
 export type DeliveryLogger = { info: (msg: string) => void; warn: (msg: string) => void };
 
 /**
- * Chooses the provider from the environment. "log" when BOOK_FORMS_DELIVERY is "log", or when it
- * is unset/blank outside production. "appsync" when it is "appsync" (email to support@playbook.golf
- * through the Backend form mailer). Anything else, including unknown values, is unconfigured.
+ * Chooses the provider from the environment. Unset or blank: "appsync" in production (email to
+ * support@playbook.golf through the Backend form mailer) and "log" everywhere else, so a local run
+ * never sends real email even though the local config points at the production backend. An explicit
+ * "log" or "appsync" is an override. Anything else, including unknown values, is unconfigured.
  */
 export function resolveProvider(env: DeliveryEnv): "log" | "appsync" | "unconfigured" {
   const value = env.BOOK_FORMS_DELIVERY?.trim() ?? "";
-  if (value === "") return env.NODE_ENV !== "production" ? "log" : "unconfigured";
+  if (value === "") return env.NODE_ENV === "production" ? "appsync" : "log";
   if (value === "log") return "log";
   return value === "appsync" ? "appsync" : "unconfigured";
 }
@@ -49,9 +50,9 @@ export async function deliver(
   logger: DeliveryLogger = console,
   send: FormSender = sendSubmitForm,
 ): Promise<DeliveryResult> {
-  // Providers: "log" (development) and "appsync" (production: one email per submission to
-  // support@playbook.golf, no database). A new provider is one more case in this switch plus a
-  // documented value for BOOK_FORMS_DELIVERY.
+  // Providers: "log" (default outside production) and "appsync" (default in production: one email
+  // per submission to support@playbook.golf, no database). BOOK_FORMS_DELIVERY only overrides the
+  // default. A new provider is one more case in this switch plus a documented value.
   //
   // "log" writes the submission, which contains an email address, to the server log. It is for
   // development. In production, set BOOK_FORMS_DELIVERY=log only on purpose.

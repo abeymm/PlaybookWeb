@@ -65,7 +65,7 @@ describe("POST /api/book/preorder", () => {
   });
   it("returns 503 with the pre-order message when delivery is not configured", async () => {
     vi.stubEnv("NODE_ENV", "production");
-    vi.stubEnv("BOOK_FORMS_DELIVERY", "");
+    vi.stubEnv("BOOK_FORMS_DELIVERY", "unknown-provider");
     vi.spyOn(console, "warn").mockImplementation(() => {});
     const res = await POST(json({ name: "Ann Lee", email: "a@b.com" }));
     expect(res.status).toBe(503);

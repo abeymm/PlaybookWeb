@@ -64,7 +64,7 @@ describe("POST /api/book/request", () => {
   });
   it("returns 503 in production when delivery is not configured", async () => {
     vi.stubEnv("NODE_ENV", "production");
-    vi.stubEnv("BOOK_FORMS_DELIVERY", "");
+    vi.stubEnv("BOOK_FORMS_DELIVERY", "unknown-provider");
     vi.spyOn(console, "warn").mockImplementation(() => {});
     const res = await requestPost(courseReq({ email: "a@b.com", course: "Bandon Dunes" }));
     expect(res.status).toBe(503);
