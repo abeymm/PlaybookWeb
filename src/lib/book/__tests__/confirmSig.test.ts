@@ -22,6 +22,9 @@ const request: Submission = {
 };
 
 describe("confirmSig", () => {
+  it("trims the secret before keying (stray space or line break gives the same signature)", () => {
+    expect(confirmSig("  test-secret-not-real\n", "golfer@example.com", "2026-11-20T01:24:30.894Z")).toBe(PINNED);
+  });
   it("matches the pinned vector shared with the backend", () => {
     expect(confirmSig(SECRET, "golfer@example.com", "2026-11-20T01:24:30.894Z")).toBe(PINNED);
   });
