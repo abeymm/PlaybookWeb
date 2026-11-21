@@ -6,6 +6,10 @@ frontend:
         - npm ci
     build:
       commands:
+        # Amplify Hosting console variables exist at build time only. Write the server-only secret
+        # into .env.production (git-ignored) so the Next.js server runtime can read it. Not
+        # NEXT_PUBLIC, so it is never inlined into client bundles. The value is not echoed.
+        - env | grep -e '^BOOK_CONFIRM_SECRET=' >> .env.production || true
         - npm run build
     postBuild:
       commands:

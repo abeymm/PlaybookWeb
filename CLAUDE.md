@@ -310,7 +310,15 @@ src/lib/book/
                per submission to support@playbook.golf through the Backend `submitForm` mutation as
                a guest, see submitForm.ts) or unconfigured (an unknown value; 503). The variable is
                only an override: the live site needs no hosting setting.
-  submitForm.ts  maps a submission to the mutation's arguments and calls it (aws-amplify, guest/identity pool)
+  submitForm.ts  maps a submission to the mutation's arguments and calls it (aws-amplify, guest/identity pool).
+               A pre-order also carries `confirmSig` when BOOK_CONFIRM_SECRET is set (see confirmSig.ts).
+  confirmSig.ts  SERVER ONLY. HMAC-SHA256 (hex) of `scottsdale-preorder\n<email>\n<receivedAt>` keyed by the
+               server-only env var BOOK_CONFIRM_SECRET (never NEXT_PUBLIC; amplify.yml writes it to the
+               git-ignored .env.production so the runtime can read it). The Backend mailer checks it
+               before emailing the golfer a confirmation. receivedAt is set by the server in
+               handleFormPost, never by the browser. Without the secret the site still works: the order
+               is sent unsigned and reaches support, the golfer just gets no confirmation. The log
+               provider never prints the signature. Only the pre-order is signed, not the course request.
   preorder.ts, scottsdale.ts  the /scottsdale pre-order validation (name + email only) and the event
                facts (prices, pickup day, the two app Playbook links, sign-in links only)
 src/app/book/

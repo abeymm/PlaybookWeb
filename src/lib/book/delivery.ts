@@ -26,7 +26,7 @@ export type DeliveryResult =
 /** Sends one form request to the mailer; throws on failure. */
 export type FormSender = (req: SubmitFormRequest) => Promise<void>;
 
-export type DeliveryEnv = { BOOK_FORMS_DELIVERY?: string; NODE_ENV?: string };
+export type DeliveryEnv = { BOOK_FORMS_DELIVERY?: string; NODE_ENV?: string; BOOK_CONFIRM_SECRET?: string };
 
 export type DeliveryLogger = { info: (msg: string) => void; warn: (msg: string) => void };
 
@@ -62,7 +62,7 @@ export async function deliver(
       return { ok: true, provider: "log" };
     case "appsync":
       try {
-        await send(toFormRequest(sub));
+        await send(toFormRequest(sub, env.BOOK_CONFIRM_SECRET));
         return { ok: true, provider: "appsync" };
       } catch (error) {
         // The message is the mailer's own; it never carries the submission, so the log stays free of the email.

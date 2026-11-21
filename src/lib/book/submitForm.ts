@@ -8,6 +8,7 @@
  */
 import outputs from "../../../amplify_outputs.json";
 import type { Submission } from "./delivery";
+import { confirmSig } from "./confirmSig";
 
 export type SubmitFormRequest = {
   formType: string;
@@ -23,14 +24,25 @@ function oneLine(text: string): string {
   return text.replace(/[\u0000-\u001f\u007f]+/g, " ").trim();
 }
 
-/** Maps a validated submission to the mutation's arguments. The player is the reply-to. */
-export function toFormRequest(sub: Submission): SubmitFormRequest {
+/**
+ * Maps a validated submission to the mutation's arguments. The player is the reply-to. A pre-order
+ * gets `confirmSig` only when `confirmSecret` is non-blank; without it the order is sent unsigned
+ * and still reaches support (the golfer gets no confirmation email).
+ */
+export function toFormRequest(sub: Submission, confirmSecret?: string): SubmitFormRequest {
   switch (sub.kind) {
     case "scottsdale-preorder":
       return {
         formType: "scottsdale-preorder",
         subject: oneLine(`TPC Scottsdale book pre-order: ${sub.name}`),
-        formData: { name: sub.name, email: sub.email, receivedAt: sub.receivedAt },
+        formData: {
+          name: sub.name,
+          email: sub.email,
+          receivedAt: sub.receivedAt,
+          ...(confirmSecret?.trim()
+            ? { confirmSig: confirmSig(confirmSecret, sub.email, sub.receivedAt) }
+            : {}),
+        },
         replyToEmail: sub.email,
       };
     case "course-request":
