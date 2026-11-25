@@ -17,74 +17,69 @@ export const PAGE = {
 
 export const HERO = {
   eyebrow: "US Am Tour · TPC Scottsdale · December 2026",
-  headline: "Aim for your miss, not a miracle.",
-  problem: {
-    label: "The problem:",
-    text: "You do not know these two courses. A good shot to the wrong side is in trouble.",
-  },
-  solution: {
-    label: "The solution:",
-    text: "Both courses in one book. Each hole shows where to aim and where to miss.",
-  },
+  headline: "Two courses you have not played. A plan for every shot.",
+  sub: "Know where to aim and where to miss before you reach the tee.",
   cta: `Pre-order for ${preorderPrice}`,
-  sampleLink: "See the sample",
+  sampleLink: "See hole 1",
 };
 
 export const SAMPLE = {
-  headline: "Shot by shot",
-  line: "Champions hole 1, from the book.",
+  headline: "Champions hole 1, from the book",
   tee: {
-    subhead: "Tee shot",
+    subhead: "1. On the tee",
     pictures: [
       {
         src: "/scottsdale/sample-hole1-map.webp",
         width: 938,
         height: 1527,
-        alt: "The hole map for Champions hole 1: the planned shots on a photo of the hole, with distances from the tee.",
+        alt: "The hole map for Champions hole 1: the planned shots on a photo of the hole.",
       },
       {
         src: "/scottsdale/sample-hole1-teeview.webp",
         width: 1001,
         height: 608,
-        alt: "The view from the tee on Champions hole 1: two aim posts, with sand and water marked in yards.",
+        alt: "The view from the tee on Champions hole 1: two aim posts.",
       },
     ],
     lines: [
-      { label: "Hole map:", text: "The plan for each shot. The shaded shape shows where shots stop." },
-      { label: "From the tee:", text: "Aim between the posts." },
+      { label: "Aim:", text: "between the two posts." },
+      { label: "Numbers:", text: "each shot ends at a numbered spot." },
     ],
   },
   green: {
-    subhead: "Approach and putts",
+    subhead: "2. Into the green",
     picture: {
       src: "/scottsdale/sample-champions1-greenmap.webp",
       width: 1002,
       height: 1084,
-      alt: "The green map for Champions hole 1: slope arrows, height bands and a yard scale. A green edge marks a safe side. An amber dashed edge and amber dots mark the sides to take care.",
+      alt: "The green map for Champions hole 1: slope arrows and the safe side.",
     },
     uses: [
-      { label: "Approach:", text: "Aim where your shot spread fits, as on the tee shot." },
-      { label: "Green map:", text: "Use it for small changes only." },
-      { label: "Miss:", text: "Green edge is safe. Amber edge or dot means take care." },
-      { label: "Putt:", text: "Read the roll from the arrows. Bold arrows mean steep slope." },
+      { label: "Green edge:", text: "safe side to miss." },
+      { label: "Amber edge or dot:", text: "take care." },
+      { label: "Arrows:", text: "the roll. Bold arrows are steep." },
+      {
+        label: "Tournaments:",
+        text: "everything in the book is worked out before the round, so slope, altitude and the plan stay in it. In the app, Tournament Mode turns slope and altitude off.",
+      },
     ],
+    localRules: "Check the event's Local Rules.",
   },
-  wind: { label: "Wind chart:", text: "Yards to add or take off for 10 and 20 mph wind." },
+  allHoles: "Every hole on both courses has these pages.",
   button: "Open the 5-page sample (PDF)",
   pdfHref: "/scottsdale/Playbook_TPC_Scottsdale_sample.pdf",
 };
 
 export const PRICING = {
-  headline: "Price and pickup",
   rows: [
     { label: "Pre-order:", text: `${preorderPrice} plus tax.` },
     { label: "At the table:", text: `${tablePrice} plus tax.` },
-    { label: "Pickup:", text: `registration, ${pickupDay}.` },
+    { label: "Pick up:", text: `registration, ${pickupDay}.` },
     { label: "Pay:", text: "at pickup, by card or cash. Not online." },
     { label: "Money back:", text: "on the spot, if you do not like the book." },
   ],
-  // Quiet line under the rows: the store price, struck through. srNote keeps a screen reader from reading it as the price to pay.
-  storeLine: { label: "Store price for the two-course book:", price: storePrice, struck: true, srNote: "Not your price." },
+  // Quiet line under the form: the store price, struck through. srNote keeps a screen reader from reading it as the price to pay.
+  introLine: { before: "One-time introductory price. The two-course book is normally", price: storePrice, srNote: "Not your price." },
   // TODO(owner): fill in once the tour confirms registration hours and place.
   hoursPlaceholder: "[Registration hours and place: to confirm with the tour]",
 };
@@ -99,21 +94,10 @@ export const PREORDER = {
 };
 
 export const APPS = {
-  headline: "Same strategy in the Golf Playbook app.",
-  body: [
-    "Use it in your practice rounds.",
-    "The app adjusts each distance for slope, temperature, wind and altitude.",
-    "Preview the strategy with 3D flyovers.",
-    "The app is free. A free sign-in is necessary.",
-  ],
-  steps: [
-    "Install the free app.",
-    "Sign in or make an account.",
-    "Tap your course link again.",
-  ],
+  headline: "Same plan in the free app",
+  body: ["Use it in your practice rounds. A free sign-in is necessary."],
   getApp: "Get the app",
   getAppHref: "/get",
-  scanLine: "Scan a code, or open a link on your phone.",
   linkLabel: (course: string): string => `Open the ${course} Playbook`,
   qrAlt: (course: string): string => `QR code for the ${course} Playbook`,
   copyLink: "Copy link",

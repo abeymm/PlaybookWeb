@@ -3,6 +3,7 @@
 import type { FormEvent } from "react";
 import { Container, Field, FormStatus, Honeypot, SubmitButton, formValues, useFormPost } from "@/app/book/_components/ui";
 import { PREORDER } from "./copy";
+import { IntroLine, PriceLines } from "./Sections";
 
 /** Name and email, posted to /api/book/preorder. The honeypot travels along as `website`. */
 function Form() {
@@ -60,7 +61,9 @@ export function PreorderForm() {
     <section id="preorder" className="scroll-mt-4 border-t border-book-line bg-book-paper py-12 md:py-14">
       <Container className="flex max-w-[860px] flex-col gap-2">
         <h2 className="text-[34px] font-extrabold leading-none text-book-green sm:text-[40px]">{PREORDER.headline}</h2>
+        <PriceLines />
         <Form />
+        <IntroLine />
       </Container>
     </section>
   );

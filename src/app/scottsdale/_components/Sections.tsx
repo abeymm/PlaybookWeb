@@ -30,17 +30,13 @@ export function Hero() {
       <Container className="flex max-w-[860px] flex-col gap-4">
         <Eyebrow className="text-book-yellow">{HERO.eyebrow}</Eyebrow>
         <h1 className="text-[44px] font-extrabold leading-[0.98] sm:text-[60px]">{HERO.headline}</h1>
-        {[HERO.problem, HERO.solution].map((part) => (
-          <p key={part.label} className="max-w-[640px] text-[19px] leading-[1.5] text-book-pale">
-            <strong className="font-bold">{part.label}</strong> {part.text}
-          </p>
-        ))}
+        <p className="max-w-[640px] text-[19px] leading-[1.5] text-book-pale">{HERO.sub}</p>
         <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center">
           <a href="#preorder" className={`${BUTTON_YELLOW} h-14 text-[22px]`}>
             {HERO.cta}
           </a>
           <a
-            href="#sample"
+            href="#hole"
             className="inline-flex h-12 items-center py-2 text-[18px] font-semibold text-book-cream underline underline-offset-4 hover:text-book-yellow"
           >
             {HERO.sampleLink}
@@ -75,28 +71,28 @@ function LabelLines({ lines }: { lines: readonly LabelLine[] }) {
 export function Sample() {
   const { tee, green } = SAMPLE;
   return (
-    <section id="sample" className="scroll-mt-4 border-t border-book-line py-12 md:py-16">
+    <section id="hole" className="scroll-mt-4 border-t border-book-line py-12 md:py-16">
       <Container className="flex max-w-[860px] flex-col gap-4">
         <h2 className="text-[34px] font-extrabold leading-none text-book-green sm:text-[40px]">{SAMPLE.headline}</h2>
-        <p className="text-[18px] leading-[1.5] text-book-muted">{SAMPLE.line}</p>
         <h3 className="mt-4 text-[26px] font-extrabold leading-none text-book-green">{tee.subhead}</h3>
         <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-start sm:justify-center">
           <Pic picture={tee.pictures[0]} sizes="(min-width: 640px) 250px, 360px" className={`${PAGE_CLASS} sm:max-w-[250px]`} />
           <div className="flex w-full max-w-[400px] flex-col gap-4">
             <Pic picture={tee.pictures[1]} sizes="400px" className={PAGE_CLASS.replace("max-w-[360px]", "max-w-[400px]")} />
+            <LabelLines lines={tee.lines} />
           </div>
         </div>
-        <LabelLines lines={tee.lines} />
         <h3 className="mt-6 text-[26px] font-extrabold leading-none text-book-green">{green.subhead}</h3>
         <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-start">
           <div className="flex w-full max-w-[400px] flex-col">
             <Pic picture={green.picture} sizes="400px" className={PAGE_CLASS.replace("max-w-[360px]", "max-w-[400px]")} />
           </div>
-          <LabelLines lines={green.uses} />
+          <div className="flex flex-col gap-2">
+            <LabelLines lines={green.uses} />
+            <p className="text-[15px] text-book-muted">{green.localRules}</p>
+          </div>
         </div>
-        <p className="mt-2 text-[18px] leading-[1.5]">
-          <strong className="font-bold">{SAMPLE.wind.label}</strong> {SAMPLE.wind.text}
-        </p>
+        <p className="mt-2 text-[18px] leading-[1.5]">{SAMPLE.allHoles}</p>
         <a href={SAMPLE.pdfHref} target="_blank" rel="noopener" className={`${BUTTON_GREEN} w-fit`}>
           {SAMPLE.button}
         </a>
@@ -105,25 +101,27 @@ export function Sample() {
   );
 }
 
-export function PriceAndPickup() {
+/** The price, pickup and money-back lines, shown above the pre-order form. */
+export function PriceLines() {
   return (
-    <section className="border-t border-book-line bg-book-cream py-12 md:py-16">
-      <Container className="flex max-w-[860px] flex-col gap-5">
-        <h2 className="text-[34px] font-extrabold leading-none text-book-green sm:text-[40px]">{PRICING.headline}</h2>
-        <div className="flex flex-col gap-2 text-[18px] leading-[1.5]">
-          {PRICING.rows.map((row) => (
-            <p key={row.label}>
-              <strong className="font-bold">{row.label}</strong> {row.text}
-            </p>
-          ))}
-          {isPlaceholder(PRICING.hoursPlaceholder) ? null : <p>{PRICING.hoursPlaceholder}</p>}
-          <p className="text-[15px] text-book-muted">
-            {PRICING.storeLine.label} <s>{PRICING.storeLine.price}</s>
-            <span className="sr-only"> {PRICING.storeLine.srNote}</span>
-          </p>
-        </div>
-      </Container>
-    </section>
+    <div className="flex flex-col gap-2 text-[18px] leading-[1.5]">
+      {PRICING.rows.map((row) => (
+        <p key={row.label}>
+          <strong className="font-bold">{row.label}</strong> {row.text}
+        </p>
+      ))}
+      {isPlaceholder(PRICING.hoursPlaceholder) ? null : <p>{PRICING.hoursPlaceholder}</p>}
+    </div>
+  );
+}
+
+/** The one-time price line, with the store price struck through. */
+export function IntroLine() {
+  const { before, price, srNote } = PRICING.introLine;
+  return (
+    <p className="text-[15px] text-book-muted">
+      {before} <s>{price}</s>.<span className="sr-only"> {srNote}</span>
+    </p>
   );
 }
 
@@ -137,12 +135,6 @@ export function AppPlaybooks() {
             <p key={line}>{line}</p>
           ))}
         </div>
-        <ol className="list-decimal pl-6 text-[18px] leading-[1.6]">
-          {APPS.steps.map((step) => (
-            <li key={step}>{step}</li>
-          ))}
-        </ol>
-        <p className="text-[18px] font-semibold">{APPS.scanLine}</p>
         <div className="flex flex-col gap-4 sm:flex-row">
           {APP_PLAYBOOKS.map((app) => (
             <div key={app.course} className="flex flex-1 items-center gap-4 rounded-md border-2 border-book-line p-3">

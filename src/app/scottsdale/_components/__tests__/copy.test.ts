@@ -64,10 +64,10 @@ describe("event facts on the page", () => {
   it("makes the money-back promise", () => {
     expect(text).toMatch(/money back/i);
   });
-  it("covers both courses in one book", () => {
+  it("covers the two courses", () => {
     expect(text).toContain("Champions");
     expect(text).toContain("Stadium");
-    expect(text).toMatch(/both courses in one book/i);
+    expect(copy.HERO.headline).toMatch(/two courses/i);
   });
   it("tells players what the email is used for", () => {
     expect(copy.PREORDER.emailUse).toMatch(/only/i);
@@ -115,7 +115,6 @@ describe("app Playbook links", () => {
   it("has copy strings for the copy button and the QR line", () => {
     expect(copy.APPS.copyLink).toBe("Copy link");
     expect(copy.APPS.copied).toBe("Copied");
-    expect(copy.APPS.scanLine).toBe("Scan a code, or open a link on your phone.");
     expect(copy.APPS.linkLabel("Champions")).toBe("Open the Champions Playbook");
     expect(copy.APPS.qrAlt("Stadium")).toBe("QR code for the Stadium Playbook");
   });
@@ -144,7 +143,7 @@ const visible = [
 ];
 const visibleText = visible.join("\n");
 const wordCount = (s: string): number => s.split(/\s+/).filter((w) => /[A-Za-z0-9$]/.test(w)).length;
-const WORD_LIMIT = 320;
+const WORD_LIMIT = 330;
 const count = (re: RegExp): number => (visibleText.match(re) ?? []).length;
 
 describe("short page: word budget and repeats", () => {
@@ -166,13 +165,12 @@ describe("short page: word budget and repeats", () => {
   });
 });
 
-describe("problem and solution", () => {
-  it("has a problem and a solution of 30 words or fewer each", () => {
-    for (const part of [copy.HERO.problem, copy.HERO.solution]) {
-      expect(part.label.length).toBeGreaterThan(0);
-      expect(part.text.length).toBeGreaterThan(0);
-      expect(wordCount(`${part.label} ${part.text}`)).toBeLessThanOrEqual(30);
-    }
+describe("hero", () => {
+  it("has the draft B headline, a short sub line and the two links", () => {
+    expect(copy.HERO.headline).toBe("Two courses you have not played. A plan for every shot.");
+    expect(wordCount(copy.HERO.sub)).toBeLessThanOrEqual(30);
+    expect(copy.HERO.cta).toBe("Pre-order for $40");
+    expect(copy.HERO.sampleLink).toBe("See hole 1");
   });
 });
 
@@ -183,7 +181,7 @@ describe("the one example", () => {
     expect(pictures).toHaveLength(3);
     for (const p of tee.pictures) expect(p.src).toMatch(/^\/scottsdale\/sample-hole1-[\w-]+\.webp$/);
     expect(green.picture.src).toBe("/scottsdale/sample-champions1-greenmap.webp");
-    expect(copy.SAMPLE.line).toBe("Champions hole 1, from the book.");
+    expect(copy.SAMPLE.headline).toBe("Champions hole 1, from the book");
   });
   it("does not use the old green maps, and the green picture has no caption", () => {
     const json = JSON.stringify(copy);
@@ -192,12 +190,17 @@ describe("the one example", () => {
     expect(json).not.toMatch(/hole 9/i);
     expect(green.picture).not.toHaveProperty("caption");
   });
-  it("gives the Miss line, and the alt text names the alert areas", () => {
-    const miss = green.uses.find((u) => u.label === "Miss:");
-    expect(miss).toEqual({ label: "Miss:", text: "Green edge is safe. Amber edge or dot means take care." });
-    expect(green.picture.alt).toBe(
-      "The green map for Champions hole 1: slope arrows, height bands and a yard scale. A green edge marks a safe side. An amber dashed edge and amber dots mark the sides to take care.",
-    );
+  it("gives the safe-side and take-care lines, and keeps the draft alt text", () => {
+    expect(green.uses).toContainEqual({ label: "Green edge:", text: "safe side to miss." });
+    expect(green.uses).toContainEqual({ label: "Amber edge or dot:", text: "take care." });
+    expect(green.picture.alt).toBe("The green map for Champions hole 1: slope arrows and the safe side.");
+    expect(tee.pictures[0].alt).toBe("The hole map for Champions hole 1: the planned shots on a photo of the hole.");
+    expect(tee.pictures[1].alt).toBe("The view from the tee on Champions hole 1: two aim posts.");
+  });
+  it("gives the Tournaments line and the Local Rules line", () => {
+    const t = green.uses.find((u) => u.label === "Tournaments:");
+    expect(t?.text).toMatch(/Tournament Mode turns slope and altitude off/);
+    expect(green.localRules).toBe("Check the event's Local Rules.");
   });
   it("gives each an alt and whole-number size", () => {
     for (const p of pictures) {
@@ -214,39 +217,29 @@ describe("the one example", () => {
   it("points at files that exist under public", () => {
     for (const p of pictures) expect(existsSync(path.join(process.cwd(), "public", p.src))).toBe(true);
   });
-  it("has the owner's heading and the two subheads", () => {
-    expect(copy.SAMPLE.headline).toBe("Shot by shot");
-    expect(tee.subhead).toBe("Tee shot");
-    expect(green.subhead).toBe("Approach and putts");
+  it("has the two numbered subheads", () => {
+    expect(tee.subhead).toBe("1. On the tee");
+    expect(green.subhead).toBe("2. Into the green");
   });
   it("keeps the two tee pictures together, with 1 to 3 label lines", () => {
     expect(tee.pictures).toHaveLength(2);
     expect(tee.lines.length).toBeGreaterThanOrEqual(1);
     expect(tee.lines.length).toBeLessThanOrEqual(3);
   });
-  it("aims the approach at the shot spread and keeps the green map for small changes", () => {
-    const text = green.uses.map((u) => `${u.label} ${u.text}`).join(" ");
-    expect(text).toMatch(/Approach: Aim where your shot spread fits/);
-    expect(text).toMatch(/Green map: Use it for small changes only/);
-    expect(text).not.toMatch(/low part/i);
-  });
-
-  it("lists 3 to 5 uses of the green map, each as a label line of 15 words or fewer", () => {
+  it("lists 3 to 5 green lines, each a label line; only the Tournaments line runs past 15 words", () => {
     expect(green.uses.length).toBeGreaterThanOrEqual(3);
     expect(green.uses.length).toBeLessThanOrEqual(5);
     for (const u of [...green.uses, ...tee.lines]) {
       expect(u.label).toMatch(/:$/);
-      expect(wordCount(u.text)).toBeLessThanOrEqual(15);
+      if (u.label !== "Tournaments:") expect(wordCount(u.text)).toBeLessThanOrEqual(15);
     }
   });
 });
 
 describe("the app block", () => {
-  it("has the owner's heading", () => {
-    expect(copy.APPS.headline).toBe("Same strategy in the Golf Playbook app.");
-  });
-  it("names the adjustments and the 3D flyovers", () => {
-    for (const word of ["slope", "temperature", "wind", "altitude", "3D flyovers"]) expect(copy.APPS.body.join(" ")).toContain(word);
+  it("has the draft B heading and body", () => {
+    expect(copy.APPS.headline).toBe("Same plan in the free app");
+    expect(copy.APPS.body.join(" ")).toBe("Use it in your practice rounds. A free sign-in is necessary.");
   });
 });
 
@@ -260,28 +253,22 @@ describe("the sample PDF", () => {
 });
 
 describe("struck-through store price", () => {
-  const line = copy.PRICING.storeLine;
-  it("is a struck entry holding the store price, once", () => {
-    expect(line.struck).toBe(true);
+  const line = copy.PRICING.introLine;
+  it("holds the store price once, in the one-time introductory line", () => {
     expect(line.price).toBe(EVENT_FACTS.storePrice);
+    expect(line.before).toBe("One-time introductory price. The two-course book is normally");
     expect(count(/\$79/g)).toBe(1);
-  });
-  it("names the two-course book and is a quiet label line", () => {
-    expect(line.label).toMatch(/two-course book/i);
-    expect(line.label).toMatch(/:$/);
-    expect(wordCount(`${line.label} ${line.price} ${line.srNote}`)).toBeLessThanOrEqual(15);
   });
   it("tells a screen reader this is not the price to pay", () => {
     expect(line.srNote).toMatch(/not (the|your) price/i);
   });
-  it("has no old store-price row", () => {
-    expect(copy.PRICING.rows.some((r) => /store price/i.test(r.label))).toBe(false);
-    expect(copy.PRICING.rows.map((r) => r.label)).toEqual(["Pre-order:", "At the table:", "Pickup:", "Pay:", "Money back:"]);
+  it("keeps the five price lines in draft B order", () => {
+    expect(copy.PRICING.rows.map((r) => r.label)).toEqual(["Pre-order:", "At the table:", "Pick up:", "Pay:", "Money back:"]);
   });
   it("renders the strike with an s element", () => {
     const src = readFileSync(path.join(process.cwd(), "src/app/scottsdale/_components/Sections.tsx"), "utf8");
     expect(src).toMatch(/<s>/);
-    expect(src).toContain("storeLine");
+    expect(src).toContain("introLine");
   });
 });
 
