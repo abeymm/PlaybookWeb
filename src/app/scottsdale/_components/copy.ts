@@ -17,7 +17,7 @@ export const PAGE = {
 
 export const HERO = {
   eyebrow: "US Am Tour · TPC Scottsdale · December 2026",
-  headline: "Two courses you have not played. A plan for every shot.",
+  headline: "Two courses. A plan for every shot.",
   sub: "Know where to aim and where to miss before you reach the tee.",
   cta: `Pre-order for ${preorderPrice}`,
   sampleLink: "See hole 1",

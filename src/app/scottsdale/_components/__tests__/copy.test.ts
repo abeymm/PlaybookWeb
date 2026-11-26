@@ -167,7 +167,7 @@ describe("short page: word budget and repeats", () => {
 
 describe("hero", () => {
   it("has the draft B headline, a short sub line and the two links", () => {
-    expect(copy.HERO.headline).toBe("Two courses you have not played. A plan for every shot.");
+    expect(copy.HERO.headline).toBe("Two courses. A plan for every shot.");
     expect(wordCount(copy.HERO.sub)).toBeLessThanOrEqual(30);
     expect(copy.HERO.cta).toBe("Pre-order for $40");
     expect(copy.HERO.sampleLink).toBe("See hole 1");
